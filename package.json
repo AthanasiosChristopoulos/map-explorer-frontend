@@ -1,0 +1,25 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "concurrently \"npm run nuxt\"",
+    "nuxt": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "axios": "^1.10.0",
+    "mapbox-gl": "^3.13.0",
+    "nuxt": "^3.17.6",
+    "vue": "^3.5.17",
+    "vue-library": "github:cliomusetours/vue-library",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "sass-embedded": "^1.89.2"
+  }
+}

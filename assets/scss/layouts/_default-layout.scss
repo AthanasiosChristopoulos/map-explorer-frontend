@@ -1,0 +1,20 @@
+.default-layout {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    margin-top: 0.7rem;
+
+}
+
+.content-panel {
+  flex: 1;            /* take remaining horizontal space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;   /* prevent overflow inside */
+  box-sizing: border-box;
+  margin-top: 0.7rem;
+}
+
