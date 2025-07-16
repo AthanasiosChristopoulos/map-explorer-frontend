@@ -4,7 +4,7 @@
 
 
 <script setup>
-import { ref, onMounted  } from 'vue'
+import { ref, onMounted, toRaw  } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import pin_image from '@/assets/icons/map-pin-fill.png';
 import { useRuntimeConfig } from '#app';
@@ -19,8 +19,10 @@ let popup;
 const geoData = ref({});
 
 onMounted(async() => {
-  const { data, error } = await useFetch(`/db.geojson`);
+
+  const{ data } = await useFetch(`/tour.geojson`);
   geoData.value = JSON.parse(data.value);
+
   mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
 
   map = new mapboxgl.Map(mapConfig.map);
@@ -60,9 +62,7 @@ onMounted(async() => {
   );
   map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
 
-  //===============================================================================================
-
-  console.log('Viewport:', window.innerWidth + ' x ' + window.innerHeight);
+  // console.log('Viewport:', window.innerWidth + ' x ' + window.innerHeight);
 
   //===============================================================================================
   // Pin Events

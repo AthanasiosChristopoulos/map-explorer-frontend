@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "title": "Lisbon: Stories from the Old Town",
+    "language": "en",
+    "availableLanguages": ["en", "pt", "es", "fr"],
+    "location": {
+      "coordinates": [-9.1399, 38.7169]
+    },
+    "categories": [1, 2],
+    "hasPreview": true,
+    "isIndoors": true
+  },
+  {
+    "id": 1,
+    "title": "Rome: Walking with Emperors",
+    "language": "it",
+    "availableLanguages": ["it", "en"],
+    "location": {
+      "coordinates": [12.4964, 41.9028]
+    },
+    "categories": [2, 3],
+    "hasPreview": false,
+    "isIndoors": false
+  }
+]
