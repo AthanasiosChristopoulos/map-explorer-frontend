@@ -21,12 +21,12 @@
   "map": {
     "container":"map",
     "style": "mapbox://styles/mapbox/streets-v12",
-    "center": [23.712889, 37.989478],
+    "center": [-9.1399, 38.7169],
     "projection": "mercator",
     "dragRotate": false,
     "pitchWithRotate": false,
     "minZoom": 1.7,
-    "zoom": 5
+    "zoom": 3
   },
   "pinLayer": {
         "id":"pin-layer",
