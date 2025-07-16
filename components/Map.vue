@@ -7,6 +7,10 @@
 import { ref, onMounted  } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import pin_image from '@/assets/icons/map-pin-fill.png';
+import { useRuntimeConfig } from '#app';
+import mapConfig from '@/assets/map/map-config.json';
+
+const config = useRuntimeConfig();
 
 let map: mapboxgl.Map;
 let popup: mapboxgl.Popup;
@@ -20,51 +24,29 @@ onMounted(async() => {
         geoData.value = data;
     });
 
-  mapboxgl.accessToken = 'pk.eyJ1IjoiZHMxMjNmMTUiLCJhIjoiY21jeGdvYnU0MGN3YzJsc2J4MWYzNGdkYiJ9.DoJqvXGIjVQcXt3Vx-n9AQ'
+  console.log(config.public.MAPBOX_ACCESS_TOKEN);
+  mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
 
-  map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [23.712889, 37.989478],
-    projection: 'mercator',
-    dragRotate: false,
-    pitchWithRotate: false,
-    minZoom: 1.7,   
-    zoom: 5
-  });
+  map = new mapboxgl.Map(mapConfig.map);
 
   map.on('load', async () => {
     try {
+      
+      // Add image for the pin to the map
       const response = await fetch(pin_image);
       const blob = await response.blob();
-
       const imageBitmap = await createImageBitmap(blob);
-
       map.addImage('custom-pin', imageBitmap);
 
       map.addSource('points', { type: 'geojson', data: geoData.value });
 
-      map.addLayer({
-        id: 'pin-layer',
-        type: 'symbol',
-        source: 'points',
-        layout: {
-          'icon-image': 'custom-pin',
-          'icon-size': 0.75,
-          'icon-anchor': 'bottom',
-          'icon-allow-overlap': true,
-        }
-      });
+      map.addLayer(mapConfig.pinLayer);
     } catch (err) {
       console.error('Error loading custom pin:', err);
     }
   });
     
-  popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-    offset: 25           // little gap above the marker
-  }).setHTML(`
+  popup = new mapboxgl.Popup(mapConfig.popup).setHTML(`
       <div class="tooltip-title">
         <h3>TourTitle</h3>
       </div>
@@ -77,20 +59,10 @@ onMounted(async() => {
   map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
 
   map.addControl(
-    new mapboxgl.NavigationControl({
-      showZoom: true,    
-      showCompass: false 
-    }),
+    new mapboxgl.NavigationControl(mapConfig.controls.navigation),
     'top-right'
   );
-
-  map.addControl(new mapboxgl.GeolocateControl({
-    positionOptions: {
-      enableHighAccuracy: true
-    },
-    trackUserLocation: true,
-    showUserHeading: true
-  }), 'top-right');
+  map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
 
   //===============================================================================================
 
@@ -100,7 +72,6 @@ onMounted(async() => {
   // Pin Events
   map.on('mouseenter', 'pin-layer', (e) => {
     map.getCanvas().style.cursor = 'pointer';
-
     const feature = e.features?.[0];
     const { id, title } = feature?.properties || {};
     const coordinates = feature.geometry.coordinates;

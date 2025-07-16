@@ -21,5 +21,10 @@ export default defineNuxtConfig({
         }
       ]
     }
+  },
+  runtimeConfig: {
+    public: {
+      MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN
+    }
   }
 })
