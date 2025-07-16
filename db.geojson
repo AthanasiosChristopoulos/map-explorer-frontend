@@ -1,0 +1,52 @@
+{
+  "data": {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "title": "Acropolis"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [23.7261, 37.9715]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "title": "Delphi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [22.5010, 38.4808]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "title": "Somewhere"
+      },      
+      "geometry": {
+        "type": "Point",
+        "coordinates": [22.7261, 37.9715]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "title": "Somewhere1"
+      },      
+      "geometry": {
+        "type": "Point",
+        "coordinates": [25.7261, 37.9715]
+      }
+    }
+  ]
+}
+
+}

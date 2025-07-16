@@ -4,13 +4,16 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "concurrently \"npm run nuxt\"",
+    "dev": "concurrently \"npm run nuxt\" \"npm run geojson\"",
     "nuxt": "nuxt dev",
+    "api": "json-server db.json -p 5000",
+    "geojson": "json-server db.geojson -p 5001",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@turf/turf": "^7.2.0",
     "axios": "^1.10.0",
     "mapbox-gl": "^3.13.0",
     "nuxt": "^3.17.6",

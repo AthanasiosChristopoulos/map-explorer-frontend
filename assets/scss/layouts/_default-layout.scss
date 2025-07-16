@@ -2,8 +2,6 @@
     display: flex;
     flex-direction: row;
     height: 100vh;
-    margin-top: 0.7rem;
-
 }
 
 .content-panel {
@@ -15,6 +13,5 @@
   height: 100vh;
   overflow: hidden;   /* prevent overflow inside */
   box-sizing: border-box;
-  margin-top: 0.7rem;
 }
 
