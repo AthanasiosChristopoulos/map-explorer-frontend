@@ -22,12 +22,8 @@ let popup;
 const geoData = ref({});
 
 onMounted(async() => {
-
-  // const{ data } = await useFetch(`/tour.geojson`);
-  // geoData.value = JSON.parse(data.value);
   
   geoData.value = toGeoJSON(tour_data);
-  // console.log(toRaw(geoData.value))
 
   mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
 
