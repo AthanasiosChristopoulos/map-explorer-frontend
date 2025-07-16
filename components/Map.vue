@@ -3,28 +3,24 @@
 </template>
 
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted  } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import pin_image from '@/assets/icons/map-pin-fill.png';
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
+import { useFetch } from '@vueuse/core';
 
 const config = useRuntimeConfig();
 
-let map: mapboxgl.Map;
-let popup: mapboxgl.Popup;
+let map;
+let popup;
 
 const geoData = ref({});
 
 onMounted(async() => {
-  const res = await fetch('http://localhost:5001/data')
-    .then(response => response.json())
-    .then(data => {
-        geoData.value = data;
-    });
-
-  console.log(config.public.MAPBOX_ACCESS_TOKEN);
+  const { data, error } = await useFetch(`/db.geojson`);
+  geoData.value = JSON.parse(data.value);
   mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
 
   map = new mapboxgl.Map(mapConfig.map);
