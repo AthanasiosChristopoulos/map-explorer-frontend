@@ -18,6 +18,15 @@ npm install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
 npm run dev
 ```
+
+## Environment Variables
+
+This project uses a Mapbox API key. Create a .env file in the root of the project:
+
+```bash
+cp .env.example .env
+```
+
+Then edit the .env file with your Mapbox access token.

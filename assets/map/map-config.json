@@ -1,0 +1,48 @@
+{
+  "controls": {
+    "fullscreen": true,
+    "navigation": {
+      "showZoom": true,
+      "showCompass": false
+    },
+    "geolocateControl": {
+        "positionOptions": {
+            "enableHighAccuracy": true
+        },
+        "trackUserLocation": true,
+        "showUserHeading": true
+    }
+  },
+  "customPin": {
+    "iconSize": 0.75,
+    "iconAnchor": "bottom",
+    "iconAllowOverlap": true
+  },
+  "map": {
+    "container":"map",
+    "style": "mapbox://styles/mapbox/streets-v12",
+    "center": [23.712889, 37.989478],
+    "projection": "mercator",
+    "dragRotate": false,
+    "pitchWithRotate": false,
+    "minZoom": 1.7,
+    "zoom": 5
+  },
+  "pinLayer": {
+        "id":"pin-layer",
+        "type": "symbol",
+        "source": "points",
+        "layout": {
+          "icon-image": "custom-pin",
+          "icon-size": 0.75,
+          "icon-anchor": "bottom",
+          "icon-allow-overlap": true
+        }
+    },
+    "popup": {
+        "closeButton": false,
+        "closeOnClick": false,
+        "offset": 40        
+    }
+
+}
