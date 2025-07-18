@@ -7,7 +7,6 @@ import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 
 let map;
-let popup;
 let geoData = ref({});
 
 export function useMapInitializer() {
@@ -45,6 +44,7 @@ export function useMapInitializer() {
         new mapboxgl.NavigationControl(mapConfig.controls.navigation),
         'top-right'
     );
+    
     map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
 
     //===============================================================================================

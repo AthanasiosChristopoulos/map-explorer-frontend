@@ -1,8 +1,9 @@
 import mapboxgl from 'mapbox-gl'
 import mapConfig from '@/assets/map/map-config.json';
 
+let popup;
 
-export function useTooltip(tours, map, popup) {
+export function useTooltip(tours, map) {
 
     popup = new mapboxgl.Popup(mapConfig.popup).setHTML(`
         <div class="tooltip-title">
@@ -34,5 +35,6 @@ export function useTooltip(tours, map, popup) {
         map.getCanvas().style.cursor = '';
         popup.remove();
     });
+    
     return { setCurrentTour };
 }
