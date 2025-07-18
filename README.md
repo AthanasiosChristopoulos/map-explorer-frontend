@@ -9,13 +9,12 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 Make sure to install dependencies:
 
 ```bash
-# npm
 npm install
 ```
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the development server on `http://localhost:3000/map-demo.vue`:
 
 ```bash
 npm run dev

@@ -23,6 +23,7 @@ onMounted(async() => {
   
   geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
 
+
   mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
 
   map = new mapboxgl.Map(mapConfig.map);
