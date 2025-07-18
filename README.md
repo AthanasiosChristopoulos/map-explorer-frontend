@@ -29,3 +29,9 @@ cp .env.example .env
 ```
 
 Then edit the .env file with your Mapbox access token.
+
+## Known Issues: Ad Blockers and Telemetry
+Errors like:
+POST https://events.mapbox.com/events/v2?... net::ERR_BLOCKED_BY_CLIENT
+
+That’s caused by ad blockers blocking Mapbox’s telemetry API. They dont affect the map functionality

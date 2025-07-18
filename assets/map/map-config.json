@@ -21,7 +21,7 @@
   "map": {
     "container":"map",
     "style": "mapbox://styles/mapbox/streets-v12",
-    "center": [12.4964, 41.9028],
+    "center": [-9.1399, 38.7169],
     "projection": "mercator",
     "dragRotate": false,
     "pitchWithRotate": false,

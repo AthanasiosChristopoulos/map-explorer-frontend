@@ -9,7 +9,8 @@ import mapboxgl from 'mapbox-gl'
 import pin_image from '@/assets/icons/map-pin-fill.png';
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
-import { useFetch } from '@vueuse/core';
+import { toGeoJSON } from '@/utils/toGeoJSON';
+import tour_data from '@/assets/data/tour.json';
 
 const config = useRuntimeConfig();
 
@@ -19,9 +20,9 @@ let map;
 const geoData = ref({});
 
 onMounted(async() => {
+  
+  geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
 
-  const{ data } = await useFetch(`/tour.geojson`);
-  geoData.value = JSON.parse(data.value);
 
   mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
 
@@ -90,6 +91,7 @@ onMounted(async() => {
 
 // function setCurrentTour(id, lngLat) {
 //   const tour = tours.value.find(t => String(t.id) === String(id));
+
 //   popup.setHTML(`
 //     <div class="tooltip-title">
 //       <h3>${tour.title}</h3>
