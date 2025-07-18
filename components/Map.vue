@@ -5,13 +5,6 @@
 
 <script setup>
 import { ref, onMounted, toRaw  } from 'vue'
-import mapboxgl from 'mapbox-gl'
-import pin_image from '@/assets/icons/map-pin-fill.png';
-import { useRuntimeConfig } from '#app';
-import mapConfig from '@/assets/map/map-config.json';
-import { toGeoJSON } from '@/utils/toGeoJSON';
-// import tour_data from '@/assets/data/tour.json';
-import tour_data from '@/assets/data/tour_data.json';
 import { useMapInitializer } from '@/composables/useMapInitializer.js'
 import { useTooltip } from '@/composables/useTooltip.js'
 
