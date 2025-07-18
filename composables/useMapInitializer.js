@@ -10,7 +10,7 @@ let map;
 let popup;
 let geoData = ref({});
 
-export function useMapInitializer(setCurrentTour) {
+export function useMapInitializer() {
     const config = useRuntimeConfig();
     geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
 
@@ -36,13 +36,6 @@ export function useMapInitializer(setCurrentTour) {
         }
     });
         
-    popup = new mapboxgl.Popup(mapConfig.popup).setHTML(`
-        <div class="tooltip-title">
-            <h3>TourTitle</h3>
-        </div>
-        <p>This is your tooltip content</p>
-        `);
-
     //===============================================================================================
     // Control:
 
@@ -57,20 +50,6 @@ export function useMapInitializer(setCurrentTour) {
     //===============================================================================================
     // Pin Events
     
-    map.on('mouseenter', 'pin-layer', (e) => {
-        map.getCanvas().style.cursor = 'pointer';
-        const feature = e.features?.[0];
-        const { id, title } = feature?.properties || {};
-        const coordinates = feature.geometry.coordinates;
-
-        setCurrentTour(id, coordinates);
-    });
-
-    map.on('mouseleave', 'pin-layer', () => {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
-    });
-
-    return {map, popup, geoData}
+    return {map, geoData}
 
 }

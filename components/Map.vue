@@ -13,37 +13,32 @@ import { toGeoJSON } from '@/utils/toGeoJSON';
 // import tour_data from '@/assets/data/tour.json';
 import tour_data from '@/assets/data/tour_data.json';
 import { useMapInitializer } from '@/composables/useMapInitializer.js'
+import { useTooltip } from '@/composables/useTooltip.js'
 
 // const config = useRuntimeConfig();
 
 let map;
-let popup;
 let geoData = ref({});
+let setCurrentTour;
 
 onMounted(() => {
-  const result = useMapInitializer(setCurrentTour);
+  
+  const result = useMapInitializer();
+
   map = result.map
-  popup = result.popup
   geoData.value = result.geoData.value
+  
+  const tooltip = useTooltip(tours, map);
+  setCurrentTour = tooltip.setCurrentTour;
+
 });
 
 const tours = computed(() =>
-  geoData.value.features.map(f => ({
-    ...f.properties,                    
-  }))
+  geoData.value?.features?.map(f => ({
+    ...f.properties,
+  })) || []
 );
 
-function setCurrentTour(id, lngLat) {
-  const tour = tours.value.find(t => String(t.id) === String(id));
-
-  popup.setHTML(`
-    <div class="tooltip-title">
-      <h3>${tour.title}</h3>
-    </div>
-    <p>This is your tooltip content</p>
-  `).addTo(map).setLngLat(lngLat);
-};
-  
 </script>
 
 
