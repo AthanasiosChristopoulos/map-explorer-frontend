@@ -26,7 +26,11 @@
     "dragRotate": false,
     "pitchWithRotate": false,
     "minZoom": 1.7,
-    "zoom": 3
+    "zoom": 3,
+    "maxBounds": [
+      [-180, -85], 
+      [180, 85]    
+    ]
   },
   "pinLayer": {
         "id":"pin-layer",
