@@ -8,9 +8,36 @@ import tour_data from '@/assets/data/tour_data.json';
 
 let map;
 let geoData = ref({});
+let filteredGeoData = ref({});
 
 export function useMapInitializer() {
+    
+    function updateGeoData() {
+
+        let bounds = map.getBounds();
+
+        filteredGeoData.value = {
+            type: "FeatureCollection",
+            features: geoData.value.features.filter(data => {
+                let lng = data.geometry.coordinates[0];
+                let lat = data.geometry.coordinates[1];
+                if( bounds.getWest() < lng && bounds.getEast() > lng) {
+                    if(bounds.getSouth() < lat && bounds.getNorth() > lat) {
+                        return true;
+                    }
+                }
+                return false;
+            })
+        }
+
+        const source = map.getSource('points');
+        if (source) {
+            console.log('AAAA')
+            source.setData(filteredGeoData.value);
+        }
+    }
     const config = useRuntimeConfig();
+
     geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
 
     mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
@@ -20,14 +47,15 @@ export function useMapInitializer() {
     map.on('load', async () => {
         try {
         
-        // Add image for the pin to the map
         const response = await fetch(pin_image);
         const blob = await response.blob();
         const imageBitmap = await createImageBitmap(blob);
 
         map.addImage('custom-pin', imageBitmap);
 
-        map.addSource('points', { type: 'geojson', data: geoData.value });
+        updateGeoData();
+
+        map.addSource('points', { type: 'geojson', data: filteredGeoData.value });
 
         map.addLayer(mapConfig.pinLayer);
         } catch (err) {
@@ -46,10 +74,9 @@ export function useMapInitializer() {
     );
     
     map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
-
-    //===============================================================================================
-    // Pin Events
-    
+    map.on('moveend', updateGeoData);
     return {map, geoData}
 
+
 }
+
