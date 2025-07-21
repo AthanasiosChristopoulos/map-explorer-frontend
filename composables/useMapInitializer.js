@@ -1,6 +1,11 @@
 import { ref } from 'vue';
 import mapboxgl from 'mapbox-gl'
 import pin_image from '@/assets/icons/map-pin-fill.png';
+import cluster_image_0 from '@/assets/icons/cluster-icon.png';
+import cluster_image_1 from '@/assets/icons/cluster-icon-1.png';
+import cluster_image_2 from '@/assets/icons/cluster-icon-2.png';
+import cluster_image_3 from '@/assets/icons/cluster-icon-3.png';
+
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
 import { toGeoJSON } from '@/utils/toGeoJSON';
@@ -12,7 +17,12 @@ export let geoData = ref({});
 let interval;
 
 export function useMapInitializer() {
-    
+    async function loadAndAddImage(map, id, url) {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const imageBitmap = await createImageBitmap(blob);
+        map.addImage(id, imageBitmap);
+    }
     const config = useRuntimeConfig();
 
     geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
@@ -22,72 +32,20 @@ export function useMapInitializer() {
     map = new mapboxgl.Map(mapConfig.map);
 
     map.on('load', async () => {
-            try {
-            
-            const response = await fetch(pin_image);
-            const blob = await response.blob();
-            const imageBitmap = await createImageBitmap(blob);
+            try {          
+                await loadAndAddImage(map, 'custom-pin', pin_image);
+                await loadAndAddImage(map, 'custom-cluster-1', cluster_image_3);
+                await loadAndAddImage(map, 'custom-cluster-2', cluster_image_0);
 
-            map.addImage('custom-pin', imageBitmap);
+                const { filteredGeoData } = updateGeoData();
 
-            const { filteredGeoData } = updateGeoData();
+                map.addSource('points', { type: 'geojson', data: filteredGeoData.value, cluster: true });
 
-            map.addSource('points', { type: 'geojson', data: filteredGeoData.value, cluster: true });
+                // map.addLayer(mapConfig.pinLayer);
+                map.addLayer(mapConfig.clusterLayers.clusters);
+                map.addLayer(mapConfig.clusterLayers.clusterCount);
+                map.addLayer(mapConfig.pinLayer);
 
-            // map.addLayer(mapConfig.pinLayer);
-            map.addLayer({
-                id: 'clusters',
-                type: 'circle',
-                source: 'points',
-                filter: ['has', 'point_count'],
-                paint: {
-                    'circle-color': [
-                        'step',
-                        ['get', 'point_count'],
-                        '#F9EDEF',
-                        5,
-                        '#EAA2A8',
-                        10,
-                        '#FD907E'
-                    ],
-                    'circle-radius': [
-                        'step',
-                        ['get', 'point_count'],
-                        30,
-                        100,
-                        50,
-                        750,
-                        70
-                    ],
-                    'circle-emissive-strength': 1
-                }
-            });
-
-            map.addLayer({
-                id: 'cluster-count',
-                type: 'symbol',
-                source: 'points',
-                filter: ['has', 'point_count'],
-                layout: {
-                    'text-field': ['get', 'point_count_abbreviated'],
-                    'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                    'text-size': 12
-                }
-            });
-
-            map.addLayer({
-                id: 'unclustered-point',
-                type: 'circle',
-                source: 'points',
-                filter: ['!', ['has', 'point_count']],
-                paint: {
-                    'circle-color': '#D54552',
-                    'circle-radius': 8,
-                    'circle-stroke-width': 1,
-                    'circle-stroke-color': '#fff',
-                    'circle-emissive-strength': 1
-                }
-            });
             } catch (err) {
                 console.error('Error loading custom pin:', err);
             }
@@ -117,7 +75,5 @@ export function useMapInitializer() {
     });
 
     return {map, geoData}
-
-
 }
 
