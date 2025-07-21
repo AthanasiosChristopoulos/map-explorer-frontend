@@ -9,7 +9,7 @@ import tour_data from '@/assets/data/tour_data.json';
 let map;
 let geoData = ref({});
 let filteredGeoData = ref({});
-
+let moveInterval;
 export function useMapInitializer() {
     
     function updateGeoData() {
@@ -73,7 +73,14 @@ export function useMapInitializer() {
     );
     
     map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
+
     map.on('moveend', updateGeoData);
+    map.on('dragstart', () => {
+        setTimeout(() => {
+            updateGeoData();
+        }, 500);
+    });
+
     return {map, geoData}
 
 
