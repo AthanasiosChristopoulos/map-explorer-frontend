@@ -9,7 +9,6 @@ export function useTooltip(tours, map) {
         <div class="tooltip-title">
             <h3>TourTitle</h3>
         </div>
-        <p>This is your tooltip content</p>
     `);
 
     function setCurrentTour(id, lngLat) {
@@ -19,7 +18,6 @@ export function useTooltip(tours, map) {
             <div class="tooltip-title">
             <h3>${tour.title}</h3>
             </div>
-            <p>This is your tooltip content</p>
         `).addTo(map).setLngLat(lngLat);
     };
 

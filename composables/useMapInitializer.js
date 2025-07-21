@@ -32,7 +32,6 @@ export function useMapInitializer() {
 
         const source = map.getSource('points');
         if (source) {
-            console.log('AAAA')
             source.setData(filteredGeoData.value);
         }
     }
