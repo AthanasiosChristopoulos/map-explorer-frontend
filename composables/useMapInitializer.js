@@ -76,7 +76,7 @@ export function useMapInitializer() {
 
     map.on('moveend', () =>
         {   if (interval) clearInterval(interval);
-            updateGeoData
+            updateGeoData();
         });
     map.on('dragstart', () => {
         interval = setInterval(() => {
