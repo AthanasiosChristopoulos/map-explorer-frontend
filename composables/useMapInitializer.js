@@ -5,36 +5,14 @@ import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
 import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
+import { updateGeoData } from '@/composables/updateGeoData.js';
 
-let map;
-let geoData = ref({});
-let filteredGeoData = ref({});
+export let map;
+export let geoData = ref({});
 let interval;
+
 export function useMapInitializer() {
     
-    function updateGeoData() {
-
-        let bounds = map.getBounds();
-
-        filteredGeoData.value = {
-            type: "FeatureCollection",
-            features: geoData.value.features.filter(data => {
-                let lng = data.geometry.coordinates[0];
-                let lat = data.geometry.coordinates[1];
-                if( bounds.getWest() < lng && bounds.getEast() > lng) {
-                    if(bounds.getSouth() < lat && bounds.getNorth() > lat) {
-                        return true;
-                    }
-                }
-                return false;
-            })
-        }
-
-        const source = map.getSource('points');
-        if (source) {
-            source.setData(filteredGeoData.value);
-        }
-    }
     const config = useRuntimeConfig();
 
     geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
@@ -44,22 +22,75 @@ export function useMapInitializer() {
     map = new mapboxgl.Map(mapConfig.map);
 
     map.on('load', async () => {
-        try {
-        
-        const response = await fetch(pin_image);
-        const blob = await response.blob();
-        const imageBitmap = await createImageBitmap(blob);
+            try {
+            
+            const response = await fetch(pin_image);
+            const blob = await response.blob();
+            const imageBitmap = await createImageBitmap(blob);
 
-        map.addImage('custom-pin', imageBitmap);
+            map.addImage('custom-pin', imageBitmap);
 
-        updateGeoData();
+            const { filteredGeoData } = updateGeoData();
 
-        map.addSource('points', { type: 'geojson', data: filteredGeoData.value });
+            map.addSource('points', { type: 'geojson', data: filteredGeoData.value, cluster: true });
 
-        map.addLayer(mapConfig.pinLayer);
-        } catch (err) {
-        console.error('Error loading custom pin:', err);
-        }
+            // map.addLayer(mapConfig.pinLayer);
+            map.addLayer({
+                id: 'clusters',
+                type: 'circle',
+                source: 'points',
+                filter: ['has', 'point_count'],
+                paint: {
+                    'circle-color': [
+                        'step',
+                        ['get', 'point_count'],
+                        '#F9EDEF',
+                        5,
+                        '#EAA2A8',
+                        10,
+                        '#FD907E'
+                    ],
+                    'circle-radius': [
+                        'step',
+                        ['get', 'point_count'],
+                        30,
+                        100,
+                        50,
+                        750,
+                        70
+                    ],
+                    'circle-emissive-strength': 1
+                }
+            });
+
+            map.addLayer({
+                id: 'cluster-count',
+                type: 'symbol',
+                source: 'points',
+                filter: ['has', 'point_count'],
+                layout: {
+                    'text-field': ['get', 'point_count_abbreviated'],
+                    'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                    'text-size': 12
+                }
+            });
+
+            map.addLayer({
+                id: 'unclustered-point',
+                type: 'circle',
+                source: 'points',
+                filter: ['!', ['has', 'point_count']],
+                paint: {
+                    'circle-color': '#D54552',
+                    'circle-radius': 8,
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#fff',
+                    'circle-emissive-strength': 1
+                }
+            });
+            } catch (err) {
+                console.error('Error loading custom pin:', err);
+            }
     });
         
     //===============================================================================================
@@ -74,10 +105,11 @@ export function useMapInitializer() {
     
     map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
 
-    map.on('moveend', () =>
-        {   if (interval) clearInterval(interval);
-            updateGeoData();
-        });
+    map.on('moveend', () =>{   
+        if (interval) clearInterval(interval);
+        updateGeoData();
+    });
+
     map.on('dragstart', () => {
         interval = setInterval(() => {
             updateGeoData();

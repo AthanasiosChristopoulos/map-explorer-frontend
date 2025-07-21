@@ -1,0 +1,30 @@
+import { ref } from 'vue';
+import { map, geoData } from '@/composables/useMapInitializer.js';
+
+let filteredGeoData = ref({});
+
+export function updateGeoData() {
+
+    let bounds = map.getBounds();
+
+    filteredGeoData.value = {
+        type: "FeatureCollection",
+        features: geoData.value.features.filter(data => {
+            let lng = data.geometry.coordinates[0];
+            let lat = data.geometry.coordinates[1];
+            if( bounds.getWest() < lng && bounds.getEast() > lng) {
+                if(bounds.getSouth() < lat && bounds.getNorth() > lat) {
+                    return true;
+                }
+            }
+            return false;
+        })
+    }
+
+    const source = map.getSource('points');
+    if (source) {
+        source.setData(filteredGeoData.value);
+    }
+
+    return { filteredGeoData }
+}

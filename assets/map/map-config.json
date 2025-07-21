@@ -16,7 +16,7 @@
   "customPin": {
     "iconSize": 0.75,
     "iconAnchor": "bottom",
-    "iconAllowOverlap": true
+    "iconAllowOverlap": false
   },
   "map": {
     "container":"map",
@@ -33,15 +33,15 @@
     ]
   },
   "pinLayer": {
-        "id":"pin-layer",
-        "type": "symbol",
-        "source": "points",
-        "layout": {
-          "icon-image": "custom-pin",
-          "icon-size": 0.75,
-          "icon-anchor": "bottom",
-          "icon-allow-overlap": true
-        }
+      "id":"pin-layer",
+      "type": "symbol",
+      "source": "points",
+      "layout": {
+        "icon-image": "custom-pin",
+        "icon-size": 0.75,
+        "icon-anchor": "bottom",
+        "icon-allow-overlap": true
+      }
     },
     "popup": {
         "closeButton": false,
