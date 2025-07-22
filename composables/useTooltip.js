@@ -29,10 +29,5 @@ export function useTooltip(tours, map) {
         setCurrentTour(id, coordinates);
     });
 
-    map.on('mouseleave', 'pin-layer', () => {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
-    });
-    
     return { setCurrentTour };
 }
