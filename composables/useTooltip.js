@@ -22,7 +22,6 @@ export function useTooltip(tours, map) {
     };
 
     map.on('mouseenter', 'pin-layer', (e) => {
-        map.getCanvas().style.cursor = 'pointer';
         const feature = e.features?.[0];
         const { id, title } = feature?.properties || {};
         const coordinates = feature.geometry.coordinates;
@@ -30,7 +29,6 @@ export function useTooltip(tours, map) {
     });
 
     map.on('mouseleave', 'pin-layer', () => {
-        map.getCanvas().style.cursor = '';
         popup.remove();
     });
     
