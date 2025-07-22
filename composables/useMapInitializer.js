@@ -73,12 +73,15 @@ export function useMapInitializer() {
 
     map.on('load', handleLoad);
     map.on('move', debouncedUpdate);
+    // map.on('zoom', () => {
+    //     console.log('Zoom level:', map.getZoom());
+    // });
 
     onUnmounted(() => {
         map.off('load', handleLoad);
         map.off('move', debouncedUpdate);
     });
-
+ 
     // Add Interactions ============================================================================================================
 
     function handleClusterClick(e) {
@@ -128,7 +131,7 @@ export function useMapInitializer() {
         target: { layerId: 'clusters' },
         handler: () => {map.getCanvas().style.cursor = '';}
     });
-    
+
     // Add map controls ============================================================================================================
 
     map.addControl(new mapboxgl.FullscreenControl(), 'top-right');

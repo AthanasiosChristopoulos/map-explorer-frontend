@@ -50,6 +50,15 @@
         "icon-anchor": "bottom",
         "icon-allow-overlap": true
       }
+      ,
+      "paint": {
+        "icon-opacity": [
+          "case",
+          ["boolean", ["feature-state", "visible"], false],
+          1,
+          0
+        ]
+      }
     },
     "pinLayerDefault": {
       "id": "pin-layer",
