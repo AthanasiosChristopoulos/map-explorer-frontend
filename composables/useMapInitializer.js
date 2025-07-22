@@ -44,6 +44,7 @@ export function useMapInitializer() {
     map = new mapboxgl.Map(mapConfig.map);
 
     // Add events ============================================================================================================
+    
     const handleLoad = async () => {
         try {
             const useCostumPin = await loadAndAddImage(map, 'custom-pin', pin_image);
@@ -67,7 +68,7 @@ export function useMapInitializer() {
         }
     };
 
-    const debouncedUpdate = debounce(() => {updateGeoData();});
+    const debouncedUpdate = debounce(updateGeoData);
 
     map.on('load', handleLoad);
     map.on('move', debouncedUpdate);
@@ -78,60 +79,55 @@ export function useMapInitializer() {
     });
 
     // Add Interactions ============================================================================================================
+
+    function handleClusterClick(e) {
+        const features = map.queryRenderedFeatures(e.point, {
+            layers: ['clusters']
+        });
+        const clusterId = features[0].properties.cluster_id;
+        const source = map.getSource('points');
+
+        source.getClusterLeaves(clusterId, Infinity, 0, (err, leaves) => {
+            if (err) return;
+
+            const coordinates = leaves.map(f => f.geometry.coordinates);
+
+            const bounds = coordinates.reduce((b, coord) => {return b.extend(coord);}, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+            const paddingDegrees = 1; 
+            const sw = bounds.getSouthWest();
+            const ne = bounds.getNorthEast();
+            const paddedBounds = new mapboxgl.LngLatBounds(
+                [sw.lng - paddingDegrees, sw.lat - paddingDegrees],
+                [ne.lng + paddingDegrees, ne.lat + paddingDegrees]
+            );
+
+            map.fitBounds(paddedBounds, {
+                padding: 0,
+                duration: 1500,
+                maxZoom: 18  // Optional: prevent zooming in too far
+            });
+        });
+    }
+
     map.addInteraction('click-clusters', {
         type: 'click',
         target: { layerId: 'clusters' },
-        handler: (e) => {
-            const features = map.queryRenderedFeatures(e.point, {
-                layers: ['clusters']
-            });
-            const clusterId = features[0].properties.cluster_id;
-            // map.getSource('points').getClusterExpansionZoom(
-            //     clusterId,
-            //     (err, zoom) => {
-            //         if (err) return;
-
-            //         map.easeTo({
-            //             center: features[0].geometry.coordinates,
-            //             zoom: zoom
-            //         });
-            //     }
-            // );
-            const source = map.getSource('points');
-
-            source.getClusterLeaves(clusterId, Infinity, 0, (err, leaves) => {
-                if (err) return;
-
-                const coordinates = leaves.map(f => f.geometry.coordinates);
-
-                const bounds = coordinates.reduce((b, coord) => {return b.extend(coord);}, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-                        // initial value is the first coordinate and then the bounding box is expanded after that
-
-                map.fitBounds(bounds, {
-                    padding: 300,
-                    duration: 1500,
-                    maxZoom: 18  // Optional: prevent zooming in too far
-                });
-            });
-        }
+        handler: handleClusterClick
     });
-
     map.addInteraction('clusters-mouseenter', {
         type: 'mouseenter',
         target: { layerId: 'clusters' },
-        handler: () => {
-            map.getCanvas().style.cursor = 'pointer';
-        }
+        handler: () => {map.getCanvas().style.cursor = 'pointer';}
     });
-
     map.addInteraction('clusters-mouseleave', {
         type: 'mouseleave',
         target: { layerId: 'clusters' },
-        handler: () => {
-            map.getCanvas().style.cursor = '';
-        }
+        handler: () => {map.getCanvas().style.cursor = '';}
     });
+    
     // Add map controls ============================================================================================================
+
     map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
     map.addControl(
         new mapboxgl.NavigationControl(mapConfig.controls.navigation),
