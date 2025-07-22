@@ -56,7 +56,8 @@ export function useMapInitializer() {
             map.addSource('points', {
                 type: 'geojson',
                 data: filteredGeoData.value,
-                cluster: true
+                cluster: true,
+                clusterRadius: 50
             });
 
             map.addLayer((useCostumCluster1 && useCostumCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
