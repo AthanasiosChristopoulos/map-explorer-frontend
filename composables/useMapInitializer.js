@@ -1,65 +1,137 @@
 import { onUnmounted, ref } from 'vue';
-import mapboxgl from 'mapbox-gl'
+import mapboxgl from 'mapbox-gl';
 import pin_image from '@/assets/icons/map-pin-fill.png';
-import cluster_image_0 from '@/assets/icons/cluster-icon.png';
-import cluster_image_1 from '@/assets/icons/cluster-icon-1.png';
-import cluster_image_2 from '@/assets/icons/cluster-icon-2.png';
-import cluster_image_3 from '@/assets/icons/cluster-icon-3.png';
+import cluster_image_0 from '@/assets/icons/cluster-icon-2.png';
+import cluster_image_1 from '@/assets/icons/cluster-icon-3.png';
+import cluster_image_2 from '@/assets/icons/cluster-icon.png';
+import cluster_image_3 from '@/assets/icons/cluster-icon-1.png';
 
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
 import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
-function debounce(func, timeout = 200){
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => func(...args), timeout);
-    };
-};
+
+function debounce(func, timeout = 200) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func(...args), timeout);
+  };
+}
 
 export let map;
 export let geoData = ref({});
 
 export function useMapInitializer() {
     async function loadAndAddImage(map, id, url) {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const imageBitmap = await createImageBitmap(blob);
-        map.addImage(id, imageBitmap);
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const imageBitmap = await createImageBitmap(blob);
+            map.addImage(id, imageBitmap);
+            return true;
+        } catch (err) {
+            console.log(`Failed to load image '${id}' from '${url}'. Show default config.`)
+            return false;
+        }
     }
 
     const config = useRuntimeConfig();
-
-    geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
+    geoData.value = toGeoJSON(tour_data);
 
     mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
     map = new mapboxgl.Map(mapConfig.map);
 
-    map.on('load', async () => {
-            try {          
-                await loadAndAddImage(map, 'custom-pin', pin_image);
-                await loadAndAddImage(map, 'custom-cluster-1', cluster_image_3);
-                await loadAndAddImage(map, 'custom-cluster-2', cluster_image_0);
+    // Add events ============================================================================================================
+    const handleLoad = async () => {
+        try {
+            const useCostumPin = await loadAndAddImage(map, 'custom-pin', pin_image);
+            const useCostumCluster1 = await loadAndAddImage(map, 'custom-cluster-1', cluster_image_1);
+            const useCostumCluster2 = await loadAndAddImage(map, 'custom-cluster-2', cluster_image_2);
 
-                const { filteredGeoData } = updateGeoData();
+            const { filteredGeoData } = updateGeoData();
 
-                map.addSource('points', { type: 'geojson', data: filteredGeoData.value, cluster: true });
+            map.addSource('points', {
+                type: 'geojson',
+                data: filteredGeoData.value,
+                cluster: true
+            });
 
-                // map.addLayer(mapConfig.pinLayer);
-                map.addLayer(mapConfig.clusterLayers.clusters);
-                map.addLayer(mapConfig.clusterLayers.clusterCount);
-                map.addLayer(mapConfig.pinLayer);
+            map.addLayer((useCostumCluster1 && useCostumCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
+            map.addLayer(mapConfig.clusterLayers.clusterCount);
+            map.addLayer(useCostumPin ? mapConfig.pinLayer : mapConfig.pinLayerDefault);
 
-            } catch (err) {
-                console.error('Error loading custom pin:', err);
-            }
+        } catch (err) {
+            console.error('Error during map load:', err);
+        }
+    };
+
+    const debouncedUpdate = debounce(() => {updateGeoData();});
+
+    map.on('load', handleLoad);
+    map.on('move', debouncedUpdate);
+
+    onUnmounted(() => {
+        map.off('load', handleLoad);
+        map.off('move', debouncedUpdate);
     });
 
-    //===============================================================================================
-    // Control:
+    // Add Interactions ============================================================================================================
+    map.addInteraction('click-clusters', {
+        type: 'click',
+        target: { layerId: 'clusters' },
+        handler: (e) => {
+            const features = map.queryRenderedFeatures(e.point, {
+                layers: ['clusters']
+            });
+            const clusterId = features[0].properties.cluster_id;
+            // map.getSource('points').getClusterExpansionZoom(
+            //     clusterId,
+            //     (err, zoom) => {
+            //         if (err) return;
 
+            //         map.easeTo({
+            //             center: features[0].geometry.coordinates,
+            //             zoom: zoom
+            //         });
+            //     }
+            // );
+            const source = map.getSource('points');
+
+            source.getClusterLeaves(clusterId, Infinity, 0, (err, leaves) => {
+                if (err) return;
+
+                const coordinates = leaves.map(f => f.geometry.coordinates);
+
+                const bounds = coordinates.reduce((b, coord) => {return b.extend(coord);}, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+                        // initial value is the first coordinate and then the bounding box is expanded after that
+
+                map.fitBounds(bounds, {
+                    padding: 300,
+                    duration: 1500,
+                    maxZoom: 18  // Optional: prevent zooming in too far
+                });
+            });
+        }
+    });
+
+    map.addInteraction('clusters-mouseenter', {
+        type: 'mouseenter',
+        target: { layerId: 'clusters' },
+        handler: () => {
+            map.getCanvas().style.cursor = 'pointer';
+        }
+    });
+
+    map.addInteraction('clusters-mouseleave', {
+        type: 'mouseleave',
+        target: { layerId: 'clusters' },
+        handler: () => {
+            map.getCanvas().style.cursor = '';
+        }
+    });
+    // Add map controls ============================================================================================================
     map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
     map.addControl(
         new mapboxgl.NavigationControl(mapConfig.controls.navigation),
@@ -67,17 +139,5 @@ export function useMapInitializer() {
     );
     map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
 
-    map.on('moveend', () =>{   
-        if (interval) clearInterval(interval);
-        updateGeoData();
-    });
-
-    map.on('dragstart', () => {
-        interval = setInterval(() => {
-            updateGeoData();
-        }, 500);
-    });
-
-    return {map, geoData}
+    return { map, geoData };
 }
-

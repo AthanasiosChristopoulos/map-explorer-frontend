@@ -55,6 +55,7 @@
       "id": "pin-layer",
       "type": "circle",
       "source": "points",
+      "filter": ["!", ["has", "point_count"]],
       "paint": {
         "circle-radius": 6,
         "circle-color": "#D54552",
@@ -89,6 +90,28 @@
             100, 3
           ],
           "icon-allow-overlap": true
+        }
+      },
+      "clustersDefault": {
+        "id": "clusters",
+        "type": "circle",
+        "source": "points",
+        "filter": ["has", "point_count"],
+        "paint": {
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#EAA2A8",
+            10, "#FD907E",
+            30, "#D54552"
+          ],
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            20,
+            10, 30,
+            30, 40
+          ]
         }
       },
       "clusterCount": {
