@@ -44,7 +44,7 @@ export function useMapInitializer() {
     map = new mapboxgl.Map(mapConfig.map);
 
     // Add events ============================================================================================================
-    
+
     const handleLoad = async () => {
         try {
             const useCostumPin = await loadAndAddImage(map, 'custom-pin', pin_image);
@@ -90,9 +90,11 @@ export function useMapInitializer() {
         source.getClusterLeaves(clusterId, Infinity, 0, (err, leaves) => {
             if (err) return;
 
+            const bounds = new (mapboxgl.LngLatBounds)();
             const coordinates = leaves.map(f => f.geometry.coordinates);
-
-            const bounds = coordinates.reduce((b, coord) => {return b.extend(coord);}, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+            coordinates.forEach(function (coordinate) {
+                bounds.extend(coordinate);
+            });
 
             const paddingDegrees = 1; 
             const sw = bounds.getSouthWest();
@@ -105,7 +107,7 @@ export function useMapInitializer() {
             map.fitBounds(paddedBounds, {
                 padding: 0,
                 duration: 1500,
-                maxZoom: 18  // Optional: prevent zooming in too far
+                maxZoom: 18  
             });
         });
     }
