@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import mapboxgl from 'mapbox-gl'
 import pin_image from '@/assets/icons/map-pin-fill.png';
 import cluster_image_0 from '@/assets/icons/cluster-icon.png';
@@ -11,10 +11,16 @@ import mapConfig from '@/assets/map/map-config.json';
 import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
+function debounce(func, timeout = 200){
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => func(...args), timeout);
+    };
+};
 
 export let map;
 export let geoData = ref({});
-let interval;
 
 export function useMapInitializer() {
     async function loadAndAddImage(map, id, url) {
@@ -23,12 +29,12 @@ export function useMapInitializer() {
         const imageBitmap = await createImageBitmap(blob);
         map.addImage(id, imageBitmap);
     }
+
     const config = useRuntimeConfig();
 
     geoData.value = toGeoJSON(tour_data); // conversion from .json to .geojson
 
     mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
-
     map = new mapboxgl.Map(mapConfig.map);
 
     map.on('load', async () => {
@@ -50,17 +56,15 @@ export function useMapInitializer() {
                 console.error('Error loading custom pin:', err);
             }
     });
-        
+
     //===============================================================================================
     // Control:
 
     map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
-
     map.addControl(
         new mapboxgl.NavigationControl(mapConfig.controls.navigation),
         'top-right'
     );
-    
     map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
 
     map.on('moveend', () =>{   

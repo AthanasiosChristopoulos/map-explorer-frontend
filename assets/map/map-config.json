@@ -51,6 +51,17 @@
         "icon-allow-overlap": true
       }
     },
+    "pinLayerDefault": {
+      "id": "pin-layer",
+      "type": "circle",
+      "source": "points",
+      "paint": {
+        "circle-radius": 6,
+        "circle-color": "#D54552",
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#FFFFFF"
+      }
+    },
     "popup": {
         "closeButton": false,
         "closeOnClick": false,
