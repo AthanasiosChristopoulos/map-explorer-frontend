@@ -1,9 +1,8 @@
 import { onUnmounted, ref } from 'vue';
 import mapboxgl from 'mapbox-gl';
-import pin_image from '@/assets/icons/map-pin-fill.png';
-
-import cluster_image_2 from '@/assets/icons/cluster/cluster-icon.png';
-import cluster_image_1 from '@/assets/icons/cluster/cluster-icon-3.png';
+import pin_image from '@/assets/icons/map-pin-fill.svg';
+import cluster_image_2 from '@/assets/icons/cluster/cluster-icon.svg';
+import cluster_image_1 from '@/assets/icons/cluster/cluster-icon-3.svg';
 
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
@@ -11,6 +10,7 @@ import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
 import { debounce, updateCursorAtPoint, loadAndAddImage, handleClusterClick } from '@/utils/mapInitFunctions.js'
+
 
 let map;
 let geoData = ref({});
@@ -40,7 +40,6 @@ export function useMapInitializer() {
 
     const handleLoad = async () => {
         try {
-
             const [useCostumPin, useCostumCluster1, useCostumCluster2] = await Promise.all([
                 loadAndAddImage(map, 'custom-pin', pin_image),
                 loadAndAddImage(map, 'custom-cluster-1', cluster_image_1),
@@ -64,7 +63,7 @@ export function useMapInitializer() {
             map.on('move', debouncedUpdate);
             map.on('mousemove', mousemoveHandler);
             map.on('zoomend', zoomendHandler);
-            
+
             updateGeoData(map, geoData);
 
         } catch (err) {
@@ -77,10 +76,6 @@ export function useMapInitializer() {
 
     const clickHandler = (e) => {handleClusterClick(map, e)}
     map.on('click', 'clusters', clickHandler);
-
-    // map.on('zoom', () => {
-    //     console.log('Zoom level:', map.getZoom());
-    // });
 
     onUnmounted(() => {
         map.off('load', handleLoad);

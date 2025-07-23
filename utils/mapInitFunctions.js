@@ -15,17 +15,19 @@ export function updateCursorAtPoint(map, point) {
     map.getCanvas().style.cursor = isOverFeature ? 'pointer' : '';
 }
 
-export async function loadAndAddImage(map, id, url) {
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const imageBitmap = await createImageBitmap(blob);
-        map.addImage(id, imageBitmap);
-        return true;
-    } catch (err) {
-        console.log(`Failed to load image '${id}' from '${url}'. Show default config.`)
-        return false;
-    }
+export function loadAndAddImage(map, id, url) {
+    return new Promise((resolve) => {
+        let img = new Image();
+        img.onload = () => {
+            map.addImage(id, img);
+            resolve(true);
+        };
+        img.onerror = () => {
+            console.log(`Failed to load image '${id}' from '${url}'. Show default config.`);
+            resolve(false);
+        };
+        img.src = url;
+    });
 }
 
 export function handleClusterClick(map, e) {
