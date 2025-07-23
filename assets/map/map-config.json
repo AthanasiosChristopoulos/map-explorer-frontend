@@ -92,11 +92,21 @@
           ],
           "icon-size": [
             "step",
-            ["get", "point_count"],
-            1,
-            10, 2,
-            50, 3,
-            100, 4
+            ["zoom"],
+            [
+              "step",
+              ["get", "point_count"],
+              0.75,        
+              7, 1.5,      
+              15, 2      
+            ],           
+            2.2, [
+              "step",
+              ["get", "point_count"],
+              1.25,        
+              7, 2.25,      
+              15, 5       
+            ]
           ],
           "icon-allow-overlap": true
         }

@@ -11,31 +11,13 @@ import mapConfig from '@/assets/map/map-config.json';
 import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
-
-function debounce(func, timeout = 200) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => func(...args), timeout);
-  };
-}
+import { debounce, updateCursorAtPoint, loadAndAddImage, handleClusterClick } from '@/utils/mapInitFunctions.js'
 
 export let map;
 export let geoData = ref({});
+let lastMouseEvent = null;
 
 export function useMapInitializer() {
-    async function loadAndAddImage(map, id, url) {
-        try {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            const imageBitmap = await createImageBitmap(blob);
-            map.addImage(id, imageBitmap);
-            return true;
-        } catch (err) {
-            console.log(`Failed to load image '${id}' from '${url}'. Show default config.`)
-            return false;
-        }
-    }
 
     const config = useRuntimeConfig();
     geoData.value = toGeoJSON(tour_data);
@@ -44,6 +26,16 @@ export function useMapInitializer() {
     map = new mapboxgl.Map(mapConfig.map);
 
     // Add events ============================================================================================================
+    const debouncedUpdate = debounce(updateGeoData);
+    const mousemoveHandler = (e) => {
+        lastMouseEvent = e;
+        updateCursorAtPoint(e.point);
+    };
+    const zoomendHandler = () => {
+        if(lastMouseEvent) {
+            updateCursorAtPoint(lastMouseEvent.point);
+        }
+    };
 
     const handleLoad = async () => {
         try {
@@ -63,13 +55,15 @@ export function useMapInitializer() {
             map.addLayer((useCostumCluster1 && useCostumCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
             map.addLayer(mapConfig.clusterLayers.clusterCount);
             map.addLayer(useCostumPin ? mapConfig.pinLayer : mapConfig.pinLayerDefault);
-
+      
+            map.on('move', debouncedUpdate);
+            map.on('mousemove', mousemoveHandler);
+            map.on('zoomend', zoomendHandler);
         } catch (err) {
             console.error('Error during map load:', err);
         }
     };
 
-    const debouncedUpdate = debounce(updateGeoData);
 
     map.on('load', handleLoad);
     map.on('move', debouncedUpdate);
@@ -80,56 +74,16 @@ export function useMapInitializer() {
     onUnmounted(() => {
         map.off('load', handleLoad);
         map.off('move', debouncedUpdate);
+        map.off('mousemove', mousemoveHandler);
+        map.off('zoomend', zoomendHandler);
     });
  
     // Add Interactions ============================================================================================================
-
-    function handleClusterClick(e) {
-        const features = map.queryRenderedFeatures(e.point, {
-            layers: ['clusters']
-        });
-        const clusterId = features[0].properties.cluster_id;
-        const source = map.getSource('points');
-
-        source.getClusterLeaves(clusterId, Infinity, 0, (err, leaves) => {
-            if (err) return;
-
-            const bounds = new (mapboxgl.LngLatBounds)();
-            const coordinates = leaves.map(f => f.geometry.coordinates);
-            coordinates.forEach(function (coordinate) {
-                bounds.extend(coordinate);
-            });
-
-            const paddingDegrees = 1; 
-            const sw = bounds.getSouthWest();
-            const ne = bounds.getNorthEast();
-            const paddedBounds = new mapboxgl.LngLatBounds(
-                [sw.lng - paddingDegrees, sw.lat - paddingDegrees],
-                [ne.lng + paddingDegrees, ne.lat + paddingDegrees]
-            );
-
-            map.fitBounds(paddedBounds, {
-                padding: 0,
-                duration: 1500,
-                maxZoom: 18  
-            });
-        });
-    }
 
     map.addInteraction('click-clusters', {
         type: 'click',
         target: { layerId: 'clusters' },
         handler: handleClusterClick
-    });
-    map.addInteraction('clusters-mouseenter', {
-        type: 'mouseenter',
-        target: { layerId: 'clusters' },
-        handler: () => {map.getCanvas().style.cursor = 'pointer';}
-    });
-    map.addInteraction('clusters-mouseleave', {
-        type: 'mouseleave',
-        target: { layerId: 'clusters' },
-        handler: () => {map.getCanvas().style.cursor = '';}
     });
 
     // Add map controls ============================================================================================================
