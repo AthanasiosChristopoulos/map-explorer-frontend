@@ -26,6 +26,7 @@ export function useMapInitializer() {
     map = new mapboxgl.Map(mapConfig.map);
 
     // Add events ============================================================================================================
+
     const debouncedUpdate = debounce(updateGeoData);
     const mousemoveHandler = (e) => {
         lastMouseEvent = e;
@@ -39,9 +40,11 @@ export function useMapInitializer() {
 
     const handleLoad = async () => {
         try {
-            const useCostumPin = await loadAndAddImage(map, 'custom-pin', pin_image);
-            const useCostumCluster1 = await loadAndAddImage(map, 'custom-cluster-1', cluster_image_1);
-            const useCostumCluster2 = await loadAndAddImage(map, 'custom-cluster-2', cluster_image_2);
+            const [useCostumPin, useCostumCluster1, useCostumCluster2] = await Promise.all([
+                loadAndAddImage(map, 'custom-pin', pin_image),
+                loadAndAddImage(map, 'custom-cluster-1', cluster_image_1),
+                loadAndAddImage(map, 'custom-cluster-2', cluster_image_2),
+            ]);
 
             const { filteredGeoData } = updateGeoData();
 
@@ -64,27 +67,19 @@ export function useMapInitializer() {
         }
     };
 
-
     map.on('load', handleLoad);
-    map.on('zoom', () => {
-        console.log(`Zoom: ${map.getZoom()}`)
-    })
+    map.on('click', 'clusters', handleClusterClick)
+    // map.on('zoom', () => {
+    //     console.log(`Zoom: ${map.getZoom()}`)
+    // })
 
     onUnmounted(() => {
         map.off('load', handleLoad);
         map.off('move', debouncedUpdate);
         map.off('mousemove', mousemoveHandler);
         map.off('zoomend', zoomendHandler);
+        map.off('click', 'clusters', handleClusterClick)
     });
-
-    // Add Interactions ============================================================================================================
-
-    map.addInteraction('click-clusters', {
-        type: 'click',
-        target: { layerId: 'clusters' },
-        handler: handleClusterClick
-    });
-
 
     // Add map controls ============================================================================================================
 
