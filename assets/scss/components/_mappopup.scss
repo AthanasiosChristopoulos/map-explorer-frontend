@@ -1,0 +1,196 @@
+$circle-dim-languages: 2rem;
+
+%mappopup-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.mappopup,
+.mappopup__static,
+.mappopup__scrollable,
+.mappopup__header,
+.mappopup__body {
+  @extend %mappopup-layout;
+}
+
+.mappopup {
+    position: absolute;
+    top: 5%;
+    left: 0;
+    width: 25%;
+    height: fit-content;
+    max-height: 85%;
+    z-index: 9999;
+    border-radius: 1.25rem;
+    background: var(--neutral-color--white);
+    box-shadow: 0px 12px 23px 0px rgba(62, 73, 84, 0.04);
+    margin-left: 2rem;  // offset from the viewport of the browser
+}
+
+.mappopup__static {
+    padding: 1rem 1.5rem 0rem 1.5rem;
+}
+
+.mappopup__header {
+    padding: 0rem 0rem 0rem 0rem;
+    gap: 0rem;
+}
+
+.mappopup__scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0rem 0.7rem 1rem 1.5rem;
+}
+
+.mappopup__scrollable span {
+    color: #3E4954;
+    font-family: Commissioner;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem; /* 150% */
+    margin: 0;
+}
+
+.mappopup__subtitle {
+    color: var(--neutral-color--quick-silver);
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.75rem;
+    text-wrap: nowrap;
+    align-items: stretch;
+    text-align: left;
+}
+
+.mappopup__body {
+    width: -webkit-fill-available;
+    gap: 0.75rem;
+    color: #5E6C93;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.625rem;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mappopup__divider {
+    height: 1px;
+    background-color: #DCDCDC;
+    margin: 0 -1rem;
+    flex-shrink: 0;
+}
+
+.mappopup__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0;
+    margin-right: 0.5rem;
+}
+
+.mappopup__languageIcon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    margin-right: 0.5rem;
+    margin-bottom: 0.8rem;
+
+}
+
+.mappopup__languageIcon img,
+.mappopup__circle {
+  width: $circle-dim-languages;
+  height: $circle-dim-languages;
+  border-radius: 50%;
+  border: 2px solid white;
+  margin-left: -0.8rem;
+}
+
+.mappopup__circle {
+  background-color: #43ABFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mappopup-animation-enter-active {
+    transition: all 0.1s cubic-bezier(0.52, 0.02, 0.19, 1.02) 0.15s;
+}
+
+.mappopup-animation-leave-active {
+    transition: all 0.1s cubic-bezier(0.52, 0.02, 0.19, 1.02);
+}
+
+.mappopup-animation-enter-from {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.mappopup-animation-leave-to {
+    transform: scale(0.8);
+}
+
+.tooltip-title {
+    border-bottom: 3px solid black;
+}
+
+
+@media (max-width: 768px) {
+    .mappopup {
+        position: fixed;
+        top: auto;
+        left: auto;
+        bottom: 0px;   
+        right: 0;    
+        width: 100%;
+        margin: 0;       
+    }
+    
+    .mappopup-handle {
+        width: 40px;
+        height: 4px;
+        background-color: #ccc;
+        border-radius: 2px;
+        margin: 0px auto 0px auto; // center it and add spacing
+    }
+
+    .mappupop__gallery__img {
+        position: relative;
+        width: 100%;
+        height: 20vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        overflow: hidden;
+        border-radius: 10.25rem; 
+
+    }
+
+    .mappopup__gallery__img-img {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            color: #ff0000;
+            font-size: 1rem;
+            font-style: normal;
+            font-weight: 400; 
+            line-height: 1.625rem;
+            // border-radius: 1.875rem 1.875rem 0 0; 
+            border-radius: 10.25rem; 
+            object-fit: cover;
+            flex-shrink: 0; 
+    }
+
+}

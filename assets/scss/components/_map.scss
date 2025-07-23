@@ -1,9 +1,14 @@
 .map-container {
   position: relative;
-  flex-grow: 1; /* fill remaining vertical space */
-  min-height: 0; /* allow shrinking */
+  height: 100%;
   width: 100%;
   box-sizing: border-box;
+}
+
+#map {
+  flex-grow: 1; /* fill remaining vertical space */
+  height: 100%;
+  border-top: 1px solid black;
 }
 
 .mapboxgl-marker {         
@@ -11,8 +16,8 @@
 }
 
 .mapboxgl-popup-content {
-  border-radius: 1rem;          /* or whatever size you want */
-  overflow: hidden;             /* ensures children like images also round */
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); /* optional: soft card shadow */
-  padding: 1rem;                   /* optional: let your own layout handle padding */
+  border-radius: 4rem;     
+  overflow: hidden;           
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 1rem;                  
 }

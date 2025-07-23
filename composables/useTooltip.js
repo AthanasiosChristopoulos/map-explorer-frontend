@@ -4,7 +4,7 @@ import { isMobile } from '@/utils/devices.js';
 
 let popup;
 
-export function useTooltip(tours, map) {
+export function useTooltip(tours, map, findTours) {
 
     popup = new mapboxgl.Popup(mapConfig.popup).setHTML(`
         <div class="tooltip-title">
@@ -35,11 +35,11 @@ export function useTooltip(tours, map) {
         });
     } else {
         console.log('Its not mobile')
-        map.on('mouseenter', 'pin-layer', (e) => {
+        map.on('click', 'pin-layer', (e) => {
             const feature = e.features?.[0];
-            const { id, title } = feature?.properties || {};
-            const coordinates = feature.geometry.coordinates;
-            setCurrentTour(id, coordinates);
+            const { id } = feature?.properties || {};
+            findTours(id);  
+            console.log('AAA')
         });
     }
 
