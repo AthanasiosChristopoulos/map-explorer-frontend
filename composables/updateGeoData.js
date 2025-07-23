@@ -1,9 +1,8 @@
 import { ref } from 'vue';
-import { map, geoData } from '@/composables/useMapInitializer.js';
 
 let filteredGeoData = ref({});
 
-export function updateGeoData() {
+export function updateGeoData(map, geoData) {
 
     let bounds = map.getBounds();
 
@@ -21,10 +20,7 @@ export function updateGeoData() {
         })
     }
 
-    const source = map.getSource('points');
-    if (source) {
-        source.setData(filteredGeoData.value);
-    }
+    map.getSource('points')?.setData(filteredGeoData.value);
 
     return { filteredGeoData }
 }

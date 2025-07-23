@@ -1,10 +1,8 @@
 import { onUnmounted, ref } from 'vue';
 import mapboxgl from 'mapbox-gl';
-import pin_image from '@/assets/icons/map-pin-fill.png';
-import cluster_image_0 from '@/assets/icons/cluster-icon-2.png';
-import cluster_image_1 from '@/assets/icons/cluster-icon-3.png';
-import cluster_image_2 from '@/assets/icons/cluster-icon.png';
-import cluster_image_3 from '@/assets/icons/cluster-icon-1.png';
+import pin_image from '@/assets/icons/map-pin-fill.svg';
+import cluster_image_2 from '@/assets/icons/cluster/cluster-icon.svg';
+import cluster_image_1 from '@/assets/icons/cluster/cluster-icon-3.svg';
 
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
@@ -13,8 +11,9 @@ import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
 import { debounce, updateCursorAtPoint, loadAndAddImage, handleClusterClick } from '@/utils/mapInitFunctions.js'
 
-export let map;
-export let geoData = ref({});
+
+let map;
+let geoData = ref({});
 let lastMouseEvent = null;
 
 export function useMapInitializer() {
@@ -27,14 +26,15 @@ export function useMapInitializer() {
 
     // Add events ============================================================================================================
 
-    const debouncedUpdate = debounce(updateGeoData);
+    const debouncedUpdate = debounce(() => { updateGeoData(map, geoData) });
+
     const mousemoveHandler = (e) => {
         lastMouseEvent = e;
-        updateCursorAtPoint(e.point);
+        updateCursorAtPoint(map, e.point);
     };
     const zoomendHandler = () => {
         if(lastMouseEvent) {
-            updateCursorAtPoint(lastMouseEvent.point);
+            updateCursorAtPoint(map, lastMouseEvent.point);
         }
     };
 
@@ -46,11 +46,12 @@ export function useMapInitializer() {
                 loadAndAddImage(map, 'custom-cluster-2', cluster_image_2),
             ]);
 
-            const { filteredGeoData } = updateGeoData();
-
             map.addSource('points', {
                 type: 'geojson',
-                data: filteredGeoData.value,
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                },
                 cluster: true,
                 clusterRadius: 50
             });
@@ -62,23 +63,29 @@ export function useMapInitializer() {
             map.on('move', debouncedUpdate);
             map.on('mousemove', mousemoveHandler);
             map.on('zoomend', zoomendHandler);
+
+            updateGeoData(map, geoData);
+
         } catch (err) {
             console.error('Error during map load:', err);
         }
     };
 
     map.on('load', handleLoad);
-    map.on('click', 'clusters', handleClusterClick)
+    map.on('move', debouncedUpdate);
     // map.on('zoom', () => {
     //     console.log(`Zoom: ${map.getZoom()}`)
     // })
+    
+    const clickHandler = (e) => {handleClusterClick(map, e)}
+    map.on('click', 'clusters', clickHandler);
 
     onUnmounted(() => {
         map.off('load', handleLoad);
         map.off('move', debouncedUpdate);
         map.off('mousemove', mousemoveHandler);
         map.off('zoomend', zoomendHandler);
-        map.off('click', 'clusters', handleClusterClick)
+        map.off('click', 'clusters', clickHandler);
     });
 
     // Add map controls ============================================================================================================
