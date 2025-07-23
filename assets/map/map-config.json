@@ -16,7 +16,7 @@
   "customPin": {
     "iconSize": 0.75,
     "iconAnchor": "bottom",
-    "iconAllowOverlap": true
+    "iconAllowOverlap": false
   },
   "map": {
     "container":"map",
@@ -33,20 +33,99 @@
     ]
   },
   "pinLayer": {
-        "id":"pin-layer",
-        "type": "symbol",
-        "source": "points",
-        "layout": {
-          "icon-image": "custom-pin",
-          "icon-size": 0.75,
-          "icon-anchor": "bottom",
-          "icon-allow-overlap": true
-        }
+      "id":"pin-layer",
+      "type": "symbol",
+      "source": "points",
+      "filter": ["!", ["has", "point_count"]],
+      "layout": {
+        "icon-image": "custom-pin",
+        "icon-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          3, 0.4,
+          6, 0.75,
+          10, 1
+        ],
+        "icon-anchor": "bottom",
+        "icon-allow-overlap": true
+      }
+    },
+    "pinLayerDefault": {
+      "id": "pin-layer",
+      "type": "circle",
+      "source": "points",
+      "filter": ["!", ["has", "point_count"]],
+      "paint": {
+        "circle-radius": 6,
+        "circle-color": "#D54552",
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#FFFFFF"
+      }
     },
     "popup": {
         "closeButton": false,
         "closeOnClick": false,
         "offset": 40        
+    },
+    "clusterLayers": {
+      "clusters": {
+        "id": "clusters",
+        "type": "symbol",
+        "source": "points",
+        "filter": ["has", "point_count"],
+        "layout": {
+          "icon-image": [
+            "step",
+            ["get", "point_count"],
+            "custom-cluster-1",
+            7, "custom-cluster-2"
+          ],
+          "icon-size": [
+            "step",
+            ["get", "point_count"],
+            1,        
+            7, 1.5,      
+            15, 2      
+          ],           
+          "icon-allow-overlap": true
+        }
+      },
+      "clustersDefault": {
+        "id": "clusters",
+        "type": "circle",
+        "source": "points",
+        "filter": ["has", "point_count"],
+        "paint": {
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#EAA2A8",
+            10, "#FD907E",
+            30, "#D54552"
+          ],
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            20,
+            10, 30,
+            30, 40
+          ]
+        }
+      },
+      "clusterCount": {
+        "id": "cluster-count",
+        "type": "symbol",
+        "source": "points",
+        "filter": ["has", "point_count"],
+        "layout": {
+          "text-field": ["get", "point_count_abbreviated"],
+          "text-font": ["Arial Unicode MS Bold"],
+          "text-size": 18
+        },
+        "paint": {
+          "text-color": "#ffffff"
+        }
+      }
     }
-
 }
