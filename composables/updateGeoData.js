@@ -21,10 +21,7 @@ export function updateGeoData() {
         })
     }
 
-    const source = map.getSource('points');
-    if (source) {
-        source.setData(filteredGeoData.value);
-    }
+    map.getSource('points')?.setData(filteredGeoData.value);
 
     return { filteredGeoData }
 }

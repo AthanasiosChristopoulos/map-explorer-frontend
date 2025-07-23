@@ -1,8 +1,12 @@
 import { onUnmounted, ref } from 'vue';
 import mapboxgl from 'mapbox-gl';
 import pin_image from '@/assets/icons/map-pin-fill.png';
-import cluster_image_1 from '@/assets/icons/cluster-icon-3.png';
+
+// import cluster_image_2 from '@/assets/icons/cluster-icon-3.png';
+// import cluster_image_1 from '@/assets/icons/cluster-icon-1.png';
+
 import cluster_image_2 from '@/assets/icons/cluster-icon.png';
+import cluster_image_1 from '@/assets/icons/cluster-icon-3.png';
 
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
@@ -39,9 +43,6 @@ export function useMapInitializer() {
 
     const handleLoad = async () => {
         try {
-            // const useCostumPin = await loadAndAddImage(map, 'custom-pin', pin_image);
-            // const useCostumCluster1 = await loadAndAddImage(map, 'custom-cluster-1', cluster_image_1);
-            // const useCostumCluster2 = await loadAndAddImage(map, 'custom-cluster-2', cluster_image_2);
 
             const [useCostumPin, useCostumCluster1, useCostumCluster2] = await Promise.all([
                 loadAndAddImage(map, 'custom-pin', pin_image),
@@ -49,14 +50,16 @@ export function useMapInitializer() {
                 loadAndAddImage(map, 'custom-cluster-2', cluster_image_2),
             ]);
 
-            const { filteredGeoData } = updateGeoData();
-
             map.addSource('points', {
                 type: 'geojson',
-                data: filteredGeoData.value,
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                },
                 cluster: true,
                 clusterRadius: 50
             });
+            updateGeoData();
 
             map.addLayer((useCostumCluster1 && useCostumCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
             map.addLayer(mapConfig.clusterLayers.clusterCount);
@@ -74,7 +77,6 @@ export function useMapInitializer() {
     map.on('load', handleLoad);
     map.on('move', debouncedUpdate);
     map.on('click', 'clusters', handleClusterClick);
-
     // map.on('zoom', () => {
     //     console.log('Zoom level:', map.getZoom());
     // });
@@ -85,7 +87,6 @@ export function useMapInitializer() {
         map.off('mousemove', mousemoveHandler);
         map.off('zoomend', zoomendHandler);
         map.off('click', 'clusters', handleClusterClick);
-
     });
 
     // Add map controls ============================================================================================================
