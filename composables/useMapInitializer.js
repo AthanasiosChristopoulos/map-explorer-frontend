@@ -1,10 +1,8 @@
 import { onUnmounted, ref } from 'vue';
 import mapboxgl from 'mapbox-gl';
 import pin_image from '@/assets/icons/map-pin-fill.png';
-import cluster_image_0 from '@/assets/icons/cluster-icon-2.png';
 import cluster_image_1 from '@/assets/icons/cluster-icon-3.png';
 import cluster_image_2 from '@/assets/icons/cluster-icon.png';
-import cluster_image_3 from '@/assets/icons/cluster-icon-1.png';
 
 import { useRuntimeConfig } from '#app';
 import mapConfig from '@/assets/map/map-config.json';
@@ -26,7 +24,9 @@ export function useMapInitializer() {
     map = new mapboxgl.Map(mapConfig.map);
 
     // Add events ============================================================================================================
+
     const debouncedUpdate = debounce(updateGeoData);
+
     const mousemoveHandler = (e) => {
         lastMouseEvent = e;
         updateCursorAtPoint(e.point);
@@ -39,9 +39,15 @@ export function useMapInitializer() {
 
     const handleLoad = async () => {
         try {
-            const useCostumPin = await loadAndAddImage(map, 'custom-pin', pin_image);
-            const useCostumCluster1 = await loadAndAddImage(map, 'custom-cluster-1', cluster_image_1);
-            const useCostumCluster2 = await loadAndAddImage(map, 'custom-cluster-2', cluster_image_2);
+            // const useCostumPin = await loadAndAddImage(map, 'custom-pin', pin_image);
+            // const useCostumCluster1 = await loadAndAddImage(map, 'custom-cluster-1', cluster_image_1);
+            // const useCostumCluster2 = await loadAndAddImage(map, 'custom-cluster-2', cluster_image_2);
+
+            const [useCostumPin, useCostumCluster1, useCostumCluster2] = await Promise.all([
+                loadAndAddImage(map, 'custom-pin', pin_image),
+                loadAndAddImage(map, 'custom-cluster-1', cluster_image_1),
+                loadAndAddImage(map, 'custom-cluster-2', cluster_image_2),
+            ]);
 
             const { filteredGeoData } = updateGeoData();
 
@@ -59,14 +65,16 @@ export function useMapInitializer() {
             map.on('move', debouncedUpdate);
             map.on('mousemove', mousemoveHandler);
             map.on('zoomend', zoomendHandler);
+
         } catch (err) {
             console.error('Error during map load:', err);
         }
     };
 
-
     map.on('load', handleLoad);
     map.on('move', debouncedUpdate);
+    map.on('click', 'clusters', handleClusterClick);
+
     // map.on('zoom', () => {
     //     console.log('Zoom level:', map.getZoom());
     // });
@@ -76,14 +84,8 @@ export function useMapInitializer() {
         map.off('move', debouncedUpdate);
         map.off('mousemove', mousemoveHandler);
         map.off('zoomend', zoomendHandler);
-    });
- 
-    // Add Interactions ============================================================================================================
+        map.off('click', 'clusters', handleClusterClick);
 
-    map.addInteraction('click-clusters', {
-        type: 'click',
-        target: { layerId: 'clusters' },
-        handler: handleClusterClick
     });
 
     // Add map controls ============================================================================================================
