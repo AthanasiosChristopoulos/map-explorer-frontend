@@ -1,5 +1,4 @@
 import mapboxgl from 'mapbox-gl';
-import { map } from '@/composables/useMapInitializer.js';
 
 
 export function debounce(func, timeout = 200) {
@@ -10,7 +9,7 @@ export function debounce(func, timeout = 200) {
   };
 }
 
-export function updateCursorAtPoint(point) {
+export function updateCursorAtPoint(map, point) {
     const features = map.queryRenderedFeatures(point, { layers: ['clusters', 'pin-layer'] });
     const isOverFeature = features.length > 0;
     map.getCanvas().style.cursor = isOverFeature ? 'pointer' : '';
@@ -29,7 +28,7 @@ export async function loadAndAddImage(map, id, url) {
     }
 }
 
-export function handleClusterClick(e) {
+export function handleClusterClick(map, e) {
     const features = map.queryRenderedFeatures(e.point, {
         layers: ['clusters']
     });
