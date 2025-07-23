@@ -1,8 +1,12 @@
 <template>
     <Transition name="mappopup-animation">
 
-            <div class="mappopup" v-if="isVisible">
-
+        <div 
+            class="mappopup" 
+            v-if="isVisible"
+            @touchstart="onTouchStart"
+            @touchend="onTouchEnd"            
+        >
                 <div class="mappopup__static">
 
                     <div class="mappopup-handle" v-if="isMobile" @click="isExpanded = !isExpanded"></div>
@@ -110,6 +114,11 @@ const numberOfStories = ref(false);
 let categories = ref([]);
 let availableLanguages = ref([]);
 
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
 const props = defineProps({
     title: {
         type: String,
@@ -201,6 +210,26 @@ function togglePopup() {
         console.warn(`Tour with id ${id} not found`);
     }
 };
+
+function onTouchStart(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    touchStartY = event.changedTouches[0].screenY;
+}
+
+function onTouchEnd(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    touchEndY = event.changedTouches[0].screenY;
+    const diffY = touchStartY - touchEndY; 
+    if (Math.abs(diffY) > 50) {  // threshold of 50px to count as swipe
+        if (diffY > 0) {
+        isExpanded.value = true;
+        } else {
+        isExpanded.value = false;
+        }
+    }
+}
 
 // function matchCategories(input_categories) {
 

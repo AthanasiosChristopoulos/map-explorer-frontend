@@ -9,7 +9,9 @@ import mapConfig from '@/assets/map/map-config.json';
 import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
-import { debounce, updateCursorAtPoint, loadAndAddImage, handleClusterClick } from '@/utils/mapInitFunctions.js'
+import { debounce, updateCursorAtPoint, loadAndAddImage, handleClusterClick } from '@/utils/mapInitFunctions.js';
+
+import { isMobile } from '../utils/devices';
 
 
 let map;
@@ -90,12 +92,14 @@ export function useMapInitializer() {
 
     // Add map controls ============================================================================================================
 
-    map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
-    map.addControl(
-        new mapboxgl.NavigationControl(mapConfig.controls.navigation),
-        'top-right'
-    );
-    map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
+    if(!isMobile) {
+        map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+        map.addControl(
+            new mapboxgl.NavigationControl(mapConfig.controls.navigation),
+            'top-right'
+        );
+        map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
+    }
 
     return { map, geoData };
 }

@@ -34,12 +34,10 @@ export function useTooltip(tours, map, findTours) {
             popup.remove();
         });
     } else {
-        console.log('Its not mobile')
         map.on('click', 'pin-layer', (e) => {
             const feature = e.features?.[0];
             const { id } = feature?.properties || {};
             findTours(id);  
-            console.log('AAA')
         });
     }
 
