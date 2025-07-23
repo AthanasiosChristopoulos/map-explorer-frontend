@@ -1,4 +1,4 @@
-# Nuxt Minimal Starter
+# Nuxt Minimal Starter 
 
 A minimal starter template for Nuxt 3 projects featuring a demo of an empty map using Mapbox GL JS.
 
