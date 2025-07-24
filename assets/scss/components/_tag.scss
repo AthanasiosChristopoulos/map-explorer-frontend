@@ -8,7 +8,9 @@ $color-light-purple: #E6EDFF;
 $color-white: #ffffff;
 $color-gold: #F2AF29;
 $color-red: #AD343E;
-
+$color-blue: #2EA7CE;
+$color-pink: #EAA2A8;
+$color-orange: #FB902D;
 
 .tag {
     display: flex;
@@ -67,4 +69,19 @@ $color-red: #AD343E;
 .tag--dark-green {
     color: $color-white;
     background-color: $color-dark-green;
+}
+
+.tag--blue {
+    color: $color-white;
+    background-color: $color-blue;
+}
+
+.tag--pink {
+    color: $color-white;
+    background-color: $color-pink;
+}
+
+.tag--orange {
+    color: $color-white;
+    background-color: $color-orange;
 }

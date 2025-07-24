@@ -9,7 +9,7 @@
         >
                 <div class="mappopup__static">
 
-                    <div class="mappopup-handle" v-if="isMobile" @click="isExpanded = !isExpanded"></div>
+                    <div class="mappopup-handle" v-if="isMobile"></div>
 
                     <ImageGallery 
                         :displayed_images="displayed_images"
@@ -18,7 +18,7 @@
 
                     <div class="mappopup__header" v-if="title">
                         <h2>{{ title }}</h2>
-                        <div v-if="subtitle" class="mappopup__subtitle">{{ subtitle }}</div>
+                        <div v-if="subtitle && isExpanded" class="mappopup__subtitle">{{ subtitle }}</div>
                     </div>
 
                 </div>
@@ -114,9 +114,7 @@ const numberOfStories = ref(false);
 let categories = ref([]);
 let availableLanguages = ref([]);
 
-let touchStartX = 0;
 let touchStartY = 0;
-let touchEndX = 0;
 let touchEndY = 0;
 
 const props = defineProps({
@@ -195,7 +193,6 @@ function togglePopup() {
     numberOfStops.value = tour.stops;
     numberOfStories.value = tour.stories;
 
-    // matchCategories(tour.categories); 
     categories.value = tour.categories;
 
     availableLanguages.value = [...new Set(tour.availableLanguages)]; // avoid language duplication
@@ -212,51 +209,27 @@ function togglePopup() {
 };
 
 function onTouchStart(event) {
-    event.stopPropagation();
-    event.preventDefault();
     touchStartY = event.changedTouches[0].screenY;
+    event.preventDefault();   
+    event.stopPropagation();  
 }
 
 function onTouchEnd(event) {
-    event.stopPropagation();
-    event.preventDefault();
     touchEndY = event.changedTouches[0].screenY;
-    const diffY = touchStartY - touchEndY; 
-    if (Math.abs(diffY) > 50) {  // threshold of 50px to count as swipe
-        if (diffY > 0) {
-        isExpanded.value = true;
-        } else {
-        isExpanded.value = false;
+    const diffY = touchStartY - touchEndY;
+
+    const isSwipe = Math.abs(diffY) > 50;
+    const isTap = Math.abs(diffY) < 10;
+
+    if (isSwipe) {
+        isExpanded.value = diffY > 0;
+    } else if (isTap) {
+        const tappedElement = event.target;
+        if (tappedElement.closest('.mappopup-handle')) {
+            isExpanded.value = !isExpanded.value;
         }
     }
 }
-
-// function matchCategories(input_categories) {
-
-//     categories.value = [];
-
-//     if(input_categories) {
-//         input_categories.forEach(category => {
-//             switch (category) {
-//                 case 1:
-//                     categories.value.push({ label: 'History', color: 'gold' });
-//                     break;
-//                 case 2:
-//                     categories.value.push({ label: 'Gastronomy', color: 'red' });
-//                     break;
-//                 case 3:
-//                     categories.value.push({ label: 'Nature', color: 'dark-green' });
-//                     break;
-//                 default:
-//                     categories.value.push({ label: 'Uncategorized', color: 'dark-purple' });
-//                     break;
-//             }
-//         });
-//     } else {
-//         categories.value.push({ label: 'Uncategorized', color: 'dark-purple' });
-//     }
-
-// } matchCategoryColor
 
 function matchCategoryColor(category_name) {
     switch (category_name) {
@@ -266,10 +239,17 @@ function matchCategoryColor(category_name) {
             return 'red';
         case 'Nature':
             return `dark-green`;
+        case 'Museum':
+            return `orange`;
+        case 'Adventure':
+            return `blue`;
+        case 'Art':
+            return `pink`;
         default:
             return 'dark-purple';
     }
 }
+
 function returnLanguageImage(language) {
     switch (language) {
         case 'it':
@@ -290,5 +270,6 @@ function returnLanguageImage(language) {
             return gr;
     }
 }
+
 </script>
 

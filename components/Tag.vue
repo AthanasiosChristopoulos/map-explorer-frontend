@@ -16,7 +16,7 @@ export default {
             default: 'gray',
             type: String,
             validator: function (value) {
-                return ['green', 'gray', 'purple', 'dark-purple', 'gold', 'red', 'dark-green'].includes(value);
+                return ['green', 'gray', 'purple', 'dark-purple', 'gold', 'red', 'dark-green', 'blue', 'pink', 'orange'].includes(value);
             }
         }
     },
