@@ -9,7 +9,7 @@
         >
                 <div class="mappopup__static">
 
-                    <div class="mappopup-handle" v-if="isMobile"></div>
+                    <div class="mappopup-handle" v-if="isMobile()"></div>
 
                     <ImageGallery 
                         :displayed_images="displayed_images"
@@ -18,12 +18,12 @@
 
                     <div class="mappopup__header" v-if="title">
                         <h2>{{ title }}</h2>
-                        <div v-if="subtitle && isExpanded" class="mappopup__subtitle">{{ subtitle }}</div>
+                        <div v-if="subtitle && (!isMobile() || isExpanded)" class="mappopup__subtitle">{{ subtitle }}</div>
                     </div>
 
                 </div>
 
-            <div class="mappopup__scrollable" v-if="isExpanded">
+            <div class="mappopup__scrollable" v-if="!isMobile() || isExpanded">
 
                 <div class="mappopup__body">
                     <slot name="mappopup__body" />
@@ -225,9 +225,10 @@ function onTouchEnd(event) {
         isExpanded.value = diffY > 0;
     } else if (isTap) {
         const tappedElement = event.target;
-        if (tappedElement.closest('.mappopup-handle')) {
-            isExpanded.value = !isExpanded.value;
-        }
+        isExpanded.value = !isExpanded.value;
+        // if (tappedElement.closest('.mappopup-handle')) {
+        //     isExpanded.value = !isExpanded.value;
+        // }
     }
 }
 
