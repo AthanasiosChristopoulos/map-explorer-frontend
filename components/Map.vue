@@ -25,6 +25,8 @@ const localShowMapPopup = ref(false);
 onMounted(() => {
   ({map, geoData} = useMapInitializer());
   useTooltip(tours, map, findTours);
+  // console.log(`Viewport: ${window.innerWidth}px X ${window.innerHeight}px`);
+
 });
 
 const tours = computed(() =>
@@ -42,7 +44,6 @@ function findTours(id) {
   } else {
     localShowMapPopup.value = !localShowMapPopup.value;
   }
-  console.log(localShowMapPopup.value )
   map.easeTo({ center: selectedTour.value.coordinates });
 };
 

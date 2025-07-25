@@ -3,7 +3,9 @@
     <Tag
       :label="`${tour.stories} Stories`"
       :color="`purple`"
-    />
+      style="padding: 0.5rem 0.7rem;"
+    ></Tag>
+    
 
     <h4>{{ tour.title }}</h4>
 

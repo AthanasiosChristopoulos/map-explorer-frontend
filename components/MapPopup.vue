@@ -2,22 +2,23 @@
     <Transition :name="isMobile() ? 'mappopup-mobile' : 'mappopup-animation'">
         <div 
             class="mappopup column-layout" 
-            v-if="isVisible"
+            v-if="props.isVisible"
             @touchstart="onTouchStart"
             @touchend="onTouchEnd"  
-            @mouseenter="closeMapTooltip"          
+            @mouseenter="closeTooltip"          
         >
-                <div class="mappopup__static column-layout">
-                    <div class="mappopup__exit-button" @click="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
-                    <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
+            <!--============================= static element, Image, Title, Author =====================-->
+            <div class="mappopup__static column-layout">
+                <div class="mappopup__exit-button" @click="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
+                <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
 
-                    <img :src="tour.images.cover" alt="Preview not available" class="mappopup__img-img"/>
+                <img :src="tour.images.cover" alt="Preview not available" class="mappopup__img-img"/>
 
-                    <div class="mappopup__header column-layer" v-if="tour.title">
-                        <h2 :style="{ paddingBottom: isMobile() && !isExpanded ? '1rem' : '0rem' }">{{ tour.title }}</h2>
-                        <div v-if="authorNames && (!isMobile() || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
-                    </div>
+                <div class="mappopup__header column-layout" v-if="tour.title">
+                    <h2 :style="{ paddingBottom: isMobile() && !isExpanded ? '1rem' : '0rem' }">{{ tour.title }}</h2>
+                    <div v-if="authorNames && (!isMobile() || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
                 </div>
+            </div>
 
             <!--============================= Scrollable element =============================-->
 

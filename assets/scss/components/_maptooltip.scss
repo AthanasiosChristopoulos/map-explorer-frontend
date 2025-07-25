@@ -3,15 +3,14 @@
   border-radius: 0.75rem;     
   overflow: hidden;           
   padding: 0;
-  display: inline-block;   
   width: fit-content;
 }
 
 .maptooltip {
     gap: 0.5rem;
     padding: 1rem;  
-    width: 20vw;
-    box-sizing: border-box;
+    width: 18vw;
+    // max-height: 29vh;
 }
 
 .maptooltip__img {
