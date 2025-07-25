@@ -22,7 +22,9 @@ let geoData;
 const localShowMapPopup = ref(false);
 
 onMounted(() => {
-  ({map, geoData} = useMapInitializer());
+  ({map, geoData} = useMapInitializer(() => {
+    localShowMapPopup.value = false;  
+  }));
   useTooltip(tours, map, findTours);
   // console.log(`Viewport: ${window.innerWidth}px X ${window.innerHeight}px`);
 

@@ -1,6 +1,9 @@
 import { onUnmounted, ref } from 'vue';
 import mapboxgl from 'mapbox-gl';
-import pin_image from '@/assets/icons/map-pin-fill.svg';
+// import pin_image from '@/assets/icons/map-pin-fill.svg';
+import pin_image from '@/assets/icons/map-pin-figma.svg';
+import pin_image_hover from '@/assets/icons/map-pin-figma-hover.svg';
+
 import cluster_image_2 from '@/assets/icons/cluster/cluster-icon.svg';
 import cluster_image_1 from '@/assets/icons/cluster/cluster-icon-3.svg';
 
@@ -19,7 +22,7 @@ let map;
 let geoData = toGeoJSON(tour_data);
 let lastMouseEvent = null;
 
-export function useMapInitializer() {
+export function useMapInitializer(onClusterClickClosePopup) { // callback function.
 
     const config = useRuntimeConfig();
 
@@ -44,6 +47,7 @@ export function useMapInitializer() {
         try {
             const [useCostumPin, useCostumCluster1, useCostumCluster2] = await Promise.all([
                 loadAndAddImage(map, 'custom-pin', pin_image),
+                loadAndAddImage(map, 'custom-pin-hover', pin_image_hover),
                 loadAndAddImage(map, 'custom-cluster-1', cluster_image_1),
                 loadAndAddImage(map, 'custom-cluster-2', cluster_image_2),
             ]);
@@ -79,6 +83,9 @@ export function useMapInitializer() {
     const clickHandler = (e) => {
         closeTooltip();
         handleClusterClick(map, e);
+        if (onClusterClickClosePopup) {
+            onClusterClickClosePopup();  
+        }
     }
     map.on('click', 'clusters', clickHandler);
 

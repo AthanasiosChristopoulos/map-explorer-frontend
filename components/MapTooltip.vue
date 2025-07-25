@@ -7,13 +7,12 @@
     ></Tag>
     
     <h4>{{ tour.title }}</h4>
-
     <img 
         :src="tour.images.cover" 
         alt="Preview not available" 
         class="maptooltip__img" 
     />
-
+    
     <div class="button__footer" style="margin-top:0.3rem">
       <Button
           :type="'submit'"

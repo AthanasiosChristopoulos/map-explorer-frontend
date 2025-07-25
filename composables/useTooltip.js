@@ -33,19 +33,29 @@ export function useTooltip(tours, map, findTours) {
         }).mount(container);
             
         popup
+            .setLngLat(lngLat)
             .setDOMContent(container)   // instead of setHTML()
-            .addTo(map)
-            .setLngLat(lngLat);
+            .addTo(map);
     };
 
+    function changePinIcon(id) {
+        map.setLayoutProperty('pin-layer', 'icon-image',
+            [
+            'match',
+            ['get', 'id'],
+            id, 'custom-pin-hover',
+            'custom-pin' 
+            ]
+        )
+    }
 
     if (!isMobile()) {
         map.on('mouseenter', 'pin-layer', (e) => {
             const feature = e.features?.[0];
             const { id } = feature?.properties || {};
-            
             const coordinates = feature.geometry.coordinates;
             setCurrentTour(id, coordinates);
+            changePinIcon(id);
         });
 
         // map.on('mouseleave', 'pin-layer', () => {
@@ -57,6 +67,7 @@ export function useTooltip(tours, map, findTours) {
             const feature = e.features?.[0];
             const { id } = feature?.properties || {};
             findTours(id);  
+            changePinIcon(id);
         });
     }
 }
