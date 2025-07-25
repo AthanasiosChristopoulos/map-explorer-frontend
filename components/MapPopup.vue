@@ -22,69 +22,69 @@
 
             <!--============================= Scrollable element =============================-->
 
-                <div class="mappopup__scrollable column-layout" v-if="(!isMobile() || isExpanded) && true"
-                    ref="scrollableRef"
-                    @touchstart="maybeStopTouchPropagation"
-                    @touchend="maybeStopTouchPropagation"
-                >
+            <div class="mappopup__scrollable column-layout" v-if="(!isMobile() || isExpanded) && true"
+                ref="scrollableRef"
+                @touchstart="maybeStopTouchPropagation"
+                @touchend="maybeStopTouchPropagation"
+            >
 
-                    <div class="mappopup__body" v-if="tour.description ">
-                        {{ tour.description }}
-                    </div>
+                <div class="mappopup__body" v-if="tour.description ">
+                    {{ tour.description }}
+                </div>
 
-                    <div style="position: relative; display: flex; flex-direction: column; gap: 0.7rem;">
-                        <div v-if="tour.categories" style="display: flex; flex-direction: row; gap: 1rem;">
-                            <div v-for="(category, idx) in tour.categories" :key="idx">
-                                <Tag
-                                    :label="category.name"
-                                    :color="matchCategoryColor(category.name)"
-                                    style="display: flex; flex-direction: row;"
-                                ></Tag>
-                            </div>
-                        </div>
-                        <div v-else>
+                <div style="position: relative; display: flex; flex-direction: column; gap: 0.7rem;">
+                    <div v-if="tour.categories" style="display: flex; flex-direction: row; gap: 1rem;">
+                        <div v-for="(category, idx) in tour.categories" :key="idx">
                             <Tag
-                                :label="`Uncategorized`"
-                                :color="`dark-purple`"
+                                :label="category.name"
+                                :color="matchCategoryColor(category.name)"
+                                style="display: flex; flex-direction: row;"
                             ></Tag>
                         </div>
-                        
-                        <span class="mappopup__stories-info">{{ tour.stops }} stops / {{ tour.stories }} stories</span>
-                        
-                        <Tag 
-                            :label="tour.isIndoors ? 'Indoors' : 'Outdoors'"
-                            :color="tour.isIndoors ? 'green' : 'purple'"
-                        />
+                    </div>
+                    <div v-else>
+                        <Tag
+                            :label="`Uncategorized`"
+                            :color="`dark-purple`"
+                        ></Tag>
+                    </div>
+                    
+                    <span class="mappopup__stories-info">{{ tour.stops }} stops / {{ tour.stories }} stories</span>
+                    
+                    <Tag 
+                        :label="tour.isIndoors ? 'Indoors' : 'Outdoors'"
+                        :color="tour.isIndoors ? 'green' : 'purple'"
+                    />
 
-                        <div class="mappopup__languageIcon" v-if="tour.availableLanguages">
-                            <div v-for="language in tour.availableLanguages.slice(0,2)">
-                                <img :src="returnLanguageImage(language)">
-                            </div>
-                            <div class="mappopup__circle" v-if="tour.availableLanguages.length > 2">
-                                <p>+{{ tour.availableLanguages.length - 2 }}</p>    
-                            </div>
+                    <div class="mappopup__languageIcon" v-if="tour.availableLanguages">
+                        <div v-for="language in tour.availableLanguages.slice(0,2)">
+                            <img :src="returnLanguageImage(language)">
                         </div>
-
+                        <div class="mappopup__circle" v-if="tour.availableLanguages.length > 2">
+                            <p>+{{ tour.availableLanguages.length - 2 }}</p>    
+                        </div>
                     </div>
 
                 </div>
 
-                <!--============================= CTA element =============================-->
+            </div>
 
-                <div class="mappopup__static column-layout" style="padding-top: 0px;" v-if="!isMobile() || isExpanded">
-                    <div class="mappopup__divider"></div>
+            <!--============================= CTA element =============================-->
 
-                    <div class="button__footer">
-                        <Button
-                            :type="'submit'"
-                            :text="`Discover Products`"
-                            :buttonClass="'button__light-blue'"
-                            :icon="arrow_right"
-                            :iconPosition="'right'"
-                            style="background: #43ABFF;"
-                        />
-                    </div>
+            <div class="mappopup__static column-layout" style="padding-top: 0px;" v-if="!isMobile() || isExpanded">
+                <div class="mappopup__divider"></div>
+
+                <div class="button__footer">
+                    <Button
+                        :type="'submit'"
+                        :text="`Discover Products`"
+                        :buttonClass="'button__light-blue'"
+                        :icon="arrow_right"
+                        :iconPosition="'right'"
+                        style="background: #43ABFF;"
+                    />
                 </div>
+            </div>
         </div>
     </Transition>
 </template>
@@ -171,22 +171,15 @@ function onTouchEnd(event) {
 }
 
 watch(() => props.tour, (newTour) => {
-  if (newTour) {togglePopup();}
-});
-
-function togglePopup() {
-    tour.value = props.tour;
-
-    if (Array.isArray(tour.author)) {
-        authorNames.value = tour.value.author.map(a => a.name).join(', ');
-    } else {
-        authorNames.value = tour.value.author.name;
+  if (newTour) {
+        tour.value = newTour;
+        if (Array.isArray(tour.value.author)) {
+            authorNames.value = tour.value.author.map(a => a.name).join(', ');
+        } else {
+            authorNames.value = tour.value.author.name;
+        }
     }
-};
-
-function closeMapTooltip() {
-    closeTooltip();
-}
+});
 
 function matchCategoryColor(category_name) {
     switch (category_name) {
