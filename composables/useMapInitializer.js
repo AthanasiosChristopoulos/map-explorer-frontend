@@ -74,10 +74,7 @@ export function useMapInitializer() {
     };
 
     map.on('load', handleLoad);
-    map.on('move', debouncedUpdate);
-    // map.on('zoom', () => {
-    //     console.log(`Zoom: ${map.getZoom()}`)
-    // })
+    map.on('move', debouncedUpdate);    
     
     const clickHandler = (e) => {handleClusterClick(map, e)}
     map.on('click', 'clusters', clickHandler);
@@ -92,7 +89,7 @@ export function useMapInitializer() {
 
     // Add map controls ============================================================================================================
 
-    if(!isMobile) {
+    if(!isMobile()) {
         map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
         map.addControl(
             new mapboxgl.NavigationControl(mapConfig.controls.navigation),

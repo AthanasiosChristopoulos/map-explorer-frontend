@@ -20,15 +20,13 @@
 </template>
 
 
-
 <script setup>
-import { createApp, h, ref, onMounted, toRef  } from 'vue'
+import { ref, onMounted  } from 'vue'
 import MapPopup from '@/components/MapPopup.vue'; 
 import { useMapInitializer } from '@/composables/useMapInitializer.js'
 import { useTooltip } from '@/composables/useTooltip.js'
 
 const selectedTour = ref(null);
-// const localShowMapPopup = ref(false);
 
 let setCurrentTour;
 let map;
@@ -40,10 +38,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:showMapPopup']);
 const localShowMapPopup = ref(props.showMapPopup);
+
 watch(() => props.showMapPopup, (val) => {
   localShowMapPopup.value = val;
 });
-
 
 onMounted(() => {
   const result = useMapInitializer();
@@ -64,9 +62,10 @@ const tours = computed(() =>
 const subtitles = ref('Clio Muse Tours');
 const mappopup_body = ref(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
                         labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                        nisi ut aliquip ex ea commodo consequat. `);
+                        nisi ut aliquip ex ea commodo consequat.`);
 
 // const mappopup_body = ref('');
+
 function closeMapPopup() {
   localShowMapPopup.value = false;
   emit('update:showMapPopup', localShowMapPopup.value);
@@ -81,6 +80,7 @@ function toggleMapPopup() {
 function findTours(id) {
     selectedTour.value = tours.value.find(t => String(t.id) === String(id));
     toggleMapPopup();
+    // toggleMapTooltip();
 };
 
 </script>

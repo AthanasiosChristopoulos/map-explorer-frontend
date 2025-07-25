@@ -1,17 +1,27 @@
+@use '../variables/_structure';
+
 .default-layout {
     display: flex;
     flex-direction: row;
     height: 100vh;
+    @media (max-width: structure.$small) {
+        height: 100dvh;
+    }
 }
 
 .content-panel {
-  flex: 1;            /* take remaining horizontal space */
+  flex: 1;           
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  overflow: hidden;   /* prevent overflow inside */
+  overflow: hidden;   
   box-sizing: border-box;
 }
 
+.column-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
