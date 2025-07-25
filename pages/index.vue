@@ -1,8 +1,6 @@
 <template>
     <div class="default-layout">
-      <div class="content-panel">
-          <Map />
-      </div>
+        <Map />
     </div>
 </template>
 

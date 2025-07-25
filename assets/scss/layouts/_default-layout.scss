@@ -1,22 +1,10 @@
 @use '../variables/_structure';
 
 .default-layout {
-    display: flex;
-    flex-direction: row;
     height: 100vh;
     @media (max-width: structure.$small) {
         height: 100dvh;
     }
-}
-
-.content-panel {
-  flex: 1;           
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;   
-  box-sizing: border-box;
 }
 
 .column-layout {
