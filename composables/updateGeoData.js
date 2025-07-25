@@ -8,7 +8,7 @@ export function updateGeoData(map, geoData) {
 
     filteredGeoData.value = {
         type: "FeatureCollection",
-        features: geoData.value.features.filter(data => {
+        features: geoData.features.filter(data => {
             let lng = data.geometry.coordinates[0];
             let lat = data.geometry.coordinates[1];
             if( bounds.getWest() < lng && bounds.getEast() > lng) {

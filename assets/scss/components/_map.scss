@@ -10,14 +10,5 @@
 #map {
   flex-grow: 1; /* fill remaining vertical space */
   height: 100%;
-  // border-top: 1px solid black;
-
-  @media(max-width: structure.$small) {
-    border-top: 0;
-  }
-}
-
-.mapboxgl-marker {         
-  cursor: pointer;
 }
 

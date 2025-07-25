@@ -27476,14 +27476,24 @@
                 "name": "Art"
             }
         ],
-        "author": {
+        "author": [
+            {
             "name": "Tour Guide",
             "description": "Local expert guide with extensive knowledge of the city.",
             "profileImage": {
                 "small": "https://picsum.photos/50/50?random=1",
                 "large": "https://picsum.photos/100/100?random=1"
             }
-        },
+            },
+            {
+            "name": "Clio Muse Tours",
+            "description": "Local expert guide with extensive knowledge of the city.",
+            "profileImage": {
+                "small": "https://picsum.photos/50/50?random=2",
+                "large": "https://picsum.photos/100/100?random=2"
+            }
+            }
+        ],
         "products": [
             {
                 "sku": "AU861",

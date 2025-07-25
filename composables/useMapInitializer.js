@@ -10,18 +10,18 @@ import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
 import { debounce, updateCursorAtPoint, loadAndAddImage, handleClusterClick } from '@/utils/mapInitFunctions.js';
+import { closeTooltip } from '@/composables/useTooltip.js';
 
 import { isMobile } from '../utils/devices';
 
 
 let map;
-let geoData = ref({});
+let geoData = toGeoJSON(tour_data);
 let lastMouseEvent = null;
 
 export function useMapInitializer() {
 
     const config = useRuntimeConfig();
-    geoData.value = toGeoJSON(tour_data);
 
     mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
     map = new mapboxgl.Map(mapConfig.map);
@@ -76,7 +76,10 @@ export function useMapInitializer() {
     map.on('load', handleLoad);
     map.on('move', debouncedUpdate);    
     
-    const clickHandler = (e) => {handleClusterClick(map, e)}
+    const clickHandler = (e) => {
+        closeTooltip();
+        handleClusterClick(map, e);
+    }
     map.on('click', 'clusters', clickHandler);
 
     onUnmounted(() => {

@@ -1,4 +1,4 @@
-import { createApp, h, ref, onMounted  } from 'vue'
+import { createApp, h } from 'vue'
 import mapboxgl from 'mapbox-gl';
 import mapConfig from '@/assets/map/map-config.json';
 import { isMobile } from '@/utils/devices.js';
@@ -6,13 +6,13 @@ import MapToolTip from '@/components/MapToolTip.vue'
 
 let popup;
 
+export function closeTooltip() {
+    popup.remove();
+}
+
 export function useTooltip(tours, map, findTours) {
 
-    popup = new mapboxgl.Popup({
-        ...mapConfig.popup,
-    }).setHTML(`
-        <h4>TourTitle</h4>
-    `);
+    popup = new mapboxgl.Popup(mapConfig.popup);
 
     function setCurrentTour(id, lngLat) {
         const tour = tours.value.find(t => String(t.id) === String(id));
@@ -27,7 +27,7 @@ export function useTooltip(tours, map, findTours) {
                 tour: tour,
                 onOpenMappopup: () => {
                     findTours(tour.id);
-                    popup.remove();
+                    closeTooltip();
                 }
             })
         }).mount(container);
@@ -42,7 +42,8 @@ export function useTooltip(tours, map, findTours) {
     if (!isMobile()) {
         map.on('mouseenter', 'pin-layer', (e) => {
             const feature = e.features?.[0];
-            const { id, title } = feature?.properties || {};
+            const { id } = feature?.properties || {};
+            
             const coordinates = feature.geometry.coordinates;
             setCurrentTour(id, coordinates);
         });
@@ -58,7 +59,4 @@ export function useTooltip(tours, map, findTours) {
             findTours(id);  
         });
     }
-
-    
-    return { setCurrentTour };
 }
