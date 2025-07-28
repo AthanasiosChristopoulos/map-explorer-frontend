@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import mapConfig from '@/assets/map/map-config.json';
 import { isMobile } from '@/utils/devices.js';
 import MapToolTip from '@/components/MapToolTip.vue'
+import AnimatedPopup from 'mapbox-gl-animated-popup'
 
 let popup;
 let mapRef = ref(null); 
@@ -69,7 +70,6 @@ export function useTooltip(tours, map, findTours) {
         map.on('click', 'pin-layer', (e) => {
             const feature = e.features?.[0];
             const { id } = feature?.properties || {};
-            current_popup_id = id;
             const coordinates = feature.geometry.coordinates;
             setCurrentTour(id, coordinates);
             changePinIcon(id);
@@ -78,13 +78,14 @@ export function useTooltip(tours, map, findTours) {
         // Close Popup on clicking anything else
         map.on('click', handleInteraction);
         map.on('dragstart', (e) => {
+            console.log('AAAA')
             popupExitAnimation = 0;
             handleInteraction(e);
         });
         function handleInteraction(e) {
             const features = map.queryRenderedFeatures(e.point, { layers: ['pin-layer'] });
 
-            if (features.length === 0 || features[0].properties?.id !== current_popup_id) {
+            if (features.length === 0) {
                 closeTooltip();
                 changePinIcon(-1);
                 popupExitAnimation = 200;

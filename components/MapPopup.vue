@@ -3,12 +3,12 @@
         <div 
             class="mappopup column-layout" 
             v-if="props.isVisible"
-            @touchstart="onTouchStart"
-            @touchend="onTouchEnd"  
+            ref="popupRef"
+            @click="isExpanded = !isExpanded"
             @mouseenter="closeTooltip"          
         >
             <!--============================= static element, Image, Title, Author =====================-->
-            <div class="mappopup__static column-layout">
+            <div class="mappopup__static column-layout" style="padding-top: 1.5rem;">
                 <div class="mappopup__exit-button" @click="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
                 <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
 
@@ -94,6 +94,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useSwipe } from '@vueuse/core'
 import { Button, Tag } from 'vue-library';
 import arrow_right from '@/assets/icons/arrow-right.svg';
 
@@ -116,9 +117,6 @@ const emit = defineEmits(['update:isVisible']);
 let tour = ref({});
 let authorNames = ref(null);
 
-let touchStartY = 0;
-let touchEndY = 0;
-
 const props = defineProps({
     isVisible: {
         type: Boolean,
@@ -130,9 +128,24 @@ const props = defineProps({
     }
 });    
 
+watch(() => props.isVisible, () => { isExpanded.value = false; });
 
-watch(() => props.isVisible, () => { 
-    isExpanded.value = false; 
+watch(() => props.tour, () => {
+  if (props.tour) {
+        tour.value = props.tour;
+        if (Array.isArray(tour.value.author)) {
+            authorNames.value = tour.value.author.map(a => a.name).join(', ');
+        } else {
+            authorNames.value = tour.value.author.name;
+        }
+
+        tour.value.categories.forEach(cat => {
+            const colors = matchCategoryColors(cat.name);
+            cat.backgroundColor = colors.backgroundColor;
+            cat.textColor = colors.textColor;
+        });
+        console.log(tour.value.categories)
+    }
 });
 
 function close() { 
@@ -151,46 +164,20 @@ function maybeStopTouchPropagation(event) {
     event.stopPropagation();
   }
 }
+// Handle Swiping:
+const popupRef = ref(null)
+const { direction } = useSwipe(popupRef)
+watch(direction, (dir) => {
+  if (dir === 'up') isExpanded.value = true
+  if (dir === 'down') {
 
-function onTouchStart(event) {
-    touchStartY = event.changedTouches[0].screenY;
-    event.preventDefault();   
-    event.stopPropagation();  
-}
-function onTouchEnd(event) {
-    touchEndY = event.changedTouches[0].screenY;
-    const diffY = touchStartY - touchEndY;
-    const isSwipe = Math.abs(diffY) > 50;
-    const isTap = Math.abs(diffY) < 10;
-
-    if (isSwipe) {
-        if(diffY < 0 && !isExpanded.value) {
-            close();
-        } else {
-            isExpanded.value = diffY > 0;
-        }
-    } else if (isTap) {
-        isExpanded.value = !isExpanded.value;
+    if(isExpanded.value) {
+        isExpanded.value = false;
+    } else {
+        close();
     }
-}
-
-watch(() => props.tour, (newTour) => {
-  if (newTour) {
-        tour.value = newTour;
-        if (Array.isArray(tour.value.author)) {
-            authorNames.value = tour.value.author.map(a => a.name).join(', ');
-        } else {
-            authorNames.value = tour.value.author.name;
-        }
-
-        tour.value.categories.forEach(cat => {
-            const colors = matchCategoryColors(cat.name);
-            cat.backgroundColor = colors.backgroundColor;
-            cat.textColor = colors.textColor;
-        });
-        console.log(tour.value.categories)
-    }
-});
+  }
+})
 
 function matchCategoryColors(category_name) {
   switch (category_name) {
