@@ -192,25 +192,6 @@ watch(() => props.tour, (newTour) => {
     }
 });
 
-function matchCategoryColor(category_name) {
-    switch (category_name) {
-        case "History":
-            return 'gold';
-        case 'Gastronomy':
-            return 'red';
-        case 'Nature':
-            return `dark-green`;
-        case 'Museum':
-            return `orange`;
-        case 'Adventure':
-            return `blue`;
-        case 'Art':
-            return `pink`;
-        default:
-            return 'dark-purple';
-    }
-}
-
 function matchCategoryColors(category_name) {
   switch (category_name) {
     case "History":
