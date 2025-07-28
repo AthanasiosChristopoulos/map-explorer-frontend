@@ -6,10 +6,13 @@ import MapToolTip from '@/components/MapToolTip.vue'
 
 let popup;
 let mapRef = ref(null); 
-let current_popup_id = -1;
+let popupExitAnimation = 300;
 
 export function closeTooltip() {
-    popup.remove();
+    if (popup && popup.isOpen()) {
+        popup.options.closingAnimation.duration = popupExitAnimation;
+        popup.remove();
+    }
 }
 
 export function changePinIcon(id) {
@@ -29,8 +32,14 @@ export function changePinIcon(id) {
 
 export function useTooltip(tours, map, findTours) {
     mapRef = map; 
-
-    popup = new mapboxgl.Popup(mapConfig.popup);
+    popup = new AnimatedPopup({
+        ...mapConfig.popup,
+        closingAnimation: {
+            duration: popupExitAnimation,
+            easing: "easeInCubic",
+            transform: "scale"
+        }
+    });
 
     function setCurrentTour(id, lngLat) {
         const tour = tours.value.find(t => String(t.id) === String(id));
@@ -66,17 +75,21 @@ export function useTooltip(tours, map, findTours) {
             changePinIcon(id);
         });
 
-        // map.on('mouseleave', 'pin-layer', () => {
-        //     popup.remove();
-        // });
-        map.on('click', (e) => {
-            const features = map.queryRenderedFeatures(e.point, {layers: ['pin-layer']});
+        // Close Popup on clicking anything else
+        map.on('click', handleInteraction);
+        map.on('dragstart', (e) => {
+            popupExitAnimation = 0;
+            handleInteraction(e);
+        });
+        function handleInteraction(e) {
+            const features = map.queryRenderedFeatures(e.point, { layers: ['pin-layer'] });
 
             if (features.length === 0 || features[0].properties?.id !== current_popup_id) {
                 closeTooltip();
-                changePinIcon(-1);  
+                changePinIcon(-1);
+                popupExitAnimation = 200;
             }
-        });
+        }
 
     } else {
         map.on('click', 'pin-layer', (e) => {
