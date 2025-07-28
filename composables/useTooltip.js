@@ -8,6 +8,7 @@ import AnimatedPopup from 'mapbox-gl-animated-popup'
 let popup;
 let mapRef = ref(null); 
 let popupExitAnimation = 300;
+let current_popup_id = -1;
 
 export function closeTooltip() {
     if (popup && popup.isOpen()) {
@@ -70,6 +71,9 @@ export function useTooltip(tours, map, findTours) {
         map.on('click', 'pin-layer', (e) => {
             const feature = e.features?.[0];
             const { id } = feature?.properties || {};
+            if (popup.isOpen() && current_popup_id === id) return;
+            current_popup_id = id
+            
             const coordinates = feature.geometry.coordinates;
             setCurrentTour(id, coordinates);
             changePinIcon(id);
@@ -85,7 +89,7 @@ export function useTooltip(tours, map, findTours) {
         function handleInteraction(e) {
             const features = map.queryRenderedFeatures(e.point, { layers: ['pin-layer'] });
 
-            if (features.length === 0) {
+            if (features.length === 0 || features[0].properties?.id !== current_popup_id) {
                 closeTooltip();
                 changePinIcon(-1);
                 popupExitAnimation = 200;
