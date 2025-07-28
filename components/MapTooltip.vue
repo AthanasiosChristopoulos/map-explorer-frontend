@@ -1,11 +1,13 @@
 <template>
   <div class="column-layout maptooltip">
+    
     <Tag
       :label="`${tour.stories} Stories`"
-      :color="`purple`"
-      style="padding: 0.5rem 0.7rem;"
+      :backgroundColor="'#E6EDFF'"   
+      :textColor="'#484C70'"         
+      :small="true"
     ></Tag>
-    
+
     <h4>{{ tour.title }}</h4>
     <img 
         :src="tour.images.cover" 
@@ -27,8 +29,7 @@
 </template>
 
 <script setup>
-import { Button } from 'vue-library';
-import Tag from '@/components/Tag.vue';
+import { Button, Tag } from 'vue-library';
 
 const props = defineProps({
     tour: {
