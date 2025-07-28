@@ -64,11 +64,11 @@ $circle-dim-languages: 2rem;
 .mappopup__scrollable {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0rem 0.7rem 1rem 1.5rem;
+    padding: 0.5rem 0.7rem 1rem 1.5rem;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y; 
     overscroll-behavior: contain;
-    gap: 1rem;
+    gap: 0.7rem;
 }
 
 .mappopup__author {

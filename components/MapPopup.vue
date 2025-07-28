@@ -8,6 +8,7 @@
             @mouseenter="closeTooltip"          
         >
             <!--============================= static element, Image, Title, Author =====================-->
+
             <div class="mappopup__static column-layout" style="padding-top: 1.5rem;">
                 <div class="mappopup__exit-button" @click="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
                 <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
@@ -32,7 +33,7 @@
                     {{ tour.description }}
                 </div>
 
-                <div style="position: relative; display: flex; flex-direction: column; gap: 0.7rem;">
+                <div style="position: relative; display: flex; flex-direction: column; gap: 0.5rem;">
                     <div v-if="tour.categories" style="display: flex; flex-direction: row; gap: 1rem;">
                         <div v-for="(category, idx) in tour.categories" :key="idx">
                             <Tag
