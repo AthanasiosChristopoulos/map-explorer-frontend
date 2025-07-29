@@ -5,7 +5,6 @@ import MapToolTip from '@/components/MapToolTip.vue'
 import AnimatedPopup from 'mapbox-gl-animated-popup'
 
 let mapRef = ref(null); 
-let popupExitAnimation = 300;
 
 export function changePinIcon(id) {
     if (!mapRef) {
@@ -26,6 +25,7 @@ export function useTooltip(tours, map, findTours) {
     let app;
     let popup;
     let current_popup_id = -1;
+    let popupExitAnimation = 200;
     mapRef = map; 
 
     function setCurrentTour(id, lngLat) {
@@ -39,6 +39,7 @@ export function useTooltip(tours, map, findTours) {
             render: () => h(MapToolTip, {
                 tour: tour,
                 onOpenMappopup: () => {
+                    popupExitAnimation = 0;
                     findTours(tour.id);
                     closeTooltip();
                 }
@@ -60,6 +61,7 @@ export function useTooltip(tours, map, findTours) {
         const { id } = feature?.properties || {};
         if (popup.isOpen() && current_popup_id === id) return;
         current_popup_id = id;
+        popupExitAnimation = 200;
         const coordinates = feature.geometry.coordinates;
         setCurrentTour(id, coordinates);
         changePinIcon(id);
