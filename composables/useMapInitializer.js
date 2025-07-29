@@ -13,11 +13,11 @@ import { toGeoJSON } from '@/utils/toGeoJSON';
 import tour_data from '@/assets/data/tour_data.json';
 import { updateGeoData } from '@/composables/updateGeoData.js';
 import { debounce, updateCursorAtPoint, loadAndAddImage, handleClusterClick } from '@/utils/mapInitFunctions.js';
-import { closeTooltip } from '@/composables/useTooltip.js';
+import { useTooltip } from '@/composables/useTooltip.js'
 
 import { isMobile } from '../utils/devices';
 
-export function useMapInitializer(onClusterClickClosePopup) { // callback function.
+export function useMapInitializer(tours, findTours, onClusterClickClosePopup) { // callback function.
 
     let map;
     let geoData = toGeoJSON(tour_data);
@@ -101,6 +101,7 @@ export function useMapInitializer(onClusterClickClosePopup) { // callback functi
         );
         map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
     }
+    const { closeTooltip } = useTooltip(tours, map, findTours);
 
-    return { map, geoData };
+    return { map, geoData, closeTooltip };
 }

@@ -5,7 +5,7 @@
             v-if="props.isVisible"
             ref="popupRef"
             @click="isExpanded = !isExpanded"
-            @mouseenter="closeTooltip"          
+            @mouseenter="props.closeTooltip"          
         >
             <!--============================= static element, Image, Title, Author =====================-->
 
@@ -109,7 +109,7 @@ import pt from '../assets/icons/languages/pt.svg';
 import de from '../assets/icons/languages/de.svg';
 
 import { isMobile } from '../utils/devices';
-import { closeTooltip, changePinIcon } from '@/composables/useTooltip.js';
+import { changePinIcon } from '@/composables/useTooltip.js';
 
 let isExpanded = ref(false);
 
@@ -123,6 +123,10 @@ const props = defineProps({
     tour: {
         type: Object,
         default: () => ({}),
+    }, 
+    closeTooltip: {
+        type: Function,
+        default: null
     }
 });    
 

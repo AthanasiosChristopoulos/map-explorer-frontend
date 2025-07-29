@@ -3,6 +3,7 @@
     <div id="map"></div>
     <MapPopup
         :tour="selectedTour"
+        :closeTooltip="closeTooltip"
         v-model:isVisible="localShowMapPopup"
     />
   </div>
@@ -12,22 +13,17 @@
 import { ref, onMounted  } from 'vue'
 import MapPopup from '@/components/MapPopup.vue'; 
 import { useMapInitializer } from '@/composables/useMapInitializer.js'
-import { useTooltip } from '@/composables/useTooltip.js'
 
 const selectedTour = ref(null);
 
 let map;
 let geoData;
-
+let closeTooltip = null;
 const localShowMapPopup = ref(false);
 
 onMounted(() => {
-  ({map, geoData} = useMapInitializer(() => {
-    localShowMapPopup.value = false;  
-  }));
-  useTooltip(tours, map, findTours);
+  ({map, geoData, closeTooltip } = useMapInitializer(tours, findTours, () => {localShowMapPopup.value = false;}));
   // console.log(`Viewport: ${window.innerWidth}px X ${window.innerHeight}px`);
-
 });
 
 const tours = computed(() =>
