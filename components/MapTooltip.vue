@@ -2,9 +2,9 @@
   <div class="column-layout maptooltip">
     
     <Tag
-      :label="`${tour.stories} Stories`"
+      :label="storiesNumberLabel"
       :backgroundColor="'#E6EDFF'"   
-      :textColor="'#484C70'"         
+      :textColor="'#5E6C93'"        
       :small="true"
     ></Tag>
 
@@ -29,6 +29,7 @@
 </template>
 
 <script setup>
+import {computed} from 'vue';
 import { Button, Tag } from 'vue-library';
 
 const props = defineProps({
@@ -38,6 +39,7 @@ const props = defineProps({
     }
 });
 
+const storiesNumberLabel = computed(() => {return `${props.tour.stories} stories`});
 const emit = defineEmits(['openMappopup']);
 
 function openMappopup() {

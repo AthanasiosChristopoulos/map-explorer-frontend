@@ -17,13 +17,11 @@ import { closeTooltip } from '@/composables/useTooltip.js';
 
 import { isMobile } from '../utils/devices';
 
-
-let map;
-let geoData = toGeoJSON(tour_data);
-let lastMouseEvent = null;
-
 export function useMapInitializer(onClusterClickClosePopup) { // callback function.
 
+    let map;
+    let geoData = toGeoJSON(tour_data);
+    let lastMouseEvent = null;
     const config = useRuntimeConfig();
 
     mapboxgl.accessToken = config.public.MAPBOX_ACCESS_TOKEN;
@@ -45,7 +43,7 @@ export function useMapInitializer(onClusterClickClosePopup) { // callback functi
 
     const handleLoad = async () => {
         try {
-            const [useCostumPin, useCostumCluster1, useCostumCluster2] = await Promise.all([
+            const [useCustomPin, useCustomCluster1, useCustomCluster2] = await Promise.all([
                 loadAndAddImage(map, 'custom-pin', pin_image),
                 loadAndAddImage(map, 'custom-pin-hover', pin_image_hover),
                 loadAndAddImage(map, 'custom-cluster-1', cluster_image_1),
@@ -62,9 +60,9 @@ export function useMapInitializer(onClusterClickClosePopup) { // callback functi
                 clusterRadius: 50
             });
 
-            map.addLayer((useCostumCluster1 && useCostumCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
+            map.addLayer((useCustomCluster1 && useCustomCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
             map.addLayer(mapConfig.clusterLayers.clusterCount);
-            map.addLayer(useCostumPin ? mapConfig.pinLayer : mapConfig.pinLayerDefault);
+            map.addLayer(useCustomPin ? mapConfig.pinLayer : mapConfig.pinLayerDefault);
       
             map.on('move', debouncedUpdate);
             map.on('mousemove', mousemoveHandler);
@@ -90,11 +88,7 @@ export function useMapInitializer(onClusterClickClosePopup) { // callback functi
     map.on('click', 'clusters', clickHandler);
 
     onUnmounted(() => {
-        map.off('load', handleLoad);
-        map.off('move', debouncedUpdate);
-        map.off('mousemove', mousemoveHandler);
-        map.off('zoomend', zoomendHandler);
-        map.off('click', 'clusters', clickHandler);
+        map.remove() 
     });
 
     // Add map controls ============================================================================================================

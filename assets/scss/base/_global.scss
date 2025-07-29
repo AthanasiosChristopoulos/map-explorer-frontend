@@ -1,7 +1,12 @@
+@use '../variables/_structure';
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  @media (max-width: structure.$small) {
+    overscroll-behavior-y: contain;
+  }
 }
 
 .button__footer {

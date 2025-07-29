@@ -1,19 +1,19 @@
 import { createApp, h, ref } from 'vue'
-import mapboxgl from 'mapbox-gl';
 import mapConfig from '@/assets/map/map-config.json';
 import { isMobile } from '@/utils/devices.js';
 import MapToolTip from '@/components/MapToolTip.vue'
 import AnimatedPopup from 'mapbox-gl-animated-popup'
 
+let app;
 let popup;
 let mapRef = ref(null); 
 let popupExitAnimation = 300;
-let current_popup_id = -1;
 
 export function closeTooltip() {
     if (popup && popup.isOpen()) {
         popup.options.closingAnimation.duration = popupExitAnimation;
         popup.remove();
+        setTimeout(() => {app.unmount();}, popupExitAnimation);
     }
 }
 
@@ -33,6 +33,7 @@ export function changePinIcon(id) {
 }
 
 export function useTooltip(tours, map, findTours) {
+    let current_popup_id = -1;
     mapRef = map; 
     popup = new AnimatedPopup({
         ...mapConfig.popup,
@@ -51,7 +52,7 @@ export function useTooltip(tours, map, findTours) {
         }
 
         const container = document.createElement('div');
-        createApp({
+        app = createApp({
             render: () => h(MapToolTip, {
                 tour: tour,
                 onOpenMappopup: () => {
@@ -59,49 +60,65 @@ export function useTooltip(tours, map, findTours) {
                     closeTooltip();
                 }
             })
-        }).mount(container);
+        })
+        
+        app.mount(container);
             
-        popup
-            .setLngLat(lngLat)
-            .setDOMContent(container)   // instead of setHTML()
-            .addTo(map);
+        try {
+            popup
+                .setLngLat(lngLat)
+                .setDOMContent(container)  
+                .addTo(map);            
+
+        } catch (error) {
+            console.error(`Failed to add the popup to the map. ${error}`)
+        } 
     };
+    function handlePinLayerClick(e) {
+        const feature = e.features?.[0];
+        const { id } = feature?.properties || {};
+        if (popup.isOpen() && current_popup_id === id) return;
+
+        current_popup_id = id;
+
+        const coordinates = feature.geometry.coordinates;
+        setCurrentTour(id, coordinates);
+        changePinIcon(id);
+    }
+    function handleInteraction(e) {
+        if (e.type === 'dragstart') popupExitAnimation = 0;
+        
+
+        const features = map.queryRenderedFeatures(e.point, { layers: ['pin-layer'] });
+
+        if (features.length === 0 || features[0].properties?.id !== current_popup_id) {
+            closeTooltip();
+            changePinIcon(-1);
+            popupExitAnimation = 200;
+        }
+    }
+
+    function handlePinLayerClickOnMobile(e) {
+        const feature = e.features?.[0];
+        const { id } = feature?.properties || {};
+        findTours(id);  
+        changePinIcon(id);
+    }
 
     if (!isMobile()) {
-        map.on('click', 'pin-layer', (e) => {
-            const feature = e.features?.[0];
-            const { id } = feature?.properties || {};
-            if (popup.isOpen() && current_popup_id === id) return;
-            current_popup_id = id
-            
-            const coordinates = feature.geometry.coordinates;
-            setCurrentTour(id, coordinates);
-            changePinIcon(id);
-        });
-
-        // Close Popup on clicking anything else
+        map.on('click', 'pin-layer', handlePinLayerClick);
+        map.on('dragstart', handleInteraction);
         map.on('click', handleInteraction);
-        map.on('dragstart', (e) => {
-            console.log('AAAA')
-            popupExitAnimation = 0;
-            handleInteraction(e);
-        });
-        function handleInteraction(e) {
-            const features = map.queryRenderedFeatures(e.point, { layers: ['pin-layer'] });
 
-            if (features.length === 0 || features[0].properties?.id !== current_popup_id) {
-                closeTooltip();
-                changePinIcon(-1);
-                popupExitAnimation = 200;
-            }
-        }
 
     } else {
-        map.on('click', 'pin-layer', (e) => {
-            const feature = e.features?.[0];
-            const { id } = feature?.properties || {};
-            findTours(id);  
-            changePinIcon(id);
-        });
+        map.on('click', 'pin-layer', handlePinLayerClickOnMobile);
     }
+    onUnmounted(() => {
+        map.off('click', 'pin-layer', handlePinLayerClickOnMobile);
+        map.off('click', 'pin-layer', handlePinLayerClick);
+        map.off('click', handleInteraction);
+        map.off('dragstart', handleInteraction);
+
+    })
 }

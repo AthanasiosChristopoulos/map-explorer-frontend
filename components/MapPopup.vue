@@ -1,7 +1,7 @@
 <template>
     <Transition :name="isMobile() ? 'mappopup-mobile' : 'mappopup-animation'">
         <div 
-            class="mappopup column-layout" 
+            class="mappopup column-layout"
             v-if="props.isVisible"
             ref="popupRef"
             @click="isExpanded = !isExpanded"
@@ -10,13 +10,13 @@
             <!--============================= static element, Image, Title, Author =====================-->
 
             <div class="mappopup__static column-layout" style="padding-top: 1.5rem;">
-                <div class="mappopup__exit-button" @click="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
+                <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
                 <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
 
                 <img :src="tour.images.cover" alt="Preview not available" class="mappopup__img"/>
 
                 <div class="mappopup__header column-layout" v-if="tour.title">
-                    <h2 :style="{ paddingBottom: isMobile() && !isExpanded ? '1rem' : '0rem' }">{{ tour.title }}</h2>
+                    <h2>{{ tour.title }}</h2>
                     <div v-if="authorNames && (!isMobile() || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
                 </div>
             </div>
@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useSwipe } from '@vueuse/core'
 import { Button, Tag } from 'vue-library';
 import arrow_right from '@/assets/icons/arrow-right.svg';
@@ -115,9 +115,6 @@ let isExpanded = ref(false);
 
 const emit = defineEmits(['update:isVisible']);
 
-let tour = ref({});
-let authorNames = ref(null);
-
 const props = defineProps({
     isVisible: {
         type: Boolean,
@@ -133,20 +130,21 @@ watch(() => props.isVisible, () => { isExpanded.value = false; });
 
 watch(() => props.tour, () => {
   if (props.tour) {
-        tour.value = props.tour;
-        if (Array.isArray(tour.value.author)) {
-            authorNames.value = tour.value.author.map(a => a.name).join(', ');
-        } else {
-            authorNames.value = tour.value.author.name;
-        }
-
         tour.value.categories.forEach(cat => {
             const colors = matchCategoryColors(cat.name);
             cat.backgroundColor = colors.backgroundColor;
             cat.textColor = colors.textColor;
         });
-        console.log(tour.value.categories)
     }
+});
+const tour = computed(() => props.tour);
+const authorNames = computed(() => {
+  const authors = props.tour.author;
+  if(Array.isArray(authors)) {
+    return authors.map(a => a.name).join(', ');
+  } else {
+    return authors.name
+  }
 });
 
 function close() { 
