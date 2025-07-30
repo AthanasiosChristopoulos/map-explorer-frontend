@@ -4,7 +4,7 @@ $circle-dim-languages: 2rem;
 
 .mappopup {
     position: absolute;
-    top: 8%;
+    top: 0;
     left: 0;
     width: 25%;
     height: fit-content;
@@ -13,10 +13,12 @@ $circle-dim-languages: 2rem;
     border-radius: 1.25rem;
     background: var(--neutral-color--white);
     box-shadow: 0 12px 23px 0 var(--popup-shadow);
-    margin-left: 2rem; 
     gap: 0rem;
-    padding-bottom: 0.7rem;
-
+    padding: 0rem 0rem 0.7rem 0rem;
+    margin: 4.2rem 0rem 0rem 2rem;
+    @media (max-width: 1440px) {
+        margin: 3.5rem 0rem 0rem 2rem;
+    }
     @media (max-width: structure.$small) {
         position: absolute;
         top: auto;
@@ -32,10 +34,10 @@ $circle-dim-languages: 2rem;
 
 .mappopup__exit-button {
     position: absolute;
-    top: -4rem;
+    top: -2.7rem;
     left: 50%;
     transform: translateX(-50%); 
-    scale: 0.75;
+    scale: 1.25;
     aspect-ratio: 1 /1;
     cursor: pointer;
 }

@@ -34,7 +34,7 @@
                     {{ tour.description }}
                 </div>
 
-                <div v-if="tourCategories" class="row-layout" style="gap: 1rem; overflow-x: auto;">
+                <div v-if="tourCategories" class="row-layout" style="gap: 1rem; overflow-x: auto; flex-shrink: 0;">
                     <div v-for="(category, idx) in tourCategories" :key="idx">
                         <Tag
                             :label="category.name"
