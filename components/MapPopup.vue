@@ -1,5 +1,5 @@
 <template>
-    <Transition :name="isMobile() ? 'mappopup-mobile' : 'mappopup-animation'">
+    <Transition :name="isMobile ? 'mappopup-mobile' : 'mappopup-animation'">
         <div 
             class="mappopup column-layout"
             v-if="props.isVisible"
@@ -10,20 +10,20 @@
             <!--============================= static element, Image, Title, Author =====================-->
 
             <div class="mappopup__static column-layout" style="padding-top: 1.5rem;">
-                <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
-                <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
+                <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile"><img :src="exitIcon" alt="Close"></div>    
+                <div class="mappopup-handle" v-if="isMobile" @click="isExpanded = !isExpanded"></div>
 
                 <img :src="tour.images.cover" alt="Preview not available" class="mappopup__img"/>
 
                 <div class="mappopup__header column-layout" v-if="tour.title">
                     <h2>{{ tour.title }}</h2>
-                    <div v-if="authorNames && (!isMobile() || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
+                    <div v-if="authorNames && (!isMobile || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
                 </div>
             </div>
 
             <!--============================= Scrollable element =============================-->
 
-            <div class="mappopup__scrollable column-layout" v-if="(!isMobile() || isExpanded) && true"
+            <div class="mappopup__scrollable column-layout" v-if="(!isMobile || isExpanded) && true"
                 ref="scrollableRef"
                 @touchstart="maybeStopTouchPropagation"
                 @touchend="maybeStopTouchPropagation"
@@ -32,34 +32,35 @@
                 <div class="mappopup__body" v-if="tour.description ">
                     {{ tour.description }}
                 </div>
-
-                <div style="position: relative; display: flex; flex-direction: column; gap: 0.5rem;">
-                    <div v-if="tour.categories" style="display: flex; flex-direction: row; gap: 1rem;">
-                        <div v-for="(category, idx) in tour.categories" :key="idx">
+                <div class="row-layout">
+                    <div style="position: relative; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div v-if="tourCategories" style="display: flex; flex-direction: row; gap: 1rem;">
+                            <div v-for="(category, idx) in tourCategories" :key="idx">
+                                <Tag
+                                    :label="category.name"
+                                    :backgroundColor="category.backgroundColor"
+                                    :textColor="category.textColor"
+                                    style="display: flex; flex-direction: row;"
+                                ></Tag>
+                            </div>
+                        </div>
+                        <div v-else>
                             <Tag
-                                :label="category.name"
-                                :backgroundColor="category.backgroundColor"
-                                :textColor="category.textColor"
-                                style="display: flex; flex-direction: row;"
+                                :label="`Uncategorized`"
+                                :backgroundColor="'#484C70'"  
+                                :textColor="'#ffffff'"       
                             ></Tag>
                         </div>
-                    </div>
-                    <div v-else>
+                        
+                        <span class="mappopup__stories-info">{{ tour.stops }} stops / {{ tour.stories }} stories</span>
+                        
                         <Tag
-                            :label="`Uncategorized`"
-                            :backgroundColor="'#484C70'"  
-                            :textColor="'#ffffff'"       
-                        ></Tag>
-                    </div>
-                    
-                    <span class="mappopup__stories-info">{{ tour.stops }} stops / {{ tour.stories }} stories</span>
-                    
-                    <Tag
-                        :label="tour.isIndoors ? 'Indoors' : 'Outdoors'"
-                        :backgroundColor="tour.isIndoors ? '#03a481' : '#E6EDFF'"   
-                        :textColor="tour.isIndoors ? '#ffffff' : '#484C70'"        
-                    />
+                            :label="tour.isIndoors ? 'Indoors' : 'Outdoors'"
+                            :backgroundColor="tour.isIndoors ? '#D7F9DA' : '#E6EDFF'"   
+                            :textColor="tour.isIndoors ? '#39B54A' : '#484C70'"        
+                        />
 
+                    </div>
                     <div class="mappopup__languageIcon" v-if="tour.availableLanguages">
                         <div v-for="language in tour.availableLanguages.slice(0,2)">
                             <img :src="returnLanguageImage(language)">
@@ -68,14 +69,12 @@
                             <p>+{{ tour.availableLanguages.length - 2 }}</p>    
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
             <!--============================= CTA element =============================-->
 
-            <div class="mappopup__static column-layout" style="padding-top: 0px;" v-if="!isMobile() || isExpanded">
+            <div class="mappopup__static column-layout" style="padding-top: 0px;" v-if="!isMobile || isExpanded">
                 <div class="mappopup__divider"></div>
 
                 <div class="button__footer">
@@ -108,8 +107,11 @@ import it from '../assets/icons/languages/it.svg';
 import pt from '../assets/icons/languages/pt.svg';
 import de from '../assets/icons/languages/de.svg';
 
-import { isMobile } from '../utils/devices';
+import { useWindowSize } from '@vueuse/core';
 import { changePinIcon } from '@/composables/useTooltip.js';
+
+const { width } = useWindowSize();
+const isMobile = computed(() => width.value <= 768);
 
 let isExpanded = ref(false);
 
@@ -132,16 +134,15 @@ const props = defineProps({
 
 watch(() => props.isVisible, () => { isExpanded.value = false; });
 
-watch(() => props.tour, () => {
-  if (props.tour) {
-        tour.value.categories.forEach(cat => {
-            const colors = matchCategoryColors(cat.name);
-            cat.backgroundColor = colors.backgroundColor;
-            cat.textColor = colors.textColor;
-        });
-    }
-});
 const tour = computed(() => props.tour);
+
+const tourCategories = computed(() => {
+  return props.tour.categories?.map(cat => {
+    const { backgroundColor, textColor } = matchCategoryColors(cat.name);
+    return { ...cat, backgroundColor, textColor };
+  }) || [];
+});
+
 const authorNames = computed(() => {
   const authors = props.tour.author;
   if(Array.isArray(authors)) {
@@ -157,17 +158,8 @@ function close() {
     changePinIcon(-1); 
 }
 
-const scrollableRef = ref(null);
-function isScrollNeeded() {
-  const el = scrollableRef.value;
-  return el && el.scrollHeight > el.clientHeight;
-}
-function maybeStopTouchPropagation(event) {
-  if (isScrollNeeded()) {
-    event.stopPropagation();
-  }
-}
-// Handle Swiping:
+// Handle Swiping for Mobile =====================================================================
+
 const popupRef = ref(null)
 const { direction } = useSwipe(popupRef)
 watch(direction, (dir) => {
@@ -181,6 +173,20 @@ watch(direction, (dir) => {
     }
   }
 })
+
+// Handle Swiping for Scrollable  =====================================================================
+
+const scrollableRef = ref(null);
+function isScrollNeeded() {
+  const el = scrollableRef.value;
+  return el && el.scrollHeight > el.clientHeight;
+}
+function maybeStopTouchPropagation(event) {
+  if (isScrollNeeded()) {
+    event.stopPropagation();
+  }
+}
+
 
 function matchCategoryColors(category_name) {
   switch (category_name) {
@@ -201,25 +207,10 @@ function matchCategoryColors(category_name) {
   }
 }
 
+const languageMap = {it, en, pt, es, fr, de, gr,};
+
 function returnLanguageImage(language) {
-    switch (language) {
-        case 'it':
-            return it;
-        case 'en':
-            return en
-        case 'pt':
-            return pt
-        case 'es':
-            return es
-        case 'fr':
-            return fr    
-        case 'de':
-            return de   
-        case 'gr':
-            return gr
-        default:
-            return gr;
-    }
+  return languageMap[language] || gr;
 }
 
 </script>

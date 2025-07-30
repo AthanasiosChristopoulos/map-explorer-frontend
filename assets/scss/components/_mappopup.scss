@@ -40,6 +40,8 @@ $circle-dim-languages: 2rem;
     cursor: pointer;
 }
 
+// Image + Header element ======================================================================================
+
 .mappopup__static {
     gap: 0.7rem;
     padding: 1rem 1.5rem 0rem 1.5rem;
@@ -60,17 +62,6 @@ $circle-dim-languages: 2rem;
     padding: 0rem 0rem 0rem 0rem;
     gap: 0rem;
 }
-
-.mappopup__scrollable {
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 0.5rem 0.7rem 1rem 1.5rem;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y; 
-    overscroll-behavior: contain;
-    gap: 0.7rem;
-}
-
 .mappopup__author {
     color: var(--neutral-color--davys-grey);
     font-size: 0.8rem;
@@ -80,6 +71,18 @@ $circle-dim-languages: 2rem;
     text-wrap: nowrap;
     align-items: stretch;
     text-align: left;
+}
+
+// Scrollable element ======================================================================================
+
+.mappopup__scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.5rem 0.7rem 1rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y; 
+    overscroll-behavior: contain;
+    gap: 0.7rem;
 }
 
 .mappopup__body p {
@@ -105,21 +108,13 @@ $circle-dim-languages: 2rem;
     padding: 0.3rem 0rem;
 }
 
-.mappopup__divider {
-    height: 1px;
-    background-color: var(--neutral-color--silver-sand);
-    margin: 0rem -1.5rem 0rem -1.5rem;
-    flex-shrink: 0;
-}
-
 .mappopup__languageIcon {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    display: flex;
-    flex-direction: row;
-    margin-right: 0.5rem;
-    margin-bottom: 0.8rem;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+  margin-right: 0.5rem;
+  justify-content: flex-end;
+  align-self: flex-end;
 }
 
 .mappopup__languageIcon img,
@@ -138,6 +133,8 @@ $circle-dim-languages: 2rem;
   align-items: center;
 }
 
+// Element with Button (CTA)  ======================================================================================
+
 @media (max-width: 768px) {
 
     .mappopup-handle {
@@ -149,7 +146,14 @@ $circle-dim-languages: 2rem;
     }
 }
 
-/* Animation */
+.mappopup__divider {
+    height: 1px;
+    background-color: var(--neutral-color--silver-sand);
+    margin: 0rem -1.5rem 0rem -1.5rem;
+    flex-shrink: 0;
+}
+
+// Animations  ======================================================================================
 
 .mappopup-animation-enter-active,
 .mappopup-animation-leave-active {
