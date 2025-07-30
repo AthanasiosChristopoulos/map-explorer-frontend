@@ -23,35 +23,37 @@
 
             <!--============================= Scrollable element =============================-->
 
-            <div class="mappopup__scrollable column-layout" v-if="(!isMobile || isExpanded) && true"
+            <div class="mappopup__scrollable column-layout" v-if="(!isMobile || isExpanded)"
                 ref="scrollableRef"
                 @touchstart="maybeStopTouchPropagation"
                 @touchend="maybeStopTouchPropagation"
+                :style="{ paddingRight: isScrollable ? '1rem' : '1.5rem' }"
             >
 
                 <div class="mappopup__body" v-if="tour.description ">
                     {{ tour.description }}
                 </div>
-                <div class="row-layout">
-                    <div style="position: relative; display: flex; flex-direction: column; gap: 0.5rem;">
-                        <div v-if="tourCategories" style="display: flex; flex-direction: row; gap: 1rem;">
-                            <div v-for="(category, idx) in tourCategories" :key="idx">
-                                <Tag
-                                    :label="category.name"
-                                    :backgroundColor="category.backgroundColor"
-                                    :textColor="category.textColor"
-                                    style="display: flex; flex-direction: row;"
-                                ></Tag>
-                            </div>
-                        </div>
-                        <div v-else>
-                            <Tag
-                                :label="`Uncategorized`"
-                                :backgroundColor="'#484C70'"  
-                                :textColor="'#ffffff'"       
-                            ></Tag>
-                        </div>
+
+                <div v-if="tourCategories" class="row-layout" style="gap: 1rem; overflow-x: auto;">
+                    <div v-for="(category, idx) in tourCategories" :key="idx">
+                        <Tag
+                            :label="category.name"
+                            :backgroundColor="category.backgroundColor"
+                            :textColor="category.textColor"
+                            style="display: flex; flex-direction: row;"
+                        ></Tag>
+                    </div>
+                </div>
+                <div v-else>
+                    <Tag
+                        :label="`Uncategorized`"
+                        :backgroundColor="'#484C70'"  
+                        :textColor="'#ffffff'"       
+                    ></Tag>
+                </div>
                         
+                <div class="row-layout" style="justify-content: space-between;">
+                    <div class="column-layout" style="gap: 0.5rem;">
                         <span class="mappopup__stories-info">{{ tour.stops }} stops / {{ tour.stories }} stories</span>
                         
                         <Tag
@@ -66,7 +68,7 @@
                             <img :src="returnLanguageImage(language)">
                         </div>
                         <div class="mappopup__circle" v-if="tour.availableLanguages.length > 2">
-                            <p>+{{ tour.availableLanguages.length - 2 }}</p>    
+                            +{{ tour.availableLanguages.length - 2 }}
                         </div>
                     </div>
                 </div>
@@ -93,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, nextTick } from 'vue';
 import { useSwipe } from '@vueuse/core'
 import { Button, Tag } from 'vue-library';
 import arrow_right from '@/assets/icons/arrow-right.svg';
@@ -165,26 +167,23 @@ const { direction } = useSwipe(popupRef)
 watch(direction, (dir) => {
   if (dir === 'up') isExpanded.value = true
   if (dir === 'down') {
-
-    if(isExpanded.value) {
-        isExpanded.value = false;
-    } else {
-        close();
-    }
+    if(isExpanded.value) isExpanded.value = false;
+    else close();
   }
 })
 
 // Handle Swiping for Scrollable  =====================================================================
 
 const scrollableRef = ref(null);
-function isScrollNeeded() {
+const isScrollable = ref(false);
+watch(() => props.tour, async () => {
+  await nextTick();
   const el = scrollableRef.value;
-  return el && el.scrollHeight > el.clientHeight;
-}
+  if (el) isScrollable.value = el.scrollHeight > el.clientHeight;
+});
 function maybeStopTouchPropagation(event) {
-  if (isScrollNeeded()) {
-    event.stopPropagation();
-  }
+  if (isScrollable.value) event.stopPropagation();
+  
 }
 
 

@@ -65,7 +65,6 @@ $circle-dim-languages: 2rem;
 .mappopup__author {
     color: var(--neutral-color--davys-grey);
     font-size: 0.8rem;
-    font-style: normal;
     font-weight: 400;
     line-height: 1.75rem;
     text-wrap: nowrap;
@@ -78,7 +77,7 @@ $circle-dim-languages: 2rem;
 .mappopup__scrollable {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0.5rem 0.7rem 1rem 1.5rem;
+    padding: 0.5rem 1rem 1rem 1.5rem;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y; 
     overscroll-behavior: contain;
@@ -89,9 +88,7 @@ $circle-dim-languages: 2rem;
     width: -webkit-fill-available;
     gap: 0.75rem;
     color: var(--neutral-color--davys-grey);
-    font-family: Commissioner;
     font-size: 1rem;
-    font-style: normal;
     font-weight: 400;
     line-height: 1.5rem;
     padding: 0;
@@ -102,19 +99,17 @@ $circle-dim-languages: 2rem;
 .mappopup__stories-info {
     color: var(--neutral-color--davys-grey);
     font-size: 0.875rem;    
-    font-style: normal;
     font-weight: 400;
     line-height: normal;
     padding: 0.3rem 0rem;
 }
 
 .mappopup__languageIcon {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 1rem;
-  margin-right: 0.5rem;
-  justify-content: flex-end;
-  align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    justify-content: flex-end;
+    align-self: flex-end;
 }
 
 .mappopup__languageIcon img,
@@ -122,15 +117,19 @@ $circle-dim-languages: 2rem;
   width: $circle-dim-languages;
   height: $circle-dim-languages;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid var(--neutral-color--white);
   margin-left: -0.8rem;
 }
 
 .mappopup__circle {
-  background-color: #43ABFF;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background-color: #43ABFF;
+    color: var(--neutral-color--white);
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 // Element with Button (CTA)  ======================================================================================
