@@ -19,6 +19,12 @@ export default defineNuxtConfig({
           rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css'
         }
+      ],
+      script: [
+        {
+          src: 'https://cdn.jsdelivr.net/npm/mapbox-gl-animated-popup@0.4.0/dist/mapbox-gl-animated-popup.min.js',
+          defer: true
+        }
       ]
     }
   },
