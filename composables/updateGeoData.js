@@ -21,6 +21,5 @@ export function updateGeoData(map, geoData) {
     }
 
     map.getSource('points')?.setData(filteredGeoData.value);
-
     return { filteredGeoData }
 }

@@ -2,8 +2,11 @@
   <div class="map-container">
     <div id="map"></div>
     <MapPopup
+        v-if="mapReady"
+        :mapReady="mapReady"
         :tour="selectedTour"
         :closeTooltip="closeTooltip"
+        :map="map"
         v-model:isVisible="localShowMapPopup"
     />
   </div>
@@ -20,6 +23,7 @@ let map;
 let geoData;
 let closeTooltip = null;
 const localShowMapPopup = ref(false);
+let mapReady = ref(false);
 
 const tours = computed(() =>
   geoData.features?.map(f => ({
@@ -28,8 +32,9 @@ const tours = computed(() =>
   })) || []
 );
 
-onMounted(() => {
-  ({map, geoData, closeTooltip } = useMapInitializer(tours, findTours, () => {localShowMapPopup.value = false;}));
+onMounted(async() => {
+  ({map, geoData, closeTooltip } = await useMapInitializer(tours, findTours, () => {localShowMapPopup.value = false;}));
+  mapReady.value = true;
   // console.log(`Viewport: ${window.innerWidth}px X ${window.innerHeight}px`);
 });
 

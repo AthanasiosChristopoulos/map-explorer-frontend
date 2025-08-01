@@ -101,14 +101,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Button, Tag } from 'vue-library';
 import arrow_right from '@/assets/icons/arrow-right.svg';
 
 import exitIcon from '../assets/icons/exit.svg';
 
 import { useWindowSize } from '@vueuse/core';
-import { changePinIcon } from '@/composables/useTooltip.js';
+import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
 
 import { matchCategoryColors, matchLanguageIcon } from '@/utils/mapPopupUtils.js'
 
@@ -131,7 +131,8 @@ const props = defineProps({
     closeTooltip: {
         type: Function,
         default: null
-    }
+    },
+    map: Object
 });    
 
 // Computed Properties: ===========================================================================
@@ -151,7 +152,9 @@ const authorNames = computed(() => {
     return authors.name
   }
 });
+onMounted(() => {
 
+})
 // Handle Scrolling: ===========================================================================
 const popupRef = ref(null);
 const scrollableRef = ref(null);
@@ -160,8 +163,7 @@ const { isExpanded, isScrollable, maybeStopTouchPropagation } = usePopupSwipeBeh
 function close() { 
     isExpanded.value = false; 
     emit('update:isVisible', false);
-    changePinIcon(-1); 
+    usePinHighlight(props.map, -1)
 }
-
 </script>
 
