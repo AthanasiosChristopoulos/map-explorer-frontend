@@ -5,6 +5,7 @@ $circle-dim-languages: 2rem;
 .mappopup {
     position: absolute;
     top: 0;
+
     left: 0;
     width: 25%;
     height: fit-content;
@@ -15,9 +16,9 @@ $circle-dim-languages: 2rem;
     box-shadow: 0 12px 23px 0 var(--popup-shadow);
     gap: 0rem;
     padding: 0rem 0rem 0.7rem 0rem;
-    margin: 4.2rem 0rem 0rem 2rem;
+    margin: 4.2rem 0rem 8rem 2rem;
     @media (max-width: 1440px) {
-        margin: 3.5rem 0rem 0rem 2rem;
+        margin: 3.5rem 0rem 4rem 2rem;
     }
     @media (max-width: structure.$small) {
         position: absolute;
@@ -32,6 +33,12 @@ $circle-dim-languages: 2rem;
     }
 }
 
+.mappopup--overflow {
+    height: calc(100vh - 4.2rem - 8rem); 
+    @media (max-width: 1440px) {
+        height: calc(100vh - 3.5rem - 4rem); 
+    }
+}
 .mappopup__exit-button {
     position: absolute;
     top: -2.7rem;
@@ -79,13 +86,16 @@ $circle-dim-languages: 2rem;
 .mappopup__scrollable {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0.5rem 1rem 1rem 1.5rem;
+    padding: 0.5rem 1.5rem 1rem 1.5rem;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y; 
     overscroll-behavior: contain;
     gap: 0.7rem;
 }
 
+.mappopup__scrollable--overflow {
+    padding-right: 1rem;
+}
 .mappopup__body p {
     width: -webkit-fill-available;
     gap: 0.75rem;
@@ -103,7 +113,7 @@ $circle-dim-languages: 2rem;
     font-size: 0.875rem;    
     font-weight: 400;
     line-height: normal;
-    padding: 0.3rem 0rem;
+    padding: 0rem 0rem 0.3rem 0rem;
 }
 
 .mappopup__languageIcon {

@@ -21,11 +21,6 @@ let geoData;
 let closeTooltip = null;
 const localShowMapPopup = ref(false);
 
-onMounted(() => {
-  ({map, geoData, closeTooltip } = useMapInitializer(tours, findTours, () => {localShowMapPopup.value = false;}));
-  // console.log(`Viewport: ${window.innerWidth}px X ${window.innerHeight}px`);
-});
-
 const tours = computed(() =>
   geoData.features?.map(f => ({
     ...f.properties,
@@ -33,6 +28,10 @@ const tours = computed(() =>
   })) || []
 );
 
+onMounted(() => {
+  ({map, geoData, closeTooltip } = useMapInitializer(tours, findTours, () => {localShowMapPopup.value = false;}));
+  // console.log(`Viewport: ${window.innerWidth}px X ${window.innerHeight}px`);
+});
 
 function findTours(id) {
   if(!(toRaw(selectedTour.value) === tours.value.find(t => t.id === id))){

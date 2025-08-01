@@ -32,6 +32,15 @@
       [180, 85]    
     ]
   },
+  "mapSource": {
+    "type": "geojson",
+    "data": {
+        "type": "FeatureCollection",
+        "features": []
+    },
+    "cluster": true,
+    "clusterRadius": 50
+  },
   "pinLayer": {
       "id":"pin-layer",
       "type": "symbol",

@@ -41,7 +41,7 @@ export function useTooltip(tours, map, findTours) {
                 onOpenMappopup: () => {
                     popupExitAnimation = 0;
                     findTours(tour.id);
-                    closeTooltip();
+                    // closeTooltip();
                 }
             })
         })

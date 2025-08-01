@@ -28,7 +28,10 @@ export function useMapInitializer(tours, findTours, onClusterClickClosePopup) { 
     map = new mapboxgl.Map(mapConfig.map);
 
     // Add events ============================================================================================================
-
+        function safeAddLayer(map, layer) {
+            if (!map.getLayer(layer.id)) map.addLayer(layer);
+            
+        }
     const debouncedUpdate = debounce(() => { updateGeoData(map, geoData) });
 
     const mousemoveHandler = (e) => {
@@ -50,20 +53,16 @@ export function useMapInitializer(tours, findTours, onClusterClickClosePopup) { 
                 loadAndAddImage(map, 'custom-cluster-2', cluster_image_2),
             ]);
 
-            map.addSource('points', {
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features: []
-                },
-                cluster: true,
-                clusterRadius: 50
-            });
+            if (!map.getSource('points')) map.addSource('points', mapConfig.mapSource);
 
-            map.addLayer((useCustomCluster1 && useCustomCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
-            map.addLayer(mapConfig.clusterLayers.clusterCount);
-            map.addLayer(useCustomPin ? mapConfig.pinLayer : mapConfig.pinLayerDefault);
-      
+            if (!map.getLayer(mapConfig.clusterLayers.clusters.id)) map.addLayer((useCustomCluster1 && useCustomCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
+            if(!map.getLayer(mapConfig.clusterLayers.clusterCount.id)) map.addLayer(mapConfig.clusterLayers.clusterCount);
+            if(!map.getLayer(mapConfig.pinLayer.id)) map.addLayer(useCustomPin ? mapConfig.pinLayer : mapConfig.pinLayerDefault);
+    
+            safeAddLayer(map, (useCustomCluster1 && useCustomCluster2) ? mapConfig.clusterLayers.clusters : mapConfig.clusterLayers.clustersDefault);
+            safeAddLayer(map, mapConfig.clusterLayers.clusterCount);
+            safeAddLayer(map, useCustomPin ? mapConfig.pinLayer : mapConfig.pinLayerDefault);
+
             map.on('move', debouncedUpdate);
             map.on('mousemove', mousemoveHandler);
             map.on('zoomend', zoomendHandler);
@@ -87,18 +86,13 @@ export function useMapInitializer(tours, findTours, onClusterClickClosePopup) { 
     }
     map.on('click', 'clusters', clickHandler);
 
-    onUnmounted(() => {
-        map.remove() 
-    });
+    onUnmounted(() => {map.remove()});
 
     // Add map controls ============================================================================================================
 
     if(!isMobile()) {
-        map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
-        map.addControl(
-            new mapboxgl.NavigationControl(mapConfig.controls.navigation),
-            'top-right'
-        );
+        map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector('body')}), "top-right");
+        map.addControl(new mapboxgl.NavigationControl(mapConfig.controls.navigation),'top-right');
         map.addControl(new mapboxgl.GeolocateControl(mapConfig.geolocateControl), 'top-right');
     }
     const { closeTooltip } = useTooltip(tours, map, findTours);
