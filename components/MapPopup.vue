@@ -5,6 +5,7 @@
             :class="{'mappopup--overflow': isScrollable}"
             v-if="props.isVisible"
             ref="popupRef"
+            @touchstart="touchStartedAt = false"
             @click="isExpanded = !isExpanded"
             @mouseenter="props.closeTooltip"          
         >
@@ -26,8 +27,9 @@
 
             <div class="mappopup__scrollable column-layout" v-if="(!isMobile || isExpanded)"
                 ref="scrollableRef"
-                @touchstart="maybeStopTouchPropagation"
-                @touchend="maybeStopTouchPropagation"
+                @touchstart.stop="touchStartedAt = true"
+                @touchend.stop
+                @click.stop
                 :class="{ 'mappopup__scrollable--overflow': isScrollable}"
             >
 
@@ -103,15 +105,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { Button, Tag } from 'vue-library';
-import arrow_right from '@/assets/icons/arrow-right.svg';
 
+import arrow_right from '@/assets/icons/arrow-right.svg';
 import exitIcon from '../assets/icons/exit.svg';
 
 import { useWindowSize } from '@vueuse/core';
 import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
-
 import { matchCategoryColors, matchLanguageIcon } from '@/utils/mapPopupUtils.js'
-
 import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
 
 const { width } = useWindowSize();
@@ -136,6 +136,7 @@ const props = defineProps({
 });    
 
 // Computed Properties: ===========================================================================
+
 const tour = computed(() => props.tour);
 const isVisibleRef = computed(() => props.isVisible);
 const tourCategories = computed(() => {
@@ -152,18 +153,20 @@ const authorNames = computed(() => {
     return authors.name
   }
 });
-onMounted(() => {
 
-})
 // Handle Scrolling: ===========================================================================
+
 const popupRef = ref(null);
 const scrollableRef = ref(null);
-const { isExpanded, isScrollable, maybeStopTouchPropagation } = usePopupSwipeBehavior(popupRef, scrollableRef, tour, isVisibleRef, close);
+let touchStartedAt = ref(false);
+
+const { isExpanded, isScrollable } = usePopupSwipeBehavior(popupRef, scrollableRef, touchStartedAt, tour, isVisibleRef, close);
 
 function close() { 
     isExpanded.value = false; 
     emit('update:isVisible', false);
     usePinHighlight(props.map, -1)
 }
+
 </script>
 
