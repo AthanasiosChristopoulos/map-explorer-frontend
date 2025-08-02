@@ -1,4 +1,4 @@
-import { ref    , nextTick, watch } from 'vue';
+import { ref, nextTick, watch } from 'vue';
 import { useSwipe } from '@vueuse/core';
 
 export function usePopupSwipeBehavior(popupRef, scrollableRef, touchStartedAt, tourRef, isVisibleRef, onClose) {

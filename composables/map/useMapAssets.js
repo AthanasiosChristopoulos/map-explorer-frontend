@@ -1,4 +1,3 @@
-// composables/useMapAssets.js
 import pin_image from '@/assets/icons/map-pin-figma.svg';
 import pin_image_hover from '@/assets/icons/map-pin-figma-hover.svg';
 import cluster_image_1 from '@/assets/icons/cluster/cluster-icon-3.svg';

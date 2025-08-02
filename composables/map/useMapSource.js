@@ -1,4 +1,3 @@
-// composables/useMapSource.js
 import mapConfig from '@/assets/map/map-config.json';
 
 function safeAddLayer(map, layer) {
