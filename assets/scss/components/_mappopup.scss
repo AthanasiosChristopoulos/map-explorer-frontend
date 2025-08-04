@@ -58,9 +58,17 @@ $circle-dim-languages: 2rem;
     padding: 1rem 1.5rem 0rem 1.5rem;
 }
 
+.mappopup__img-wrapper {
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .mappopup__img {
     height: 30vh;
     aspect-ratio: 0.7;
+    width: 100%;
     border-radius: 1.25rem; 
     object-fit: cover;
     flex-shrink: 0;

@@ -15,8 +15,17 @@
                 <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile"><img :src="exitIcon" alt="Close"></div>    
                 <div class="mappopup-handle" v-if="isMobile" @click="isExpanded = !isExpanded"></div>
 
-                <img :src="tour.images.cover" alt="Preview not available" class="mappopup__img"/>
-
+                <div class="mappopup__img-wrapper">
+                    <div v-if="loading" class="spinner"></div>
+                    <img 
+                        :src="tour.images.cover"
+                        @load="handleImageLoad"
+                        alt="Preview not available"
+                        class="mappopup__img"
+                        :class="{ 'hidden': loading }"
+                    />
+                </div>
+                
                 <div class="mappopup__header column-layout" v-if="tour.title">
                     <h2>{{ tour.title }}</h2>
                     <div v-if="authorNames && (!isMobile || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
@@ -45,7 +54,7 @@
                             :textColor="category.textColor"
                             :small="true"
                             style="display: flex; flex-direction: row; padding: 0.6em 0.8rem;"
-                        ></Tag>
+                        />
                     </div>
                 </div>
                 <div v-else>
@@ -54,14 +63,12 @@
                         :backgroundColor="'#484C70'"  
                         :textColor="'#ffffff'" 
                         :small="true"
-
-                    ></Tag>
+                    />
                 </div>
                         
                 <div class="row-layout" style="justify-content: space-between;">
                     <div class="column-layout" style="gap: 0.5rem;">
-                        <span class="mappopup__stories-info">{{ tour.stops }} stops / {{ tour.stories }} stories</span>
-                        
+                        <span class="mappopup__stories-info">{{ tour.stops }} stops / {{ tour.stories }} stories</span>     
                         <Tag
                             :label="tour.isIndoors ? 'Indoors' : 'Outdoors'"
                             :backgroundColor="tour.isIndoors ? '#D7F9DA' : '#E6EDFF'"   
@@ -69,7 +76,6 @@
                             :small="true" 
                             style="padding: 0.6em 0.8rem;"
                         />
-
                     </div>
                     <div class="mappopup__languageIcon" v-if="tour.availableLanguages">
                         <div v-for="language in tour.availableLanguages.slice(0,2)">
@@ -167,6 +173,9 @@ function close() {
     emit('update:isVisible', false);
     usePinHighlight(props.map, -1)
 }
+
+const loading = ref(true);
+function handleImageLoad() {loading.value = false;}
 
 </script>
 

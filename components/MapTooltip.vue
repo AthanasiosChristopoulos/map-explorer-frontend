@@ -9,12 +9,18 @@
     ></Tag>
 
     <h4>{{ tour.title }}</h4>
-    <img 
-        :src="tour.images.cover" 
-        alt="Preview not available" 
-        class="maptooltip__img" 
-    />
-    
+
+    <div class="maptooltip__img-wrapper">
+      <div v-if="loading" class="spinner"></div>
+      <img 
+        :src="tour.images.cover"
+        @load="handleImageLoad"
+        alt="Preview not available"
+        class="maptooltip__img"
+        :class="{ 'hidden': loading }"
+      />
+    </div>
+
     <div class="button__footer" style="margin-top:0.3rem">
       <Button
           :type="'submit'"
@@ -40,9 +46,11 @@ const props = defineProps({
 });
 
 const storiesNumberLabel = computed(() => {return `${props.tour.stories} stories`});
-const emit = defineEmits(['openMappopup']);
 
-function openMappopup() {
-  emit('openMappopup');
-}
+const emit = defineEmits(['openMappopup']);
+const openMappopup = () => emit('openMappopup');
+
+const loading = ref(true);
+function handleImageLoad() {loading.value = false;}
+
 </script>

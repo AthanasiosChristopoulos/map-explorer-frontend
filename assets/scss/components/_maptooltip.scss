@@ -14,6 +14,13 @@
     // max-height: 29vh;
 }
 
+.maptooltip__img-wrapper {
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .maptooltip__img {
     height: 20vh;
     aspect-ratio: 0.5;

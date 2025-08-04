@@ -15,20 +15,20 @@ export function usePopup(map, tours, findTours) {
         if (!tour) return;
 
         if (popup?.isOpen() && currentId === id) return;
-
+        
         currentId = id;
         popupExitAnimation = 200;
 
         const container = document.createElement('div');
         app = createApp({
-        render: () => h(MapToolTip, {
-            tour,
-            onOpenMappopup: () => {
-                popupExitAnimation = 0;
-                findTours(tour.id);
-                // closePopup();
-            }
-        })
+            render: () => h(MapToolTip, {
+                tour,
+                onOpenMappopup: () => {
+                    popupExitAnimation = 0;
+                    findTours(tour.id);
+                    // closePopup();
+                }
+            })
         });
         app.mount(container);
         try {

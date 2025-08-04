@@ -6,9 +6,9 @@ export default defineNuxtConfig({
     port:3000,
   },
   css: [
+    'vue-library/src/assets/scss/styles.scss',
     'mapbox-gl/dist/mapbox-gl.css',
     '@/assets/scss/styles.scss',
-    
   ],
   compatibilityDate: '2025-05-15',
   devtools: { enabled: false },
