@@ -122,6 +122,7 @@ import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
 
 const { width } = useWindowSize();
 const isMobile = computed(() => width.value <= 768);
+const loading = ref(true);
 
 const emit = defineEmits(['update:isVisible']);
 
@@ -160,6 +161,12 @@ const authorNames = computed(() => {
   }
 });
 
+// Watchers:  ===========================================================================
+
+watch(() => props.tour, () => {
+    loading.value = true;
+}, { immediate: true });
+
 // Handle Scrolling: ===========================================================================
 
 const popupRef = ref(null);
@@ -174,7 +181,6 @@ function close() {
     usePinHighlight(props.map, -1)
 }
 
-const loading = ref(true);
 function handleImageLoad() {loading.value = false;}
 
 </script>
