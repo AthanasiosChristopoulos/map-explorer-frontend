@@ -15,16 +15,14 @@
                 <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile"><img :src="exitIcon" alt="Close"></div>    
                 <div class="mappopup-handle" v-if="isMobile" @click="isExpanded = !isExpanded"></div>
 
-                <div class="mappopup__img-wrapper">
-                    <div v-if="loading" class="spinner"></div>
-                    <img 
-                        :src="tour.images.cover"
-                        @load="handleImageLoad"
-                        alt="Preview not available"
-                        class="mappopup__img"
-                        :class="{ 'hidden': loading }"
-                    />
-                </div>
+                <div v-if="loading" class="skeleton mappopup__img"></div>
+                <img 
+                    :src="tour.images.cover"
+                    @load="handleImageLoad"
+                    alt="Preview not available"
+                    class="mappopup__img"
+                    :class="{ 'hidden': loading }"
+                />
                 
                 <div class="mappopup__header column-layout" v-if="tour.title">
                     <h2>{{ tour.title }}</h2>
@@ -77,14 +75,9 @@
                             style="padding: 0.6em 0.8rem;"
                         />
                     </div>
-                    <div class="mappopup__languageIcon" v-if="tour.availableLanguages">
-                        <div v-for="language in tour.availableLanguages.slice(0,2)">
-                            <img :src="matchLanguageIcon(language)">
-                        </div>
-                        <div class="mappopup__circle" v-if="tour.availableLanguages.length > 2">
-                            +{{ tour.availableLanguages.length - 2 }}
-                        </div>
-                    </div>
+          
+                    <LanguageIcons v-if="tour.availableLanguages" :languages="tour.availableLanguages" />
+
                 </div>
             </div>
 
@@ -109,7 +102,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { Button, Tag } from 'vue-library';
 
 import arrow_right from '@/assets/icons/arrow-right.svg';
@@ -117,8 +110,10 @@ import exitIcon from '../assets/icons/exit.svg';
 
 import { useWindowSize } from '@vueuse/core';
 import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
-import { matchCategoryColors, matchLanguageIcon } from '@/utils/mapPopupUtils.js'
+import { matchCategoryColors } from '@/utils/mapPopupUtils.js'
 import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
+
+import LanguageIcons from '@/components/LanguageIcons.vue';
 
 const { width } = useWindowSize();
 const isMobile = computed(() => width.value <= 768);
@@ -152,6 +147,7 @@ const tourCategories = computed(() => {
     return { ...cat, backgroundColor, textColor };
   }) || [];
 });
+
 const authorNames = computed(() => {
   const authors = props.tour.author;
   if(Array.isArray(authors)) {

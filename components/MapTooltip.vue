@@ -10,16 +10,14 @@
 
     <h4>{{ tour.title }}</h4>
 
-    <div class="maptooltip__img-wrapper">
-      <div v-if="loading" class="spinner"></div>
-      <img 
-        :src="tour.images.cover"
-        @load="handleImageLoad"
-        alt="Preview not available"
-        class="maptooltip__img"
-        :class="{ 'hidden': loading }"
-      />
-    </div>
+    <div v-if="loading" class="skeleton maptooltip__img"></div>
+    <img 
+      :src="tour.images.cover"
+      @load="handleImageLoad"
+      alt="Preview not available"
+      class="maptooltip__img"
+      :class="{ 'hidden': loading }"
+    />
 
     <div class="button__footer" style="margin-top:0.3rem">
       <Button

@@ -16,23 +16,4 @@ html, body {
     padding: 0;
 }
 
-
-.hidden {display: none;}
-
-.spinner {
-    border: 5px solid var(--neutral-color--silver-sand);
-    border-top: 5px solid var(--blue-accent);
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+.hidden { display: none; }

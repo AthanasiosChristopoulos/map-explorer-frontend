@@ -1,0 +1,27 @@
+$circle-dim-languages: 2rem;
+
+.language-icons__list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.language-icons__list img,
+.language-icons__circle {
+  width: $circle-dim-languages;
+  height: $circle-dim-languages;
+  border-radius: 50%;
+  border: 2px solid var(--neutral-color--white);
+}
+
+.language-icons__circle {
+  background-color: #43ABFF;
+  color: var(--neutral-color--white);
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: normal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

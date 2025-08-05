@@ -8,24 +8,16 @@
 }
 
 .maptooltip {
-    gap: 0.5rem;
-    padding: 1rem;  
-    width: 18vw;
-    // max-height: 29vh;
-}
-
-.maptooltip__img-wrapper {
-    height: 20vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;  
+  width: 18vw;
 }
 
 .maptooltip__img {
-    height: 20vh;
-    aspect-ratio: 0.5;
-    width: 100%;
-    border-radius: 1rem;
-    object-fit: cover;
+  height: 20vh;
+  aspect-ratio: 0.5;
+  width: 100%;
+  border-radius: 1rem;
+  object-fit: cover;
 }
 
