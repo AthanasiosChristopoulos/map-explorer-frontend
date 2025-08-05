@@ -32,7 +32,7 @@ export default defineComponent({
     align: {
       default: 'right',
       type: String,
-      validator: (value) => ['right', 'top', 'left', 'bottom', 'over'].includes(value),
+      validator: (value) => ['right', 'top', 'left', 'bottom', 'over', 'over--right'].includes(value),
     },
   },
   setup(props) {
@@ -70,6 +70,10 @@ export default defineComponent({
           top = containerRect.top;
           left = containerRect.left;
           break;
+          case 'over--right':
+            top = containerRect.top;
+            left = containerRect.right - tooltipRect.width;
+            break;
       }
 
       tooltipStyle.value = {

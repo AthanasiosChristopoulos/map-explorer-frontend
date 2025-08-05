@@ -4,7 +4,8 @@ $circle-dim-languages: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  height: 100%;
 }
 
 .language-icons__list img,

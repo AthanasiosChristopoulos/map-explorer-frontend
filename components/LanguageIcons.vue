@@ -1,20 +1,24 @@
 <template>
-
-    <Tooltip :align="'over'">
+    <Tooltip :align="align_string" v-if="languageData.fullList.length > 2">
         <template v-slot:anchor>
             <div class="language-icons__list">
-                <img :src="matchLanguageIcon(firstLanguage)">
-                <img :src="matchLanguageIcon(secondLanguage)" style="margin-left: -0.8rem">
-                <div class="language-icons__circle" v-if="fullLanguageList.length > 2" style="margin-left: -0.8rem">+{{ extraLanguageCount}}</div>
+                <img :src="matchLanguageIcon(languageData.first)">
+                <img :src="matchLanguageIcon(languageData.second)" style="margin-left: -0.8rem">
+                <div class="language-icons__circle" style="margin-left: -0.8rem">+{{ languageData.extraCount}}</div>
             </div>
         </template>
 
-        <template v-slot:tooltip-content v-if="fullLanguageList.length > 2">
+        <template v-slot:tooltip-content>
             <div class="language-icons__list" style="margin-right: -0.5rem; line-height: 0">
-                <img v-for="language in fullLanguageList" :src="matchLanguageIcon(language)" style="margin-right: 0.5rem;">
+                <img v-for="language in languageData.fullList" :src="matchLanguageIcon(language)" style="margin-right: 0.5rem;">
             </div>
         </template>
     </Tooltip>
+
+    <div class="language-icons__list" v-else>
+        <img :src="matchLanguageIcon(languageData.first)">
+        <img :src="matchLanguageIcon(languageData.second)" style="margin-left: -0.8rem" v-if="languageData.second">
+    </div>
 
 </template>
 
@@ -30,8 +34,17 @@ const props = defineProps({
   },
 });
 
-const firstLanguage = computed(() => props.languages[0]);
-const secondLanguage = computed(() => props.languages[1]);
-const extraLanguageCount = computed(() => props.languages.length - 2);
-const fullLanguageList = computed(() => props.languages);
+const languageData = computed(() => {
+  const languages = props.languages;
+  return {
+    fullList: languages,
+    first: languages[0],
+    second: languages[1],
+    extraCount: languages.length > 2 ? languages.length - 2 : 0,
+  };
+});
+
+const isMobile = () => window.innerWidth <= 768;
+const align_string = computed(() => isMobile() ? 'over--right' : 'over');
+
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <Transition :name="isMobile ? 'mappopup-mobile' : 'mappopup-animation'">
+    <Transition :name="isMobile() ? 'mappopup-mobile' : 'mappopup-animation'">
         <div 
             class="mappopup column-layout"
             :class="{'mappopup--overflow': isScrollable}"
@@ -12,8 +12,8 @@
             <!--============================= static element, Image, Title, Author =====================-->
 
             <div class="mappopup__static column-layout" style="padding-top: 1.5rem;">
-                <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile"><img :src="exitIcon" alt="Close"></div>    
-                <div class="mappopup-handle" v-if="isMobile" @click="isExpanded = !isExpanded"></div>
+                <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
+                <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
 
                 <div v-if="loading" class="skeleton mappopup__img"></div>
                 <img 
@@ -26,13 +26,13 @@
                 
                 <div class="mappopup__header column-layout" v-if="tour.title">
                     <h2>{{ tour.title }}</h2>
-                    <div v-if="authorNames && (!isMobile || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
+                    <div v-if="authorNames && (!isMobile() || isExpanded)" class="mappopup__author">{{ authorNames }}</div>
                 </div>
             </div>
 
             <!--============================= Scrollable element =============================-->
 
-            <div class="mappopup__scrollable column-layout" v-if="(!isMobile || isExpanded)"
+            <div class="mappopup__scrollable column-layout" v-if="(!isMobile() || isExpanded)"
                 ref="scrollableRef"
                 @touchstart.stop="touchStartedAt = true"
                 @touchend.stop
@@ -83,7 +83,7 @@
 
             <!--============================= CTA element =============================-->
 
-            <div class="mappopup__static column-layout" style="padding-top: 0px;" v-if="!isMobile || isExpanded">
+            <div class="mappopup__static column-layout" style="padding-top: 0px;" v-if="!isMobile() || isExpanded">
                 <div class="mappopup__divider"></div>
 
                 <div class="button__footer">
@@ -108,15 +108,13 @@ import { Button, Tag } from 'vue-library';
 import arrow_right from '@/assets/icons/arrow-right.svg';
 import exitIcon from '../assets/icons/exit.svg';
 
-import { useWindowSize } from '@vueuse/core';
 import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
 import { matchCategoryColors } from '@/utils/mapPopupUtils.js'
 import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
 
 import LanguageIcons from '@/components/LanguageIcons.vue';
 
-const { width } = useWindowSize();
-const isMobile = computed(() => width.value <= 768);
+const isMobile = () => window.innerWidth <= 768;
 const loading = ref(true);
 
 const emit = defineEmits(['update:isVisible']);
