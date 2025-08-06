@@ -17,7 +17,6 @@
 import { ref, onMounted  } from 'vue'
 import MapPopup from '@/components/MapPopup.vue'; 
 import { useMapInitializer } from '@/composables/useMapInitializer.js'
-import Filters from '@/components/Filters.vue'; 
 
 const selectedTour = ref(null);
 

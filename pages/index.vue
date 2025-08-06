@@ -1,5 +1,4 @@
 <template>
-
     <div class="default-layout">
         <Filters />
         <Map />
