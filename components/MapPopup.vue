@@ -3,17 +3,17 @@
         <div 
             class="mappopup column-layout"
             :class="{'mappopup--overflow': isScrollable}"
-            v-if="props.isVisible"
+            v-if="isVisibleRef"
             ref="popupRef"
-            @touchstart="touchStartedAt = false"
-            @click="isExpanded = !isExpanded"
+            @touchstart="!isLanguagePopoverOpen && (touchStartedAt = false)"
+            @click="!isLanguagePopoverOpen && (isExpanded = !isExpanded)"
             @mouseenter="props.closeTooltip"          
         >
             <!--============================= static element, Image, Title, Author =====================-->
 
             <div class="mappopup__static column-layout" style="padding-top: 1.5rem;">
                 <div class="mappopup__exit-button" @click.stop="close" v-if="!isMobile()"><img :src="exitIcon" alt="Close"></div>    
-                <div class="mappopup-handle" v-if="isMobile()" @click="isExpanded = !isExpanded"></div>
+                <div class="mappopup-handle" v-if="isMobile()"></div>
 
                 <div v-if="loading" class="skeleton mappopup__img"></div>
                 <img 
@@ -34,9 +34,9 @@
 
             <div class="mappopup__scrollable column-layout" v-if="(!isMobile() || isExpanded)"
                 ref="scrollableRef"
-                @touchstart.stop="touchStartedAt = true"
-                @touchend.stop
-                @click.stop
+                @touchstart="handleScrollableTouchStart"
+                @touchend="handleScrollableTouchEnd"
+                @click="handleScrollableClick"
                 :class="{ 'mappopup__scrollable--overflow': isScrollable}"
             >
 
@@ -76,7 +76,7 @@
                         />
                     </div>
           
-                    <LanguageIcons v-if="tour.availableLanguages" :languages="tour.availableLanguages" />
+                    <LanguageGallery v-if="tour.availableLanguages" :languages="tour.availableLanguages" @popover-toggle="updatePopover"/>
 
                 </div>
             </div>
@@ -112,7 +112,10 @@ import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
 import { matchCategoryColors } from '@/utils/mapPopupUtils.js'
 import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
 
-import LanguageIcons from '@/components/LanguageIcons.vue';
+import LanguageGallery from '@/components/LanguageGallery.vue';
+
+const isLanguagePopoverOpen = ref(false);
+const updatePopover = (val) => isLanguagePopoverOpen.value = val;
 
 const isMobile = () => window.innerWidth <= 768;
 const loading = ref(true);
@@ -176,6 +179,26 @@ function close() {
 }
 
 function handleImageLoad() {loading.value = false;}
+
+// Events: ===========================================================================
+
+function handleScrollableTouchStart(event) {
+    if(!isScrollable.value) return
+    touchStartedAt.value = true;
+    event.stopPropagation();
+}
+
+function handleScrollableTouchEnd(event) {
+    if(!isScrollable.value) return
+    event.stopPropagation();
+}
+
+function handleScrollableClick(event) {
+    if(!isScrollable.value) return
+    if (!isLanguagePopoverOpen) {
+        event.stopPropagation();
+    }
+}
 
 </script>
 

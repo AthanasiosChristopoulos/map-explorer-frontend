@@ -6,7 +6,7 @@
       :backgroundColor="'#E6EDFF'"   
       :textColor="'#5E6C93'"        
       :small="true"
-    ></Tag>
+    />
 
     <h4>{{ tour.title }}</h4>
 

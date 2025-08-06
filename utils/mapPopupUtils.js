@@ -1,10 +1,10 @@
-import en from '../assets/icons/languages/en.svg';
-import es from '../assets/icons/languages/es.svg';
-import fr from '../assets/icons/languages/fr.svg';
-import gr from '../assets/icons/languages/gr.svg';
-import it from '../assets/icons/languages/it.svg';
-import pt from '../assets/icons/languages/pt.svg';
-import de from '../assets/icons/languages/de.svg';
+import en from '@/assets/icons/languages/en.svg';
+import es from '@/assets/icons/languages/es.svg';
+import fr from '@/assets/icons/languages/fr.svg';
+import gr from '@/assets/icons/languages/gr.svg';
+import it from '@/assets/icons/languages/it.svg';
+import pt from '@/assets/icons/languages/pt.svg';
+import de from '@/assets/icons/languages/de.svg';
 
 const languageMap = {it, en, pt, es, fr, de, gr,};
 
