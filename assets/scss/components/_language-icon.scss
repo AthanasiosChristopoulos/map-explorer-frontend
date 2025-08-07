@@ -1,5 +1,7 @@
 $circle-dim-languages: 2rem;
 $circle-dim-languages-small: 1.5rem;
+$circle-dim-languages--category-icon: 2.5rem;
+// $circle-dim-languages--category-icon--small: 2rem;
 
 .icon-label {
   display: inline-flex;
@@ -22,6 +24,10 @@ $circle-dim-languages-small: 1.5rem;
 .icon-label__image {
   width: $circle-dim-languages;
   height: $circle-dim-languages;
+}
+.icon-label__image--category-icon {
+  width: $circle-dim-languages--category-icon;
+  height: $circle-dim-languages--category-icon;
 }
 
 .icon-label--border-circle {

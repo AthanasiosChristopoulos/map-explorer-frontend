@@ -2,14 +2,13 @@
   <div class="icon-label" :class="{ 'icon-label--small': props.size === 'small' }">
     <img
       class="icon-label__image"
-      :class="{ 'icon-label--border-circle': props.language }"
+      :class="{ 'icon-label--border-circle': props.language, 'icon-label__image--category-icon': props.categoryIcon }"
       :src="resolvedIcon"
       :alt="resolvedLabel"
     />
     <span class="icon-label__label" v-if="props.showLabel">{{ resolvedLabel }}</span>
   </div>
 </template>
-
 
 <script setup>
 import { computed } from 'vue';
@@ -47,6 +46,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  categoryIcon: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const resolvedIcon = computed(() =>

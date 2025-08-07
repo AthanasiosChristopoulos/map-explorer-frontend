@@ -1,18 +1,20 @@
 <template>
   <div class="header-bar">
-    <img class="header-bar__logo" :src="smallLogoRedHorizontal" />
+    <img v-if="isMobile()" class="header-bar__logo" :src="smallLogoNoLogotype" />
+    <img v-else class="header-bar__logo" :src="smallLogoRedHorizontal" />
 
     <div class="header-bar__center-group">
       <div class="header-bar__search-wrapper">
         <Text
           v-model="text"
-          :placeholder="'Search by location, title'"
+          :placeholder="searchBarText"
           :icon="iconMagnifier"
           :iconPosition="'left'"
           class="header-bar__search"
+          :style="inputStyle"
         />
         <Button
-          :text="`Filters`"
+          :text="filterText"
           :buttonClass="`button__white`"
           :icon="filterIcon"
           class="header-bar__filters"
@@ -45,15 +47,19 @@
 
 <script setup>
 import { ref } from 'vue';
-import { smallLogoRedHorizontal, Text, Button, Window, Checkbox } from 'vue-library';
+import { smallLogoNoLogotype, smallLogoRedHorizontal, Text, Button, Checkbox } from 'vue-library';
 import iconMagnifier from '@/assets/icons/magnifier.svg';
 import filterIcon from '@/assets/icons/filterIcon.svg';
 import FilterBody from '@/components/FilterBody.vue';
 import { updateGeoData } from '../composables/updateGeoData';
 import { clearAllFilters } from '@/composables/useMapFilters.js'
+import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
+import Window from '@/components/Window.vue'
+
+const isMobile = () => window.innerWidth <= 768;
 
 const text = ref('');
-const showWindow = ref(false);
+const showWindow = ref(true);
 
 const props = defineProps({
   map: Object,
@@ -63,6 +69,7 @@ const props = defineProps({
 })
 
 function openFilterWindow() {
+  usePinHighlight(props.map, -1)
   props.closeMapPopup()
   props.closeTooltip(true)
   showWindow.value = true
@@ -102,8 +109,26 @@ function handleClickOutside(event) {
   closeWindow();
 }
 
-onMounted(() => {document.addEventListener('click', handleClickOutside)})
+const searchBarText = ref('');
+const filterText = ref('');
 
+onMounted(() => {
+  if(!isMobile()) {
+    searchBarText.value = 'Search a tour by location or title';
+    filterText.value = 'Filters';
+  } else {
+    searchBarText.value = 'Search';
+    filterText.value = '';    
+  }
+  document.addEventListener('click', handleClickOutside)}
+)
 onUnmounted(() => {document.removeEventListener('click', handleClickOutside)})
+
+// Input Style: =================================================================================================================
+
+const inputStyle = computed(() => ({
+  width: isMobile() ? '7rem' : 'fit-content',
+  height: '10rem',
+}));
 
 </script>

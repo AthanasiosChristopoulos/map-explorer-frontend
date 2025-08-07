@@ -1,6 +1,6 @@
 <template>
     <div class="column-layout" style="gap: 1.5rem;">
-        <h3 style="padding-top: 0.5rem;">Tour language</h3>
+        <h3>Tour language</h3>
         <div class="filter-body__language-checkboxes">
             <Checkbox 
                 v-for="language in availableLanguages" 
@@ -18,12 +18,13 @@
         <div class="divider" style="margin-bottom: -0.5rem"></div>
 
         <h3>Indoor or Outdoor Tour</h3>
-        <div class="row-layout" style="gap: 2.5rem;">
+        <div class="row-layout filter-body__enviroment-checkboxes">
             <Checkbox 
                 :isChecked="getFilters('isIndoors') === true"
                 :id="`isIndoors`"
                 @update:isChecked="(isChecked) => setIndoors(true, isChecked)"
                 class="filter-body__indoors-checkbox"
+                :enviromentCheckbox="true"
             >
                 <template #checkbox-label>
                     <IconLabel :icon="indoorsIcon" :label="`Indoors`" :showLabel="true" :size="`small`" />
@@ -35,6 +36,7 @@
                 :id="`isOutdoors`"
                 @update:isChecked="(isChecked) => setIndoors(false, isChecked)"
                 class="filter-body__indoors-checkbox"
+                :enviromentCheckbox="true"
             >
                 <template #checkbox-label>
                     <IconLabel :icon="outdoorsIcon" :label="`Outdoors`" :showLabel="true" :size="`small`" />
@@ -55,7 +57,13 @@
                 @update:isChecked="(isChecked) => toggleCategory(category, isChecked)"
             >
                 <template #checkbox-label>
-                    <IconLabel :icon="matchCategory(category).icon" :label="category" :showLabel="true" :size="`normal`" />
+                    <IconLabel 
+                        :icon="matchCategory(category).icon" 
+                        :label="category" 
+                        :categoryIcon="true" 
+                        :showLabel="true" 
+                        :size=" isMobile() ? 'small': 'normal'" 
+                    />
                 </template>
             </Checkbox>
         </div>
@@ -65,12 +73,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Checkbox } from 'vue-library';
+// import { Checkbox } from 'vue-library';
+import Checkbox from '@/components/Checkbox.vue';
 import IconLabel from '@/components/IconLabel.vue';
 import { availableLanguages, availableCategories, matchCategory } from '@/utils/tourInfo.js'
 import indoorsIcon from '@/assets/icons/indoors.svg';
 import outdoorsIcon from '@/assets/icons/outdoors.svg';
 import { getFilters, setFilters, pushFilters } from '@/composables/useMapFilters.js'
+
+const isMobile = () => window.innerWidth <= 768;
 
 function toggleLanguage(language, isChecked) {
     console.log(language)
