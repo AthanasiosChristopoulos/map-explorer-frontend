@@ -1,5 +1,19 @@
+@use '../variables/_structure';
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-style: normal;
+  @media (max-width: structure.$small) {
+    overscroll-behavior-y: contain;
+  }
 }
+
+.button__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+}
+
+.hidden { display: none; }

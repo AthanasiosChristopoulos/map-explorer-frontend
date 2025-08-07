@@ -1,0 +1,35 @@
+$circle-dim-languages: 2rem;
+$circle-dim-languages-small: 1.5rem;
+
+.language-icon {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+}
+
+.language-icon__image {
+  width: $circle-dim-languages;
+  height: $circle-dim-languages;
+  border-radius: 50%;
+  border: 2px solid var(--neutral-color--white);
+}
+
+.language-icon__label {
+  color: #3E4954;
+  font-family: Commissioner;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.language-icon--small .language-icon__image {
+  width: $circle-dim-languages-small;
+  height: $circle-dim-languages-small;
+}
+
+.language-icon--small {
+  font-size: 0.8rem;
+}

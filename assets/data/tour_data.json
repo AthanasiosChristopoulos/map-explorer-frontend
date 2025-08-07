@@ -27458,10 +27458,12 @@
     {
         "id": 286,
         "title": "Tour 286: Discover the City",
-        "description": "Explore the beautiful landmarks of the city on this historical journey.",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
         "language": "it",
         "availableLanguages": [
-            "fr"
+            "fr",
+            "it",
+            "pt"
         ],
         "stops": 15,
         "stories": 12,
@@ -27476,14 +27478,24 @@
                 "name": "Art"
             }
         ],
-        "author": {
-            "name": "Tour Guide",
-            "description": "Local expert guide with extensive knowledge of the city.",
-            "profileImage": {
-                "small": "https://picsum.photos/50/50?random=1",
-                "large": "https://picsum.photos/100/100?random=1"
+        "author": [
+            {
+                "name": "Tour Guide",
+                "description": "Local expert guide with extensive knowledge of the city.",
+                "profileImage": {
+                    "small": "https://picsum.photos/50/50?random=1",
+                    "large": "https://picsum.photos/100/100?random=1"
             }
-        },
+            },
+            {
+                "name": "Clio Muse Tours",
+                "description": "Local expert guide with extensive knowledge of the city.",
+                "profileImage": {
+                    "small": "https://picsum.photos/50/50?random=2",
+                    "large": "https://picsum.photos/100/100?random=2"
+            }
+            }
+        ],
         "products": [
             {
                 "sku": "AU861",

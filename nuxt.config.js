@@ -6,18 +6,24 @@ export default defineNuxtConfig({
     port:3000,
   },
   css: [
+    'vue-library/src/assets/scss/styles.scss',
     'mapbox-gl/dist/mapbox-gl.css',
     '@/assets/scss/styles.scss',
-    
   ],
   compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   app: {
     head: {
       link: [
         {
           rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css'
+        }
+      ],
+      script: [
+        {
+          src: 'https://cdn.jsdelivr.net/npm/mapbox-gl-animated-popup@0.4.0/dist/mapbox-gl-animated-popup.min.js',
+          defer: true
         }
       ]
     }

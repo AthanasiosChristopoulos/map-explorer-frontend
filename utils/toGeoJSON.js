@@ -16,8 +16,6 @@ export function toGeoJSON(tours) {
       }
     }))
   };
-  console.log(`Converted ${geoJSON.features.length} tours to GeoJSON`);
 
   return geoJSON;
-  
 }

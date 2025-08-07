@@ -15,21 +15,6 @@ export function updateCursorAtPoint(map, point) {
     map.getCanvas().style.cursor = isOverFeature ? 'pointer' : '';
 }
 
-export function loadAndAddImage(map, id, url) {
-    return new Promise((resolve) => {
-        let img = new Image();
-        img.onload = () => {
-            map.addImage(id, img);
-            resolve(true);
-        };
-        img.onerror = () => {
-            console.log(`Failed to load image '${id}' from '${url}'. Show default config.`);
-            resolve(false);
-        };
-        img.src = url;
-    });
-}
-
 export function handleClusterClick(map, e) {
     const features = map.queryRenderedFeatures(e.point, {
         layers: ['clusters']
