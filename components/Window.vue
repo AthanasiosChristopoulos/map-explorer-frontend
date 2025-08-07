@@ -45,61 +45,51 @@
     </transition>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script setup>
 import { Button } from 'vue-library';
 import closeIcon from '@/node_modules/vue-library/src/assets/icons/close-callout.svg';
 import checkedIcon from '@/node_modules/vue-library/src/assets/icons/checked.svg';
 import checkedDisabledIcon from '@/node_modules/vue-library/src/assets/icons/checked-disabled.svg';
+import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
 
-export default defineComponent({
-    name: 'Window',
-    components: {
-        Button,
+const props = defineProps({
+    leftButtonText: {
+        type: String,
+        default: '',
     },
-    props: {
-        leftButtonText: {
-            type: String,
-            default: '',
-        },
-        rightButtonText: {
-            type: String,
-            default: '',
-        },
-        isVisible: {
-            type: Boolean,
-            default: false,
-        },
-        leftButtonDisabled: {
-            type: Boolean,
-            default: false,
-        },
-        rightButtonDisabled: {
-            type: Boolean,
-            default: false,
-        },
+    rightButtonText: {
+        type: String,
+        default: '',
     },
-    setup(props, { emit }) {
-        // Reactive data for icons
-        const closeIconUrl = closeIcon;
-        const checkedIconUrl = checkedIcon;
-        const checkedDisabledIconUrl = checkedDisabledIcon;
-
-        // Emitting actions
-        const emitClose = () => emit('close');
-        const emitLeftAction = () => emit('left-action');
-        const emitRightAction = () => emit('right-action');
-
-        const isMobile = () => window.innerWidth <= 768;
-
-        return {
-            closeIcon: closeIconUrl,
-            checkedIcon: checkedIconUrl,
-            checkedDisabledIcon: checkedDisabledIconUrl,
-            emitClose,
-            emitLeftAction,
-            emitRightAction,
-        };
+    isVisible: {
+        type: Boolean,
+        default: false,
+    },
+    leftButtonDisabled: {
+        type: Boolean,
+        default: false,
+    },
+    rightButtonDisabled: {
+        type: Boolean,
+        default: false,
     },
 });
+const emit = defineEmits(['close', 'left-action', 'right-action'])
+
+// Reactive data for icons
+const closeIconUrl = closeIcon;
+const checkedIconUrl = checkedIcon;
+const checkedDisabledIconUrl = checkedDisabledIcon;
+
+// Emitting actions
+const emitClose = () => emit('close');
+const emitLeftAction = () => emit('left-action');
+const emitRightAction = () => emit('right-action');
+
+const isMobile = () => window.innerWidth <= 768;
+
+const { isExpanded, isScrollable } = usePopupSwipeBehavior(popupRef, scrollableRef, touchStartedAt, tour, isVisibleRef, close);
+
+
+
 </script>
