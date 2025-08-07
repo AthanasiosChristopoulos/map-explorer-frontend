@@ -13,7 +13,6 @@
   "dependencies": {
     "@turf/turf": "^7.2.0",
     "@vueuse/core": "^13.5.0",
-    "axios": "^1.10.0",
     "mapbox-gl": "^3.13.0",
     "mapbox-gl-animated-popup": "^0.4.0",
     "nuxt": "^3.17.6",
@@ -22,6 +21,6 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "sass-embedded": "^1.89.2"
+    "sass": "^1.90.0"
   }
 }
