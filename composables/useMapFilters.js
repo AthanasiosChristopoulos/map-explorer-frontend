@@ -28,7 +28,6 @@ export function removeFilters(key, value) {
   if (Array.isArray(filters.value[key])) {
     filters.value[key] = filters.value[key].filter(item => item !== value);
 
-    // Optional: If array becomes empty, reset to null
     if (filters.value[key].length === 0) {
       filters.value[key] = null;
     }

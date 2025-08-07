@@ -46,6 +46,20 @@
         
         <h3>Tour Category</h3>
 
+        <div class="filter-body__language-checkboxes">
+            <Checkbox 
+                v-for="category in availableCategories" 
+                :key="category" 
+                :id="category"
+                :isChecked="getFilters('categories')?.includes(category)"
+                @update:isChecked="(isChecked) => toggleCategory(language, isChecked)"
+            >
+                <template #checkbox-label>
+                    <IconLabel :language="language" :showLabel="true" :size="`small`" />
+                </template>
+            </Checkbox>
+        </div>
+
     </div>
 
 </template>
@@ -54,7 +68,7 @@
 import { ref, onMounted } from 'vue';
 import { Checkbox } from 'vue-library';
 import IconLabel from '@/components/IconLabel.vue';
-import { availableLanguages } from '@/utils/mapPopupUtils.js'
+import { availableLanguages, availableCategories } from '@/utils/mapPopupUtils.js'
 import indoorsIcon from '@/assets/icons/indoors.svg';
 import outdoorsIcon from '@/assets/icons/outdoors.svg';
 import { getFilters, setFilters, pushFilters } from '@/composables/useMapFilters.js'
@@ -70,6 +84,16 @@ function toggleLanguage(language, isChecked) {
     }
 }
 
+function toggleLanguage(language, isChecked) {
+    console.log(language)
+    console.log(isChecked)
+
+    if (isChecked) {
+        pushFilters('languages', language);
+    } else if (!isChecked) {
+        removeFilters('languages', language);
+    }
+}
 function setIndoors(isIndoors, isChecked) {
     if (!isChecked) {
         setFilters('isIndoors', null);

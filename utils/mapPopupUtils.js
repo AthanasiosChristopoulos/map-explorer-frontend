@@ -31,9 +31,15 @@ export function matchCategory(category_name) {
       return { backgroundColor: '#2EA7CE', textColor: '#ffffff', icon: religion };
     case "Art":
       return { backgroundColor: '#EAA2A8', textColor: '#ffffff', icon: religion };
-    case "Museum":
+    case "Architecture":
       return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
-    case "Museum":
+    case "Kids":
+      return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
+    case "Archeology":
+      return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
+    case "Fun":
+      return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
+    case "Religion":
       return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
     default:
       return { backgroundColor: '#484C70', textColor: '#ffffff', icon: religion };
