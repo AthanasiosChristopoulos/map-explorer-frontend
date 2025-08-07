@@ -1,25 +1,3 @@
-<!-- <template>
-    <div class="row-layout" style="padding: 1rem; width: 57vw; justify-content: space-between;">
-        <img :src="smallLogoRedHorizontal" style="padding-right: 20% ">
-        <div class="row-layout" style="justify-content: center; ">
-            <Text
-                v-model="text"
-                :placeholder="'Search by location, title'"
-                :icon="iconMagnifier"
-                :iconPosition="'left'"
-                style="width: fit-content; padding-right: 1.5rem; flex-shrink: 0;"
-            /> 
-            <Button 
-                :text="`Filters`"
-                :buttonClass="`button__white`" 
-                :icon="filterIcon"
-                @click="openPopup"
-            />
-        </div>
-
-    </div>
-</template> -->
-
 <template>
   <div class="header-bar">
     <img class="header-bar__logo" :src="smallLogoRedHorizontal" />
@@ -37,23 +15,66 @@
           :text="`Filters`"
           :buttonClass="`button__white`"
           :icon="filterIcon"
-          @click="openPopup"
+          @click="openFilterWindow"
           class="header-bar__filters"
         />
       </div>
     </div>
   </div>
+
+  <Window
+      :isVisible="showWindow"
+      :leftButtonText="'Clear All'"
+      :rightButtonText="'Apply Filters'"
+      :leftButtonDisabled="false"
+      :rightButtonDisabled="false"
+      @left-action="clearAll"
+      @right-action="applyFilters"
+      @close="closeWindow"
+  >
+      <template v-slot:window__header>
+          <h1>Filters</h1>
+      </template>
+
+      <template v-slot:window__body>
+        <FilterBody />
+      </template>
+
+  </Window>
+
 </template>
 
 
-
 <script setup>
-import { ref, computed } from 'vue';
-import { smallLogoRedHorizontal, Text, Button } from 'vue-library';
+import { ref } from 'vue';
+import { smallLogoRedHorizontal, Text, Button, Window, Checkbox } from 'vue-library';
 import iconMagnifier from '@/assets/icons/magnifier.svg';
 import filterIcon from '@/assets/icons/filterIcon.svg';
+import FilterBody from '@/components/FilterBody.vue';
+import { updateGeoData } from '../composables/updateGeoData';
+import { clearAllFilters } from '@/composables/useMapFilters.js'
 
 const text = ref('');
+const showWindow = ref(true);
 
+const props = defineProps({
+  map: Object,
+  geoData: Object,
+})
 
+function openFilterWindow() {
+  showWindow.value = true
+}
+function closeWindow() {
+  showWindow.value = false
+}
+
+function clearAll() {
+  clearAllFilters()
+  updateGeoData(props.map, props.geoData)
+}
+function applyFilters() {
+  updateGeoData(props.map, props.geoData)
+  closeWindow()
+}
 </script>

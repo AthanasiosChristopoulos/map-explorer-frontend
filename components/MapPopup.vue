@@ -84,7 +84,7 @@
             <!--============================= CTA element =============================-->
 
             <div class="mappopup__static column-layout" style="padding-top: 0px;" v-if="!isMobile() || isExpanded">
-                <div class="mappopup__divider"></div>
+                <div class="divider" style="margin: 0rem -1.5rem 0rem -1.5rem;"></div>
 
                 <div class="button__footer">
                     <Button
@@ -109,7 +109,7 @@ import arrow_right from '@/assets/icons/arrow-right.svg';
 import exitIcon from '../assets/icons/exit.svg';
 
 import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
-import { matchCategoryColors } from '@/utils/mapPopupUtils.js'
+import { matchCategory } from '@/utils/mapPopupUtils.js'
 import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
 
 import LanguageGallery from '@/components/LanguageGallery.vue';
@@ -144,7 +144,7 @@ const tour = computed(() => props.tour);
 const isVisibleRef = computed(() => props.isVisible);
 const tourCategories = computed(() => {
   return props.tour.categories?.map(cat => {
-    const { backgroundColor, textColor } = matchCategoryColors(cat.name);
+    const { backgroundColor, textColor } = matchCategory(cat.name);
     return { ...cat, backgroundColor, textColor };
   }) || [];
 });

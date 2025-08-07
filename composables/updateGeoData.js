@@ -1,5 +1,4 @@
 import { filters } from '@/composables/useMapFilters.js';
-
 import { ref } from 'vue';
 
 let filteredGeoData = ref({});
@@ -11,6 +10,7 @@ export function updateGeoData(map, geoData) {
         type: "FeatureCollection",
         features: geoData.features.filter(data => {
             let filterBounds = false;
+            let languageFilter = false
             let isIndoorsFilter = false;
 
             let lng = data.geometry.coordinates[0];
@@ -20,16 +20,32 @@ export function updateGeoData(map, geoData) {
                     filterBounds = true;
                 }
             }
-            
+            // languageFilter ===================================================================
+
+             if(filters.value.languages !== null) {
+                for (const language of filters.value.languages) {
+                    if (data.properties.availableLanguages.includes(language)) {
+                        languageFilter = true;
+                        break;
+                    }
+                }
+            } else {
+                languageFilter = true;
+            }
+
+            // isIndoorsFilter ===================================================================
+
             if(filters.value.isIndoors !== null) {
                 if (filters.value.isIndoors === data.properties.isIndoors) {
                     isIndoorsFilter = true;
                 }
-
             } else {
                 isIndoorsFilter = true;
             }
-            if (filterBounds && isIndoorsFilter) {
+            
+            // Final Check if Tour should be filtered out or not =================================
+
+            if (filterBounds && languageFilter && isIndoorsFilter) {
                 return true;
             }
             return false;

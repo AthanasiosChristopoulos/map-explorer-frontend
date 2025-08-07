@@ -1,0 +1,15 @@
+.filter-body__language-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 1rem;
+}
+
+.label-text {
+    margin-left: 0.5rem;
+}
+.filter-body__indoors-checkbox {
+    border-radius: 0.9375rem;
+    border: 2px solid #ECEAF3;
+    background: #FFF;
+    padding: 0.7rem 1rem;
+}

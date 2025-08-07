@@ -1,3 +1,4 @@
+// Language Icons:
 import en from '@/assets/icons/languages/en.svg';
 import es from '@/assets/icons/languages/es.svg';
 import fr from '@/assets/icons/languages/fr.svg';
@@ -6,24 +7,36 @@ import it from '@/assets/icons/languages/it.svg';
 import pt from '@/assets/icons/languages/pt.svg';
 import de from '@/assets/icons/languages/de.svg';
 
+// Category Icons:
+import religion from '@/assets/icons/categories/religion.svg';
+
+
+export const availableLanguages = ["it", "en", "pt", "es", "fr", "de", "gr"];
+
+export const availableCategories = ["History", "Nature", "Architecture", "Kids", "Archeology", "Fun", "Art", "Religion"]
+
 const languageMap = {it, en, pt, es, fr, de, gr,};
 
-export function matchCategoryColors(category_name) {
+export function matchCategory(category_name) {
   switch (category_name) {
     case "History":
-      return { backgroundColor: '#F2AF29', textColor: '#ffffff' };
+      return { backgroundColor: '#F2AF29', textColor: '#ffffff', icon: religion };
     case "Gastronomy":
-      return { backgroundColor: '#AD343E', textColor: '#ffffff' };
+      return { backgroundColor: '#AD343E', textColor: '#ffffff', icon: religion };
     case "Nature":
-      return { backgroundColor: '#5296A5', textColor: '#ffffff' };
+      return { backgroundColor: '#5296A5', textColor: '#ffffff', icon: religion };
     case "Museum":
-      return { backgroundColor: '#FB902D', textColor: '#ffffff' };
+      return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
     case "Adventure":
-      return { backgroundColor: '#2EA7CE', textColor: '#ffffff' };
+      return { backgroundColor: '#2EA7CE', textColor: '#ffffff', icon: religion };
     case "Art":
-      return { backgroundColor: '#EAA2A8', textColor: '#ffffff' };
+      return { backgroundColor: '#EAA2A8', textColor: '#ffffff', icon: religion };
+    case "Museum":
+      return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
+    case "Museum":
+      return { backgroundColor: '#FB902D', textColor: '#ffffff', icon: religion };
     default:
-      return { backgroundColor: '#484C70', textColor: '#ffffff' };
+      return { backgroundColor: '#484C70', textColor: '#ffffff', icon: religion };
   }
 }
 

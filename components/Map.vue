@@ -19,10 +19,10 @@ import MapPopup from '@/components/MapPopup.vue';
 import { useMapInitializer } from '@/composables/useMapInitializer.js'
 
 const selectedTour = ref(null);
-
 let map;
 let geoData;
 let closeTooltip = null;
+
 const localShowMapPopup = ref(false);
 let mapReady = ref(false);
 
@@ -33,10 +33,12 @@ const tours = computed(() =>
   })) || []
 );
 
+const emit = defineEmits(['init']);
+
 onMounted(async() => {
   ({map, geoData, closeTooltip } = await useMapInitializer(tours, findTours, () => {localShowMapPopup.value = false;}));
   mapReady.value = true;
-  // console.log(`Viewport: ${window.innerWidth}px X ${window.innerHeight}px`);
+  emit('init', { map, geoData });
 });
 
 function findTours(id) {

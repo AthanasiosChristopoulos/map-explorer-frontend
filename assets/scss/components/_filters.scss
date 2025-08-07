@@ -4,18 +4,12 @@
 }
 
 .button__text {
-    color: #3E4954;
     font-family: Commissioner;
-    font-size: 0.9rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    padding: 0;
 }
 
 .header-bar {
   position: relative;
-  height: 4rem;
+  height: 4.5rem;
   width: 100vw;
   display: flex;
   align-items: center;
@@ -57,4 +51,16 @@
     width: 7rem;
     height: 2.5rem;
   }
+}
+
+.window__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    text-align: left; 
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+    width: -webkit-fill-available;
+    background: var(--neutral-color--white);
+    overflow-y: auto;
 }

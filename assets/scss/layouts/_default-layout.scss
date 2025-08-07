@@ -2,6 +2,9 @@
 
 .default-layout {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+
     @media (max-width: structure.$small) {
         height: 100dvh;
     }

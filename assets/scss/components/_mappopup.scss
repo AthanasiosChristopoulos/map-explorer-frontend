@@ -97,6 +97,7 @@
 .mappopup__scrollable--overflow {
     padding-right: 0.7rem;
 }
+
 .mappopup__body p {
     width: -webkit-fill-available;
     gap: 0.75rem;
@@ -128,13 +129,6 @@
         border-radius: 2px;
         margin: 0px auto 0px auto; 
     }
-}
-
-.mappopup__divider {
-    height: 1px;
-    background-color: var(--neutral-color--silver-sand);
-    margin: 0rem -1.5rem 0rem -1.5rem;
-    flex-shrink: 0;
 }
 
 // Animations  ======================================================================================
