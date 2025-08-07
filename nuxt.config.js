@@ -2,9 +2,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-  server: {
-    port:3000,
-  },
+  ssr: false,
   css: [
     'vue-library/src/assets/scss/styles.scss',
     'mapbox-gl/dist/mapbox-gl.css',
