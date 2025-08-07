@@ -38,7 +38,7 @@ const emit = defineEmits(['init']);
 onMounted(async() => {
   ({map, geoData, closeTooltip } = await useMapInitializer(tours, findTours, () => {localShowMapPopup.value = false;}));
   mapReady.value = true;
-  emit('init', { map, geoData });
+  emit('init', map, geoData, closeTooltip, closeMapPopup);
 });
 
 function findTours(id) {
@@ -51,5 +51,8 @@ function findTours(id) {
   map.easeTo({ center: selectedTour.value.coordinates });
 };
 
+function closeMapPopup() {
+  localShowMapPopup.value = false    
+}
 </script>
 

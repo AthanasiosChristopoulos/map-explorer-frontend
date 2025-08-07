@@ -1,34 +1,38 @@
 $circle-dim-languages: 2rem;
 $circle-dim-languages-small: 1.5rem;
 
-.language-icon {
+.icon-label {
   display: inline-flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.125rem;
+  font-size: 1rem;
 }
 
-.language-icon__image {
+.icon-label--small .icon-label__image {
+  width: $circle-dim-languages-small;
+  height: $circle-dim-languages-small;
+}
+
+.icon-label--small {
+  font-size: 0.8rem;
+}
+
+.icon-label__image {
   width: $circle-dim-languages;
   height: $circle-dim-languages;
+}
+
+.icon-label--border-circle {
+  border-radius: 50%;
   border: 2px solid var(--neutral-color--white);
 }
 
-.language-icon__label {
+.icon-label__label {
   color: #3E4954;
   font-family: Commissioner;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-}
-
-.language-icon--small .language-icon__image {
-  width: $circle-dim-languages-small;
-  height: $circle-dim-languages-small;
-}
-
-.language-icon--small {
-  font-size: 0.8rem;
 }

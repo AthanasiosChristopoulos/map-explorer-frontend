@@ -18,7 +18,6 @@ export function pushFilters(key, value) {
   if (!Array.isArray(filters.value[key])) {
     filters.value[key] = [];
   }
-
   if (!filters.value[key].includes(value)) {
     filters.value[key].push(value);
   }
@@ -33,6 +32,7 @@ export function removeFilters(key, value) {
     }
   }
 }
+
 export function clearAllFilters() {
   for (const key in filters.value) {
     filters.value[key] = null;

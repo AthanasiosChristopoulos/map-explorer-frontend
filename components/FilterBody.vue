@@ -1,6 +1,6 @@
 <template>
-    <div class="column-layout" style="gap: 1rem;">
-        <h3>Tour language</h3>
+    <div class="column-layout" style="gap: 1.5rem;">
+        <h3 style="padding-top: 0.5rem;">Tour language</h3>
         <div class="filter-body__language-checkboxes">
             <Checkbox 
                 v-for="language in availableLanguages" 
@@ -15,7 +15,7 @@
             </Checkbox>
         </div>
 
-        <div class="divider"></div>
+        <div class="divider" style="margin-bottom: -0.5rem"></div>
 
         <h3>Indoor or Outdoor Tour</h3>
         <div class="row-layout" style="gap: 2.5rem;">
@@ -46,20 +46,19 @@
         
         <h3>Tour Category</h3>
 
-        <div class="filter-body__language-checkboxes">
+        <div class="filter-body__category-checkboxes">
             <Checkbox 
                 v-for="category in availableCategories" 
                 :key="category" 
                 :id="category"
                 :isChecked="getFilters('categories')?.includes(category)"
-                @update:isChecked="(isChecked) => toggleCategory(language, isChecked)"
+                @update:isChecked="(isChecked) => toggleCategory(category, isChecked)"
             >
                 <template #checkbox-label>
-                    <IconLabel :language="language" :showLabel="true" :size="`small`" />
+                    <IconLabel :icon="matchCategory(category).icon" :label="category" :showLabel="true" :size="`normal`" />
                 </template>
             </Checkbox>
         </div>
-
     </div>
 
 </template>
@@ -68,7 +67,7 @@
 import { ref, onMounted } from 'vue';
 import { Checkbox } from 'vue-library';
 import IconLabel from '@/components/IconLabel.vue';
-import { availableLanguages, availableCategories } from '@/utils/mapPopupUtils.js'
+import { availableLanguages, availableCategories, matchCategory } from '@/utils/tourInfo.js'
 import indoorsIcon from '@/assets/icons/indoors.svg';
 import outdoorsIcon from '@/assets/icons/outdoors.svg';
 import { getFilters, setFilters, pushFilters } from '@/composables/useMapFilters.js'
@@ -76,7 +75,6 @@ import { getFilters, setFilters, pushFilters } from '@/composables/useMapFilters
 function toggleLanguage(language, isChecked) {
     console.log(language)
     console.log(isChecked)
-
     if (isChecked) {
         pushFilters('languages', language);
     } else if (!isChecked) {
@@ -84,16 +82,16 @@ function toggleLanguage(language, isChecked) {
     }
 }
 
-function toggleLanguage(language, isChecked) {
-    console.log(language)
+function toggleCategory(category, isChecked) {
+    console.log(category)
     console.log(isChecked)
-
     if (isChecked) {
-        pushFilters('languages', language);
+        pushFilters('categories', category);
     } else if (!isChecked) {
-        removeFilters('languages', language);
+        removeFilters('categories', category);
     }
 }
+
 function setIndoors(isIndoors, isChecked) {
     if (!isChecked) {
         setFilters('isIndoors', null);

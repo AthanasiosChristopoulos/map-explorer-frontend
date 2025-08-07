@@ -12,6 +12,7 @@ export function updateGeoData(map, geoData) {
             let filterBounds = false;
             let languageFilter = false
             let isIndoorsFilter = false;
+            let categoryFilter = false
 
             let lng = data.geometry.coordinates[0];
             let lat = data.geometry.coordinates[1];
@@ -23,6 +24,7 @@ export function updateGeoData(map, geoData) {
             // languageFilter ===================================================================
 
              if(filters.value.languages !== null) {
+                // Tour must include only one of the selected languages
                 for (const language of filters.value.languages) {
                     if (data.properties.availableLanguages.includes(language)) {
                         languageFilter = true;
@@ -42,10 +44,22 @@ export function updateGeoData(map, geoData) {
             } else {
                 isIndoorsFilter = true;
             }
-            
+
+            // categoryFilter ===================================================================
+
+            if (filters.value.categories !== null) {
+                // Tour must include all of the selected categories 
+                const tourCategoryNames = data.properties.categories.map(c => c.name);
+                categoryFilter = filters.value.categories.every(selectedCategory =>
+                    tourCategoryNames.includes(selectedCategory)
+                );
+            } else {
+                categoryFilter = true;
+            }
+
             // Final Check if Tour should be filtered out or not =================================
 
-            if (filterBounds && languageFilter && isIndoorsFilter) {
+            if (filterBounds && languageFilter && isIndoorsFilter && categoryFilter) {
                 return true;
             }
             return false;

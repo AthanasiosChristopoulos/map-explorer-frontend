@@ -109,7 +109,7 @@ import arrow_right from '@/assets/icons/arrow-right.svg';
 import exitIcon from '../assets/icons/exit.svg';
 
 import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
-import { matchCategory } from '@/utils/mapPopupUtils.js'
+import { matchCategory } from '@/utils/tourInfo.js'
 import { usePopupSwipeBehavior } from '@/composables/usePopupSwipeBehavior.js';
 
 import LanguageGallery from '@/components/LanguageGallery.vue';

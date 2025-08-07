@@ -1,18 +1,19 @@
 <template>
-  <div class="language-icon" :class="{ 'language-icon--small': props.size === 'small' }">
+  <div class="icon-label" :class="{ 'icon-label--small': props.size === 'small' }">
     <img
-      class="language-icon__image"
+      class="icon-label__image"
+      :class="{ 'icon-label--border-circle': props.language }"
       :src="resolvedIcon"
       :alt="resolvedLabel"
     />
-    <span class="language-icon__label" v-if="props.showLabel">{{ resolvedLabel }}</span>
+    <span class="icon-label__label" v-if="props.showLabel">{{ resolvedLabel }}</span>
   </div>
 </template>
 
 
 <script setup>
 import { computed } from 'vue';
-import { matchLanguageIcon } from '@/utils/mapPopupUtils.js';
+import { matchLanguageIcon } from '@/utils/tourInfo.js';
 
 const languageDataMap = {
   en: 'English',

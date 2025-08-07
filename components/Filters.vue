@@ -15,7 +15,6 @@
           :text="`Filters`"
           :buttonClass="`button__white`"
           :icon="filterIcon"
-          @click="openFilterWindow"
           class="header-bar__filters"
         />
       </div>
@@ -31,6 +30,7 @@
       @left-action="clearAll"
       @right-action="applyFilters"
       @close="closeWindow"
+      ref="windowRef"
   >
       <template v-slot:window__header>
           <h1>Filters</h1>
@@ -39,9 +39,7 @@
       <template v-slot:window__body>
         <FilterBody />
       </template>
-
   </Window>
-
 </template>
 
 
@@ -55,17 +53,23 @@ import { updateGeoData } from '../composables/updateGeoData';
 import { clearAllFilters } from '@/composables/useMapFilters.js'
 
 const text = ref('');
-const showWindow = ref(true);
+const showWindow = ref(false);
 
 const props = defineProps({
   map: Object,
   geoData: Object,
+  closeTooltip: Function,
+  closeMapPopup: Function,
 })
 
 function openFilterWindow() {
+  props.closeMapPopup()
+  props.closeTooltip(true)
   showWindow.value = true
 }
+
 function closeWindow() {
+  console.log('closeWindow')
   showWindow.value = false
 }
 
@@ -73,8 +77,33 @@ function clearAll() {
   clearAllFilters()
   updateGeoData(props.map, props.geoData)
 }
+
 function applyFilters() {
   updateGeoData(props.map, props.geoData)
   closeWindow()
 }
+
+// Handle clickOutside: =================================================================================================================
+
+const windowRef = ref(null)
+
+function handleClickOutside(event) {
+  const filterButton = document.querySelector('.header-bar__filters'); 
+  if(filterButton?.contains(event.target)) {
+    openFilterWindow()
+    return
+  }
+
+  const header = document.querySelector('.window__header');
+  const body = document.querySelector('.window__body');
+  const footer = document.querySelector('.window__footer'); 
+  if (header?.contains(event.target) || body?.contains(event.target) || footer?.contains(event.target) ||!showWindow.value) return;
+
+  closeWindow();
+}
+
+onMounted(() => {document.addEventListener('click', handleClickOutside)})
+
+onUnmounted(() => {document.removeEventListener('click', handleClickOutside)})
+
 </script>

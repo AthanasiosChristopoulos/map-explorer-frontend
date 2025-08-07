@@ -3,8 +3,13 @@
     height: 1rem;
 }
 
-.button__text {
-    font-family: Commissioner;
+.header-bar__filters .button__text {
+  padding-bottom: 0.35rem;
+  font-family: Commissioner; 
+  font-weight: 400; 
+}
+.header-bar__filters.button__white {
+  border: 2px solid var(--gray-xxlight);
 }
 
 .header-bar {
@@ -49,7 +54,7 @@
     right: -9rem; 
     z-index: 0;
     width: 7rem;
-    height: 2.5rem;
+    height: 2.6rem;
   }
 }
 
@@ -63,4 +68,5 @@
     width: -webkit-fill-available;
     background: var(--neutral-color--white);
     overflow-y: auto;
+    max-height: 60vh;
 }

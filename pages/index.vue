@@ -1,7 +1,7 @@
 <!-- DefaultLayout.vue or wherever this is -->
 <template>
   <div class="default-layout">
-    <Filters :map="map" :geoData="geoData" />
+    <Filters :map="map" :geoData="geoData" :closeTooltip="closeTooltip" :closeMapPopup="closeMapPopup" />
     <Map @init="onMapInit" />
   </div>
 </template>
@@ -13,9 +13,14 @@ import Filters from '@/components/Filters.vue';
 
 const map = ref(null);
 const geoData = ref(null);
+const closeTooltip = ref(null);
+const closeMapPopup = ref(null);
 
-function onMapInit({ map: m, geoData: g }) {
-  map.value = m;
-  geoData.value = g;
+function onMapInit(map_parameter, geoData_parameter, closeTooltip_parameter, closeMapPopup_parameter) {
+  map.value = map_parameter;
+  geoData.value = geoData_parameter;
+  closeTooltip.value = closeTooltip_parameter;
+  closeMapPopup.value = closeMapPopup_parameter;
 }
+
 </script>

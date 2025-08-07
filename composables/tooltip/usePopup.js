@@ -39,9 +39,14 @@ export function usePopup(map, tours, findTours) {
     };
 
     // closeTooltip ============================================================================================
-    const closeTooltip = () => {
+    const closeTooltip = (noCloseAnimation = false) => {
         if (popup.isOpen()) {
-            popup.options.closingAnimation.duration = popupExitAnimation;
+            if(noCloseAnimation) {
+               popup.options.closingAnimation.duration = 0; 
+            } else {
+                popup.options.closingAnimation.duration = popupExitAnimation;
+
+            }
             popup.remove();
             setTimeout(() => { app?.unmount(); }, popupExitAnimation);
         }

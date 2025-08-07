@@ -4,9 +4,17 @@
     gap: 1rem;
 }
 
+.filter-body__category-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1rem;
+    padding: 0 1rem 0 1rem;
+}
+
 .label-text {
     margin-left: 0.5rem;
 }
+
 .filter-body__indoors-checkbox {
     border-radius: 0.9375rem;
     border: 2px solid #ECEAF3;
