@@ -1,6 +1,6 @@
 import { createApp, h, onUnmounted } from 'vue'
 import AnimatedPopup from 'mapbox-gl-animated-popup'
-import MapToolTip from '@/components/MapToolTip.vue'
+import MapTooltip from '@/components/MapTooltip.vue'
 import mapConfig from '@/assets/map/map-config.json'
 
 export function usePopup(map, tours, findTours) {
@@ -21,7 +21,7 @@ export function usePopup(map, tours, findTours) {
 
         const container = document.createElement('div');
         app = createApp({
-            render: () => h(MapToolTip, {
+            render: () => h(MapTooltip, {
                 tour,
                 onOpenMappopup: () => {
                     popupExitAnimation = 0;
