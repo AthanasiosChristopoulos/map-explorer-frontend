@@ -1,8 +1,12 @@
 <template>
     <transition name="window-animation">
-        <div v-if="isVisible">
+        <div 
+            v-if="isExpanded" 
+            ref="popupRef" 
+            @click="emitClose()"
+            @touchstart="touchStartedAt = false"
+        >
             <transition name="window-animation-inner">
-                <!-- <div class="window"> -->
                 <div :class="isMobile() ? '' : 'window-container'">
                     <div class="window">
                         <img 
@@ -16,7 +20,13 @@
 
                             <slot name="window__header" />
                         </div>
-                        <div class="window__body">
+                        <div 
+                            class="window__body" 
+                            ref="scrollableRef"
+                            @touchstart="handleScrollableTouchStart"
+                            @touchend.stop
+                            @click.stop   
+                        >
                             <slot name="window__body" />
                         </div>
                         <div class="window__footer">
@@ -74,22 +84,35 @@ const props = defineProps({
         default: false,
     },
 });
-const emit = defineEmits(['close', 'left-action', 'right-action'])
 
-// Reactive data for icons
-const closeIconUrl = closeIcon;
-const checkedIconUrl = checkedIcon;
-const checkedDisabledIconUrl = checkedDisabledIcon;
+const emit = defineEmits(['close', 'left-action', 'right-action', 'update:isVisible'])
 
-// Emitting actions
 const emitClose = () => emit('close');
-const emitLeftAction = () => emit('left-action');
-const emitRightAction = () => emit('right-action');
 
+// Handle Scrolling: ===========================================================================
 const isMobile = () => window.innerWidth <= 768;
+const popupRef = ref(null);
+const scrollableRef = ref(null);
+let touchStartedAt = ref(false);
 
-const { isExpanded, isScrollable } = usePopupSwipeBehavior(popupRef, scrollableRef, touchStartedAt, tour, isVisibleRef, close);
+const isExpanded = computed({
+  get: () => props.isVisible,
+  set: (val) => emit('update:isVisible', val)
+});
 
+usePopupSwipeBehavior(isExpanded, null, popupRef, scrollableRef, touchStartedAt, null, null, null);
 
+// Events: ====================================================================================
+
+function handleScrollableTouchStart(event) {
+    const el = scrollableRef.value;
+    touchStartedAt.value = true;
+    const isAtTop = el.scrollTop === 0;  // number of pixels that the content has been scrolled vertically from the top.
+    if (!isAtTop) {
+        event.stopPropagation();
+    } else {
+        touchStartedAt.value = false;
+    }
+}
 
 </script>

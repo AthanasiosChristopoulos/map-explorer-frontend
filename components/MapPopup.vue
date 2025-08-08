@@ -169,8 +169,10 @@ watch(() => props.tour, () => {
 const popupRef = ref(null);
 const scrollableRef = ref(null);
 let touchStartedAt = ref(false);
+let isExpanded = ref(false);
+let isScrollable = ref(false);
 
-const { isExpanded, isScrollable } = usePopupSwipeBehavior(popupRef, scrollableRef, touchStartedAt, tour, isVisibleRef, close);
+({ isExpanded, isScrollable } = usePopupSwipeBehavior(isExpanded, isScrollable, popupRef, scrollableRef, touchStartedAt, tour, isVisibleRef, close));
 
 function close() { 
     isExpanded.value = false; 
@@ -184,8 +186,15 @@ function handleImageLoad() {loading.value = false;}
 
 function handleScrollableTouchStart(event) {
     if(!isScrollable.value) return
+    const el = scrollableRef.value;
     touchStartedAt.value = true;
-    event.stopPropagation();
+    const isAtTop = el.scrollTop === 0;
+
+    if (!isAtTop) {
+        event.stopPropagation();
+    } else {
+        touchStartedAt.value = false;
+    }
 }
 
 function handleScrollableTouchEnd(event) {

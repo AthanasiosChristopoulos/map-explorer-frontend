@@ -1,15 +1,12 @@
 import { ref, nextTick, watch } from 'vue';
 import { useSwipe } from '@vueuse/core';
 
-export function usePopupSwipeBehavior(popupRef, scrollableRef, touchStartedAt, tourRef, isVisibleRef, onClose) {
-    const isExpanded = ref(false);
-    const isScrollable = ref(false);
+export function usePopupSwipeBehavior(isExpanded, isScrollable, popupRef, scrollableRef, touchStartedAt, tourRef, isVisibleRef, onClose) {
 
     const { direction } = useSwipe(popupRef);
 
     watch(direction, (dir) => {
       if (touchStartedAt.value) return;
-      
       if (dir === 'up') isExpanded.value = true;
       if (dir === 'down') {
         if (isExpanded.value) {
@@ -20,15 +17,19 @@ export function usePopupSwipeBehavior(popupRef, scrollableRef, touchStartedAt, t
       }
     });
 
-    watch([tourRef, isExpanded], async () => {
-      await nextTick();
-      const el = scrollableRef.value;
-      if (el) {
-        isScrollable.value = el.scrollHeight > el.clientHeight;
-      }
-    }, { immediate: true });
+    if(tourRef) {
+      watch([tourRef, isExpanded], async () => {
+        await nextTick();
+        const el = scrollableRef.value;
+        if (el) {
+          isScrollable.value = el.scrollHeight > el.clientHeight;
+        }
+      }, { immediate: true });
+    }
 
-    watch(isVisibleRef, () => {isExpanded.value = false;});
+    if(isVisibleRef) {
+      watch(isVisibleRef, () => {isExpanded.value = false;});
+    }
 
     return {isExpanded, isScrollable};
 }

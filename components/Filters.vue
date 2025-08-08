@@ -1,30 +1,38 @@
 <template>
   <div class="header-bar">
-    <img v-if="isMobile()" class="header-bar__logo" :src="smallLogoNoLogotype" />
-    <img v-else class="header-bar__logo" :src="smallLogoRedHorizontal" />
+    <img v-if="isMobile() && !isFocused" class="header-bar__logo" :src="smallLogoNoLogotype" />
+    <img v-else-if="!isMobile()" class="header-bar__logo" :src="smallLogoRedHorizontal" />
 
     <div class="header-bar__center-group">
-      <div class="header-bar__search-wrapper">
+      <div class="header-bar__search-wrapper" v-click-outside="blur">
         <Text
           v-model="text"
           :placeholder="searchBarText"
           :icon="iconMagnifier"
           :iconPosition="'left'"
           class="header-bar__search"
+          @keydown.enter="handleEnter"
+          @click="focus"
           :style="inputStyle"
         />
         <Button
+          v-if="!isMobile()"
           :text="filterText"
           :buttonClass="`button__white`"
           :icon="filterIcon"
           class="header-bar__filters"
+        />
+        <img 
+          v-else-if="!isFocused"
+          class="header-bar__filters"
+          :src="filterIcon"
         />
       </div>
     </div>
   </div>
 
   <Window
-      :isVisible="showWindow"
+      v-model:isVisible="showWindow"
       :leftButtonText="'Clear All'"
       :rightButtonText="'Apply Filters'"
       :leftButtonDisabled="false"
@@ -55,11 +63,12 @@ import { updateGeoData } from '../composables/updateGeoData';
 import { clearAllFilters } from '@/composables/useMapFilters.js'
 import { usePinHighlight } from '@/composables/tooltip/usePinHighlight.js';
 import Window from '@/components/Window.vue'
+import { clickOutside } from 'vue-library';
 
 const isMobile = () => window.innerWidth <= 768;
 
 const text = ref('');
-const showWindow = ref(true);
+const showWindow = ref(false);
 
 const props = defineProps({
   map: Object,
@@ -76,7 +85,6 @@ function openFilterWindow() {
 }
 
 function closeWindow() {
-  console.log('closeWindow')
   showWindow.value = false
 }
 
@@ -90,13 +98,13 @@ function applyFilters() {
   closeWindow()
 }
 
-// Handle clickOutside: =================================================================================================================
+// Handle clickOutside: =======================================================================================================
 
 const windowRef = ref(null)
 
 function handleClickOutside(event) {
   const filterButton = document.querySelector('.header-bar__filters'); 
-  if(filterButton?.contains(event.target)) {
+  if(filterButton?.contains(event.target) && showWindow.value === false) {
     openFilterWindow()
     return
   }
@@ -108,6 +116,8 @@ function handleClickOutside(event) {
 
   closeWindow();
 }
+
+// ==============================================================================================================================
 
 const searchBarText = ref('');
 const filterText = ref('');
@@ -127,9 +137,37 @@ onUnmounted(() => {document.removeEventListener('click', handleClickOutside)})
 
 // Input Style: =================================================================================================================
 
+const isFocused = ref(false);
 const inputStyle = computed(() => ({
-  width: isMobile() ? '7rem' : 'fit-content',
-  height: '10rem',
+  width: isMobile()
+    ? isFocused.value
+      ? '17rem'
+      : '7rem'  
+    : '17rem',
+  height: '2.5rem', 
 }));
 
+function handleEnter() {
+  console.log('Enter key pressed in the input');
+}
+function focus() {
+  if(isMobile()) searchBarText.value = 'Search a tour by location or title';
+  isFocused.value = true
+}
+function blur() {
+  if(isMobile()) searchBarText.value = 'Search';
+  isFocused.value = false;
+}
+</script>
+
+
+<script>
+import { defineComponent, ref} from 'vue';
+import { clickOutside } from 'vue-library';
+
+export default defineComponent({
+  directives: {
+    'click-outside': clickOutside,
+  }
+});
 </script>

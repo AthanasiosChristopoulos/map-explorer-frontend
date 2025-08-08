@@ -84,8 +84,6 @@ import { getFilters, setFilters, pushFilters } from '@/composables/useMapFilters
 const isMobile = () => window.innerWidth <= 768;
 
 function toggleLanguage(language, isChecked) {
-    console.log(language)
-    console.log(isChecked)
     if (isChecked) {
         pushFilters('languages', language);
     } else if (!isChecked) {
@@ -94,8 +92,6 @@ function toggleLanguage(language, isChecked) {
 }
 
 function toggleCategory(category, isChecked) {
-    console.log(category)
-    console.log(isChecked)
     if (isChecked) {
         pushFilters('categories', category);
     } else if (!isChecked) {
