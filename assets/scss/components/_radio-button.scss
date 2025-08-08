@@ -1,5 +1,15 @@
 @use "../variables/structure";
 
+.radio-button {
+    border-radius: 0.9375rem;
+    border: 2px solid #ECEAF3;
+    background: #FFF;
+    padding: 0.7rem 1rem;
+    @media (max-width: structure.$small) {
+        padding: 0.4rem 0.4rem;
+    }
+}
+
 .radioButton-label {
     // color: var(--text-color--secondary);
     // font-size: 0.75rem;
@@ -27,9 +37,6 @@
     margin-left: 1rem;
 }
 
-.label-text--checked {
-    // font-weight: 600;
-}
 
 .styled-radioButton {
     appearance: none;

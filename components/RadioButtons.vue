@@ -1,17 +1,14 @@
-<!-- RadioButtons.vue -->
 <template>
-  <div class="radio-buttons" :class="props.layout === 'row' ? 'row-layout': 'column-layout'" style="gap: 4rem;">
+  <div class="radio-buttons" :class="props.layout === 'row' ? 'row-layout': 'column-layout'">
     <div 
       v-for="(radioButton, index) in radioButtons" 
       :key="index"
     >
       <RadioButton 
         :id="`radio-${index}`"
-        :name="groupName"
-        :value="radioButton.value"
         :isChecked="getCheckedRadioButton(radioButton.label)"
         @update:isChecked="setCheckedRadioButton(radioButton.label)"
-        class="filter-body__indoors-checkbox"
+        class="radio-button"
       >
         <template #radioButton-label>
           <IconLabel 
@@ -27,7 +24,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import RadioButton from './RadioButton.vue';
 import IconLabel from '@/components/IconLabel.vue';
 
@@ -36,25 +32,26 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  groupName: {
-    type: String,
-    default: 'radio-group'
+  checkedRadioButton: {
+    type: Object,
+    required: true
   },
   layout: {
     type: String,
-    default: 'row'
+    default: 'row',
+    validator: (value) => ['row', 'column'].includes(value)
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
-
-const checkedRadioButton = ref('')
+const emit = defineEmits(['update:checkedRadioButton']);
 
 function setCheckedRadioButton(label) {
-  checkedRadioButton.value = label
+  const selected = props.radioButtons.find(data => data.label === label)
+  emit('update:checkedRadioButton', selected)
 }
 
 function getCheckedRadioButton(label) {
-  return checkedRadioButton.value === label
+  return props.checkedRadioButton.label === label
 }
+
 </script>

@@ -10,9 +10,8 @@
         padding: 0;
     }
 }
-.filter-body__enviroment-checkboxes {
+.filter-body__enviroment-radio-buttons {
     padding: 0 1rem 0 1rem;
-    gap: 4rem;
     @media (max-width: structure.$small) {
         display: flex;
         justify-content: space-between;
@@ -22,16 +21,6 @@
     }
 }
 
-.filter-body__indoors-checkbox {
-    border-radius: 0.9375rem;
-    border: 2px solid #ECEAF3;
-    background: #FFF;
-    padding: 0.7rem 1rem;
-    @media (max-width: structure.$small) {
-        padding: 0.4rem 0.4rem;
-
-    }
-}
 
 .filter-body__category-checkboxes {
     display: grid;

@@ -18,35 +18,16 @@
         <div class="divider" style="margin-bottom: -0.5rem"></div>
 
         <h3>Indoor or Outdoor Tour</h3>
-        <div class="row-layout filter-body__enviroment-checkboxes">
-            <!-- <RadioButton 
-                :isChecked="getFilters('isIndoors') === true"
-                :id="`isIndoors`"
-                @update:isChecked="(isChecked) => setIndoors(true, isChecked)"
-                class="filter-body__indoors-checkbox"
-            >
-                <template #radioButton-label>
-                    <IconLabel :icon="indoorsIcon" :label="`Indoors`" :showLabel="true" :size="`small`" />
-                </template>
-            </RadioButton>
-
-            <RadioButton 
-                :isChecked="getFilters('isIndoors') === false"
-                :id="`isOutdoors`"
-                @update:isChecked="(isChecked) => setIndoors(false, isChecked)"
-                class="filter-body__indoors-checkbox"
-            >
-                <template #radioButton-label>
-                    <IconLabel :icon="outdoorsIcon" :label="`Outdoors`" :showLabel="true" :size="`small`" />
-                </template>
-            </RadioButton> -->
-            
+        <div class="filter-body__enviroment-radio-buttons">
             <RadioButtons
-                v-model="selectedEnvironment"
                 :radioButtons="radioButtons"
                 groupName="environment-filter"
                 :layout="'row'"
+                :checkedRadioButton="getIndoors()"
+                @update:checkedRadioButton="(enviromentData) => setIndoors(enviromentData)"
+                style="gap: 4rem;"
             />
+
         </div>
 
         <div class="divider"></div>
@@ -108,7 +89,6 @@
 <script setup>
 import { ref, inject } from 'vue';
 import { Button, Checkbox } from 'vue-library';
-import RadioButton from '@/components/RadioButton.vue';
 import RadioButtons from '@/components/RadioButtons.vue';
 
 import IconLabel from '@/components/IconLabel.vue';
@@ -122,6 +102,8 @@ import dropdown_show from '@/assets/icons/dropdown.svg';
 
 const isMobile = () => window.innerWidth <= 768;
 
+// Checkbox Logic ============================================================================================
+
 function handleFilter(newFilterObject, isChecked, typeOfFilter) {
     if (isChecked) {
         pushFilters(typeOfFilter, newFilterObject);
@@ -130,23 +112,26 @@ function handleFilter(newFilterObject, isChecked, typeOfFilter) {
     }
 }
 
-function setIndoors(isIndoors, isChecked) {
-    if (!isChecked) {
-        setFilters('isIndoors', null);
-    } else {
-        if (isIndoors === true) {
-            setFilters('isIndoors', true);
-        } else {
-            setFilters('isIndoors', false);
-        }
-    }
+// RadioButton Logic ============================================================================================
+
+const radioButtons = [
+    { icon: indoorsIcon, label: 'Indoors', showLabel: true, size: 'small', value: true},
+    { icon: outdoorsIcon, label: 'Outdoors', showLabel: true, size: 'small', value: false }
+];
+function getIndoors() {
+    return radioButtons.find(enviromentData => enviromentData.value === getFilters('isIndoors')) || {};
+}
+function setIndoors(enviromentData) {
+    if (enviromentData == null) setFilters('isIndoors', null);
+    else setFilters('isIndoors', enviromentData.value);
 };
+
+// Dropdown Logic ============================================================================================
 
 let dropDownImage = ref(dropdown_hide)
 const scrollFullyDown = inject('scrollFullyDown');
 
 function toogleDropdown() {
-    console.log('AAA')
     if(dropDownImage.value === dropdown_hide) {
         dropDownImage.value = dropdown_show
         scrollFullyDown()
@@ -154,11 +139,6 @@ function toogleDropdown() {
         dropDownImage.value = dropdown_hide
     }
 }
-const selectedEnvironment = ref(null); // true or false
 
-const radioButtons = [
-    { icon: indoorsIcon, label: 'Indoors', showLabel: true, size: 'small'    },
-    { icon: outdoorsIcon, label: 'Outdoors', showLabel: true, size: 'small' }
-];
 
 </script>
