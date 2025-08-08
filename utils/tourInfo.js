@@ -17,11 +17,11 @@ import kids from '@/assets/icons/categories/kids.svg';
 import nature from '@/assets/icons/categories/nature.svg';
 import history from '@/assets/icons/categories/history.svg';
 
-
-
 export const availableLanguages = ["it", "en", "pt", "es", "fr", "de", "gr"];
 
 export const availableCategories = ["History", "Nature", "Architecture", "Kids", "Archeology", "Fun", "Art", "Religion"]
+
+export const availableCountries = ["Greece", "Italy", "France", "Ireland", "Spain", "Portugal", "Belgium", "Morocco", "Croatia", "Japan", "Latvia", "Switzerland"]
 
 const languageMap = {it, en, pt, es, fr, de, gr,};
 

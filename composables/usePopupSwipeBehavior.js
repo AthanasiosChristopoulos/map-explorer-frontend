@@ -27,9 +27,7 @@ export function usePopupSwipeBehavior(isExpanded, isScrollable, popupRef, scroll
       }, { immediate: true });
     }
 
-    if(isVisibleRef) {
-      watch(isVisibleRef, () => {isExpanded.value = false;});
-    }
+    if(isVisibleRef) watch(isVisibleRef, () => {isExpanded.value = false;})
 
     return {isExpanded, isScrollable};
 }

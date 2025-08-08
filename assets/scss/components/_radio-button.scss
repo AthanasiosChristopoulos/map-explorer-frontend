@@ -1,0 +1,83 @@
+@use "../variables/structure";
+
+.radioButton-label {
+    // color: var(--text-color--secondary);
+    // font-size: 0.75rem;
+    font-style: normal;
+    // font-weight: 400;
+    line-height: normal;
+    display: flex;
+    flex-direction: row;
+    // justify-content: center;
+    align-items: center;
+    // gap: 1rem;
+    color: var(--neutral-color--davys-grey);
+    font-size: 0.925rem;
+    font-weight: 500;
+    // width: max-content;
+}
+
+.label-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: fit-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 1rem;
+}
+
+.label-text--checked {
+    // font-weight: 600;
+}
+
+.styled-radioButton {
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: structure.$border-radius--xlarge;
+    border: 2px solid #E7E9EF;
+    background: var(--neutral-color--white);
+    display: inline-flex; // ← changed from inline-block
+    align-items: center;  // ← vertically center checkmark
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.styled-radioButton:checked {
+    background-color: #02C39A;
+    border-radius: structure.$border-radius--xlarge;
+    border: none;
+}
+
+.styled-radioButton:disabled {
+    background-color: #F0F4F9;
+    cursor: not-allowed;
+}
+
+.styled-radioButton:checked::before {
+  content: '';
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: white;
+  border: 3px solid #2CC6A2;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+}
+
+.styled-radioButton:checked::after {
+  content: '';
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #2CC6A2;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

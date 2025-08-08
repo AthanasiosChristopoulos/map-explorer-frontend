@@ -1,12 +1,19 @@
 <template>
   <div class="icon-label" :class="{ 'icon-label--small': props.size === 'small' }">
     <img
+      v-if="resolvedIcon"
       class="icon-label__image"
       :class="{ 'icon-label--border-circle': props.language, 'icon-label__image--category-icon': props.categoryIcon }"
       :src="resolvedIcon"
       :alt="resolvedLabel"
     />
-    <span class="icon-label__label" v-if="props.showLabel">{{ resolvedLabel }}</span>
+    <span 
+      class="icon-label__label" 
+      v-if="props.showLabel" 
+      :style="{ paddingLeft: resolvedIcon ? '0rem' : '0.5rem'}"
+    >
+      {{ resolvedLabel }}
+    </span>
   </div>
 </template>
 
@@ -27,6 +34,7 @@ const languageDataMap = {
 const props = defineProps({
   language: {
     type: String,
+    default: '',
     required: false,
   },
   size: {
@@ -49,14 +57,23 @@ const props = defineProps({
   categoryIcon: {
     type: Boolean,
     default: false,
+  },
+  countryIconLabel: {
+    type: Boolean,
+    default: false,
   }
 });
 
-const resolvedIcon = computed(() =>
-  props.icon || matchLanguageIcon(props.language)
-);
+const resolvedIcon = computed(() => {
+  if(props.language === '') {
+    return props.icon
+  } else {
+    return matchLanguageIcon(props.language)
+  } 
+});
 
 const resolvedLabel = computed(() =>
   props.label || languageDataMap[props.language] || props.language
 );
+
 </script>

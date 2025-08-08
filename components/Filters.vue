@@ -1,10 +1,9 @@
 <template>
-  <div class="header-bar">
-    <img v-if="isMobile() && !isFocused" class="header-bar__logo" :src="smallLogoNoLogotype" />
-    <img v-else-if="!isMobile()" class="header-bar__logo" :src="smallLogoRedHorizontal" />
+  <div class="header-bar row-layout" style="align-items: center;">
+    <img v-if="isMobile()" class="header-bar__logo" :src="smallLogoNoLogotype" />
+    <img v-else class="header-bar__logo" :src="smallLogoRedHorizontal" />
 
-    <div class="header-bar__center-group">
-      <div class="header-bar__search-wrapper" v-click-outside="blur">
+    <div class="header-bar__center-group" v-click-outside="blur">
         <Text
           v-model="text"
           :placeholder="searchBarText"
@@ -27,7 +26,6 @@
           class="header-bar__filters"
           :src="filterIcon"
         />
-      </div>
     </div>
   </div>
 
@@ -68,7 +66,7 @@ import { clickOutside } from 'vue-library';
 const isMobile = () => window.innerWidth <= 768;
 
 const text = ref('');
-const showWindow = ref(false);
+const showWindow = ref(true);
 
 const props = defineProps({
   map: Object,
@@ -95,6 +93,7 @@ function clearAll() {
 
 function applyFilters() {
   updateGeoData(props.map, props.geoData)
+
   closeWindow()
 }
 
@@ -113,7 +112,6 @@ function handleClickOutside(event) {
   const body = document.querySelector('.window__body');
   const footer = document.querySelector('.window__footer'); 
   if (header?.contains(event.target) || body?.contains(event.target) || footer?.contains(event.target) ||!showWindow.value) return;
-
   closeWindow();
 }
 
@@ -150,16 +148,18 @@ const inputStyle = computed(() => ({
 function handleEnter() {
   console.log('Enter key pressed in the input');
 }
+
 function focus() {
   if(isMobile()) searchBarText.value = 'Search a tour by location or title';
   isFocused.value = true
 }
+
 function blur() {
   if(isMobile()) searchBarText.value = 'Search';
   isFocused.value = false;
 }
-</script>
 
+</script>
 
 <script>
 import { defineComponent, ref} from 'vue';

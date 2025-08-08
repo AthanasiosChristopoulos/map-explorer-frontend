@@ -7,7 +7,7 @@
                 :key="language" 
                 :id="language"
                 :isChecked="getFilters('languages')?.includes(language)"
-                @update:isChecked="(isChecked) => toggleLanguage(language, isChecked)"
+                @update:isChecked="(isChecked) => handleFilter(language, isChecked, 'languages')"
             >
                 <template #checkbox-label>
                     <IconLabel :language="language" :showLabel="true" :size="`small`" />
@@ -19,29 +19,34 @@
 
         <h3>Indoor or Outdoor Tour</h3>
         <div class="row-layout filter-body__enviroment-checkboxes">
-            <Checkbox 
+            <!-- <RadioButton 
                 :isChecked="getFilters('isIndoors') === true"
                 :id="`isIndoors`"
                 @update:isChecked="(isChecked) => setIndoors(true, isChecked)"
                 class="filter-body__indoors-checkbox"
-                :enviromentCheckbox="true"
             >
-                <template #checkbox-label>
+                <template #radioButton-label>
                     <IconLabel :icon="indoorsIcon" :label="`Indoors`" :showLabel="true" :size="`small`" />
                 </template>
-            </Checkbox>
+            </RadioButton>
 
-            <Checkbox 
+            <RadioButton 
                 :isChecked="getFilters('isIndoors') === false"
                 :id="`isOutdoors`"
                 @update:isChecked="(isChecked) => setIndoors(false, isChecked)"
                 class="filter-body__indoors-checkbox"
-                :enviromentCheckbox="true"
             >
-                <template #checkbox-label>
+                <template #radioButton-label>
                     <IconLabel :icon="outdoorsIcon" :label="`Outdoors`" :showLabel="true" :size="`small`" />
                 </template>
-            </Checkbox>
+            </RadioButton> -->
+            
+            <RadioButtons
+                v-model="selectedEnvironment"
+                :radioButtons="radioButtons"
+                groupName="environment-filter"
+                :layout="'row'"
+            />
         </div>
 
         <div class="divider"></div>
@@ -54,7 +59,7 @@
                 :key="category" 
                 :id="category"
                 :isChecked="getFilters('categories')?.includes(category)"
-                @update:isChecked="(isChecked) => toggleCategory(category, isChecked)"
+                @update:isChecked="(isChecked) => handleFilter(category, isChecked, 'categories')"
             >
                 <template #checkbox-label>
                     <IconLabel 
@@ -67,35 +72,61 @@
                 </template>
             </Checkbox>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="row-layout" style="justify-content: space-between;">
+            <h3>Country</h3>
+            <Button
+                :icon="dropDownImage" 
+                @click="toogleDropdown"
+                style="width: fit-content; height: fit-content; padding: 0rem; scale: 1.5;"
+            />
+        </div>
+
+        <div class="filter-body__category-checkboxes" v-if="dropDownImage === dropdown_show">
+            <Checkbox 
+                v-for="country in availableCountries" 
+                :key="country" 
+                :id="country"
+                :isChecked="getFilters('countries')?.includes(country)"
+                @update:isChecked="(isChecked) => handleFilter(country, isChecked, 'countries')"
+            >
+                <template #checkbox-label>
+                    <IconLabel 
+                        :label="country" 
+                        :showLabel="true" 
+                        :size="'normal'" 
+                    />
+                </template>
+            </Checkbox>
+        </div>
     </div>
 
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-// import { Checkbox } from 'vue-library';
-import Checkbox from '@/components/Checkbox.vue';
+import { ref, inject } from 'vue';
+import { Button, Checkbox } from 'vue-library';
+import RadioButton from '@/components/RadioButton.vue';
+import RadioButtons from '@/components/RadioButtons.vue';
+
 import IconLabel from '@/components/IconLabel.vue';
-import { availableLanguages, availableCategories, matchCategory } from '@/utils/tourInfo.js'
+import { availableLanguages, availableCategories, availableCountries, matchCategory } from '@/utils/tourInfo.js'
+import { getFilters, setFilters, pushFilters } from '@/composables/useMapFilters.js'
+
 import indoorsIcon from '@/assets/icons/indoors.svg';
 import outdoorsIcon from '@/assets/icons/outdoors.svg';
-import { getFilters, setFilters, pushFilters } from '@/composables/useMapFilters.js'
+import dropdown_hide from '@/assets/icons/dropdown-light.svg';
+import dropdown_show from '@/assets/icons/dropdown.svg'; 
 
 const isMobile = () => window.innerWidth <= 768;
 
-function toggleLanguage(language, isChecked) {
+function handleFilter(newFilterObject, isChecked, typeOfFilter) {
     if (isChecked) {
-        pushFilters('languages', language);
+        pushFilters(typeOfFilter, newFilterObject);
     } else if (!isChecked) {
-        removeFilters('languages', language);
-    }
-}
-
-function toggleCategory(category, isChecked) {
-    if (isChecked) {
-        pushFilters('categories', category);
-    } else if (!isChecked) {
-        removeFilters('categories', category);
+        removeFilters(typeOfFilter, newFilterObject);
     }
 }
 
@@ -110,4 +141,24 @@ function setIndoors(isIndoors, isChecked) {
         }
     }
 };
+
+let dropDownImage = ref(dropdown_hide)
+const scrollFullyDown = inject('scrollFullyDown');
+
+function toogleDropdown() {
+    console.log('AAA')
+    if(dropDownImage.value === dropdown_hide) {
+        dropDownImage.value = dropdown_show
+        scrollFullyDown()
+    } else {
+        dropDownImage.value = dropdown_hide
+    }
+}
+const selectedEnvironment = ref(null); // true or false
+
+const radioButtons = [
+    { icon: indoorsIcon, label: 'Indoors', showLabel: true, size: 'small'    },
+    { icon: outdoorsIcon, label: 'Outdoors', showLabel: true, size: 'small' }
+];
+
 </script>

@@ -3,7 +3,8 @@ import { ref } from 'vue';
 export const filters = ref({
     languages: null,
     categories: null,
-    isIndoors: null
+    isIndoors: null,
+    countries: null
 });
 
 export function getFilters(key) {

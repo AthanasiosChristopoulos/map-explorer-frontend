@@ -6,6 +6,22 @@ let filteredGeoData = ref({});
 export function updateGeoData(map, geoData) {
     let bounds = map.getBounds();
 
+    function filterMatch(activeFilters, data, all = false) {
+        // No filter applied or invalid data
+        if (activeFilters === null || activeFilters === undefined) return true;
+        if (data === null || data === undefined) return false;
+
+        // Handle arrays
+        if (Array.isArray(data) && Array.isArray(activeFilters)) {
+            return all
+            ? activeFilters.every(f => data.includes(f))  // must include all
+            : activeFilters.some(f => data.includes(f));  // must include at least one
+        }
+
+        // Handle primitive comparison if its not an array
+        return activeFilters === data;
+    }
+
     filteredGeoData.value = {
         type: "FeatureCollection",
         features: geoData.features.filter(data => {
@@ -13,6 +29,7 @@ export function updateGeoData(map, geoData) {
             let languageFilter = false
             let isIndoorsFilter = false;
             let categoryFilter = false
+            let countryFilter = false
 
             let lng = data.geometry.coordinates[0];
             let lat = data.geometry.coordinates[1];
@@ -21,45 +38,14 @@ export function updateGeoData(map, geoData) {
                     filterBounds = true;
                 }
             }
-            // languageFilter ===================================================================
 
-             if(filters.value.languages !== null) {
-                // Tour must include only one of the selected languages
-                for (const language of filters.value.languages) {
-                    if (data.properties.availableLanguages.includes(language)) {
-                        languageFilter = true;
-                        break;
-                    }
-                }
-            } else {
-                languageFilter = true;
-            }
-
-            // isIndoorsFilter ===================================================================
-
-            if(filters.value.isIndoors !== null) {
-                if (filters.value.isIndoors === data.properties.isIndoors) {
-                    isIndoorsFilter = true;
-                }
-            } else {
-                isIndoorsFilter = true;
-            }
-
-            // categoryFilter ===================================================================
-
-            if (filters.value.categories !== null) {
-                // Tour must include all of the selected categories 
-                const tourCategoryNames = data.properties.categories.map(c => c.name);
-                categoryFilter = filters.value.categories.every(selectedCategory =>
-                    tourCategoryNames.includes(selectedCategory)
-                );
-            } else {
-                categoryFilter = true;
-            }
+            languageFilter = filterMatch(filters.value.languages, data.properties.availableLanguages);
+            isIndoorsFilter = filterMatch(filters.value.isIndoors, data.properties.isIndoors);
+            categoryFilter = filterMatch(filters.value.categories, data.properties.categories.map(c => c.name), true);
+            countryFilter = filterMatch(filters.value.countries, data.properties.country);
 
             // Final Check if Tour should be filtered out or not =================================
-
-            if (filterBounds && languageFilter && isIndoorsFilter && categoryFilter) {
+            if (filterBounds && languageFilter && isIndoorsFilter && categoryFilter && countryFilter) {
                 return true;
             }
             return false;

@@ -1,13 +1,12 @@
 <template>
     <transition name="window-animation">
-        <div 
+        <div :class="isMobile() ? '' : 'window-container'"
             v-if="isExpanded" 
             ref="popupRef" 
-            @click="emitClose()"
+            @click="closeIfOnMobile"
             @touchstart="touchStartedAt = false"
         >
             <transition name="window-animation-inner">
-                <div :class="isMobile() ? '' : 'window-container'">
                     <div class="window">
                         <img 
                             v-if="!isMobile()"
@@ -49,13 +48,13 @@
                         </div>
                     </div>
 
-                </div>
             </transition>
         </div>
     </transition>
 </template>
 
 <script setup>
+import { provide } from 'vue';
 import { Button } from 'vue-library';
 import closeIcon from '@/node_modules/vue-library/src/assets/icons/close-callout.svg';
 import checkedIcon from '@/node_modules/vue-library/src/assets/icons/checked.svg';
@@ -89,7 +88,13 @@ const emit = defineEmits(['close', 'left-action', 'right-action', 'update:isVisi
 
 const emitClose = () => emit('close');
 
+function closeIfOnMobile() {
+    if(!isMobile()) return
+    emitClose();
+}
+
 // Handle Scrolling: ===========================================================================
+
 const isMobile = () => window.innerWidth <= 768;
 const popupRef = ref(null);
 const scrollableRef = ref(null);
@@ -101,6 +106,17 @@ const isExpanded = computed({
 });
 
 usePopupSwipeBehavior(isExpanded, null, popupRef, scrollableRef, touchStartedAt, null, null, null);
+
+function scrollFullyDown() {
+    nextTick(() => {
+        const el = scrollableRef.value;
+        if (el) {
+            el.scrollTop = el.scrollHeight;
+        }
+    });
+}
+
+provide('scrollFullyDown', scrollFullyDown);
 
 // Events: ====================================================================================
 
@@ -114,5 +130,6 @@ function handleScrollableTouchStart(event) {
         touchStartedAt.value = false;
     }
 }
+
 
 </script>

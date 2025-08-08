@@ -24,7 +24,7 @@ $modal-shadow-color: rgba(62, 73, 84, 0.04);
     z-index: 9999;
     box-shadow: 0px 12px 23px 0px $modal-shadow-color;
     margin: 0.5rem 0;
-    height: 85dvh;
+    height: 90dvh;
 
     @media (max-width: structure.$small) {
         position: absolute;
