@@ -1,0 +1,25 @@
+@use '../variables/_structure';
+
+.default-layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: structure.$small) {
+        height: 100dvh;
+    }
+}
+
+.column-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.row-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+}

@@ -1,0 +1,48 @@
+$circle-dim-languages: 2rem;
+$circle-dim-languages-small: 1.5rem;
+
+.language-gallery__list {
+  all: unset;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.language-gallery__list:focus {
+  outline: 1px solid var(--neutral-color--black); /* your brand color */
+}
+
+.language-gallery__list--scrollable {
+  @extend .language-gallery__list;
+  line-height: 0; 
+  flex-direction: column; 
+  padding: 0rem 0.75rem 0rem 0.75rem; 
+  gap: 0.7rem; 
+  max-height: 8rem; 
+  overflow-y: auto;    
+  margin: 0rem -0.75rem 0rem -0.75rem;
+}
+
+.language-gallery__list--grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 0.75rem; 
+  padding: 0.3rem 0;
+  line-height: 0;
+}
+
+.language-gallery__circle {
+  background-color: #43ABFF;
+  color: var(--neutral-color--white);
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: normal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $circle-dim-languages;
+  height: $circle-dim-languages;
+  border-radius: 50%;
+  border: 2px solid var(--neutral-color--white);
+}

@@ -1,0 +1,80 @@
+@use '../variables/_structure';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-style: normal;
+  font-family: Commissioner;
+  background-color:  var(--neutral-color--white);
+  @media (max-width: structure.$small) {
+    overscroll-behavior-y: contain;
+  }
+}
+
+.button__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+}
+
+.divider {
+    height: 1px;
+    background-color: #D0D6DE;
+    margin: 0rem;
+    flex-shrink: 0;
+}
+
+.hidden { display: none; }
+
+
+// Mobile vertical Transition
+@media (max-width: 768px) {
+    .mobile-enter-active,
+    .mobile-leave-active {
+        transition: transform 0.3s ease-out, opacity 0.3s ease;
+    }
+    .mobile-enter-from,
+    .mobile-leave-to {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    .mobile-enter-to,
+    .mobile-leave-from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+// Accessibility: If reduced motion is preferred, skip animation completely
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+    .mobile-enter-active,
+    .mobile-leave-active {
+        transition: none !important;
+    }
+}
+
+.fit-content-button { 
+    padding: 0;
+}
+
+.fit-content-button .button__icon {
+    width: fit-content;
+    height: fit-content;
+}
+
+// .mapboxgl-ctrl-logo {
+//   display: none !important;
+// }
+
+button.avatar-circle {
+    padding: 0;
+    box-sizing: content-box;
+}
+
+// Add focus indicator to input element
+// The focus ring will show only when using tab, not when using the mouse.
+input:focus {
+  outline: 2px solid var(--neutral-color--black);
+  outline-offset: -2px;      
+}

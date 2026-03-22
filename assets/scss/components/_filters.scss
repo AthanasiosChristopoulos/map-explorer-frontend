@@ -1,0 +1,72 @@
+@use '../variables/_structure';
+
+.filters {
+  position: relative;
+  height: 4.5rem;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+}
+
+.filters__logo {
+  left: 1rem;
+  height: 2rem;
+  padding: 0rem 1rem 0rem 1rem;
+  width: fit-content;
+}
+
+.filters__center-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: -webkit-fill-available;
+
+  @media (max-width: structure.$small) {
+    gap: 1.3rem;
+    padding: 0;
+    @media (max-width: structure.$extra-small) {gap: 1rem;}
+  }
+}
+
+@media (max-width: structure.$extra-small) {
+  textarea,
+  input[type="text"],
+  textarea::placeholder,
+  input[type="text"]::placeholder{
+    font-size: clamp(0.73rem, 2vw, 1rem);
+  }
+}
+
+.filters__options {
+  height: 2.65rem;
+  width: 7.5rem;
+  @media (max-width: structure.$small) {
+    width: fit-content; 
+    height: fit-content; 
+    background-color: var(--neutral-color--white);
+    scale: 1.2;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0rem 1rem 0rem 0rem;
+  }
+}
+
+// overring css of vue-library to adapt to projects requirements:
+.filters__options .button__icon { 
+    width: 1rem;
+    height: 1rem;
+}
+
+.filters__options .button__text {
+  padding-bottom: 0.35rem;
+  font-family: Commissioner; 
+  font-weight: 400; 
+}
+
+.filters__options.button__white {
+  border: 2px solid var(--gray-xxlight);
+  @media (max-width: structure.$small) {
+    border: none;
+  }
+}

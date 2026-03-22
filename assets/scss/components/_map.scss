@@ -1,0 +1,16 @@
+@use '../variables/_structure';
+
+.map-container {
+  flex-grow: 1;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border-top: 1.5px solid var(--gray-xxxxlight);
+}
+
+#map {
+  flex-grow: 1; /* fill remaining vertical space */
+  height: 100%;
+}
+

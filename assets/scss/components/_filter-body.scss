@@ -1,0 +1,56 @@
+@use '../variables/_structure';
+
+%filter-grid {
+  display: grid;
+  gap: 1rem; 
+  padding: 0 1rem;
+  @media (max-width: structure.$small) {
+    padding: 0;
+    @media (max-width: structure.$extra-small) {
+      gap: 1rem 0.7rem; 
+    }
+  }
+}
+
+.filter-body__language-checkboxes {
+  @extend %filter-grid;
+  grid-template-columns: repeat(4, 1fr);
+  @media (max-width: structure.$small) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.filter-body__enviroment-radio-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+    gap: 3rem;
+    width: fit-content;
+    height: fit-content;
+    @media (max-width: structure.$small) {
+        padding: 0;
+        gap: 1.5rem;
+    }
+}
+
+.filter-body__grid_2_checkboxes {
+  @extend %filter-grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.filter-body__radio-button {
+    border-radius: 0.9375rem;
+    border: 2px solid #ECEAF3;
+    background: #FFF;
+    padding: 0.8rem 2rem 0.8rem 1rem;
+    font-style: normal;
+    line-height: normal;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--neutral-color--davys-grey);
+    font-size: 0.925rem;
+    font-weight: 500;
+    height: fit-content;
+}

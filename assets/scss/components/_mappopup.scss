@@ -1,0 +1,162 @@
+@use '../variables/_structure';
+
+.mappopup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25%;
+    height: fit-content;
+    max-height: 80%;
+    z-index: 9995;
+    border-radius: 1.25rem;
+    background: var(--neutral-color--white);
+    box-shadow: 0 12px 23px 0 var(--popup-shadow);
+    gap: 0rem;
+    padding: 0rem 0rem 0.7rem 0rem;
+    margin: 4.2rem 0rem 8rem 2rem;
+    @media (max-width: structure.$xlarge) {
+        margin: 3.5rem 0rem 4rem 2rem;
+    }
+    @media (max-width: structure.$small) {
+        position: absolute;
+        top: auto;
+        left: auto;
+        bottom: 0px;   
+        right: 0;    
+        width: 100%;
+        margin: 0;       
+        border-radius: 1.25rem 1.25rem 0rem 0rem; 
+        max-height: 80vh;
+    }
+}
+
+.mappopup--overflow {
+    height: calc(100vh - 4.2rem - 8rem); 
+    @media (max-width: structure.$xlarge) {
+        height: calc(100vh - 3.5rem - 4rem); 
+    }
+    @media (max-width: structure.$small) {
+        height: fit-content;
+    }
+}
+
+.mappopup__exit-button {
+    position: absolute;
+    top: -3rem;
+    left: 50%;
+    transform: translateX(-50%); 
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+}
+
+// Image + Header element ======================================================================================
+
+.mappopup__static {
+    gap: 0.7rem;
+    padding: 1rem 1.5rem 0rem 1.5rem;
+}
+
+.mappopup__img {
+    height: 30vh;
+    aspect-ratio: 0.7;
+    width: 100%;
+    border-radius: 1.25rem; 
+    object-fit: cover;
+    flex-shrink: 0;
+    @media (max-width: structure.$small) {
+        height: 25dvh;
+    }
+}
+
+.mappopup__header {
+    padding: 0rem 0rem 0rem 0rem;
+    gap: 0rem;
+}
+
+.mappopup__author {
+    color: var(--neutral-color--davys-grey);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.75rem;
+    text-wrap: nowrap;
+    align-items: stretch;
+    text-align: left;
+}
+
+// Scrollable element ======================================================================================
+
+.mappopup__scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.5rem 1.5rem 1rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y; 
+    overscroll-behavior: contain;
+    gap: 0.7rem;
+}
+
+.mappopup__scrollable--overflow {
+    padding-right: 0.7rem;
+}
+
+.mappopup__body p {
+    width: -webkit-fill-available;
+    gap: 0.75rem;
+    color: var(--neutral-color--davys-grey);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.mappopup__stories-info {
+    color: var(--neutral-color--davys-grey);
+    font-size: 0.875rem;    
+    font-weight: 400;
+    line-height: normal;
+    padding: 0rem 0rem 0.3rem 0rem;
+}
+
+// Element with Button (CTA)  ======================================================================================
+
+@media (max-width: 768px) {
+    .mappopup-handle {
+        width: 40px;
+        height: 4px;
+        background-color: var(--neutral-color--davys-grey);
+        border-radius: 2px;
+        margin: 0px auto 0px auto; 
+    }
+}
+
+// override blue additional language counter, so it appears clickable 
+.counter {
+    cursor: pointer;
+}
+
+// Animations  ======================================================================================
+
+.mappopup-animation-enter-active,
+.mappopup-animation-leave-active {
+    transition: all 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);
+}
+
+.mappopup-animation-enter-from {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.mappopup-animation-leave-to {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mappopup-animation-enter-active,
+    .mappopup-animation-leave-active {
+        transition: none !important;
+    }
+}
