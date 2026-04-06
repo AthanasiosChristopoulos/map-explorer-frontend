@@ -1,0 +1,3 @@
+GET https://www.googleapis.com/books/v1/volumes?q={search terms}
+ => ?q={search terms} this is necessary, find it in the API docs => logical, since its not sql you cant output the entire library of books
+ => What comes after the ? are the actual parameters.

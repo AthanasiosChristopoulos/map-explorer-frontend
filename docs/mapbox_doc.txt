@@ -1,0 +1,261 @@
+1)
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.13.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.13.0/mapbox-gl.css" rel="stylesheet">
+    or
+    npm install mapbox-gl
+
+2)
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }    <!-- equivalent to height: 100%; (top edge to top, bottom edge to bottom) -->
+    <div id="map"><div> // need to id the map. 
+
+3) Map: // has by default this class: .mapboxgl-canvas
+const map = new mapboxgl.Map({
+    container: 'map',   // needs to be the same as the id in the div
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: [0,50], // center: [longitude, latitude], in degrees. Latitude: From -90° at the South Pole, To +90° at the North Pole, 0° is the Equator
+                    // Longitude: From -180° (west), To +180° (east), 0° is the Prime Meridian (runs through Greenwich, London)
+                    // Google Maps: Latitude, Longitude, in programming: Longitude, Latitude 
+    zoom: 5         // center and zoom initial values (where does the map launch) 
+})
+
+Longtitude comes first from Latitude:
+    let lng = data.geometry.coordinates[0];
+    let lat = data.geometry.coordinates[1];
+
+Mapbox styles:
+    mapbox://styles/mapbox/streets-v12
+    mapbox://styles/mapbox/light-v11
+    mapbox://styles/mapbox/dark-v11
+    mapbox://styles/mapbox/satellite-v9
+    mapbox://styles/mapbox/outdoors-v12
+    
+4) Marker: // has by default this class: .mapboxgl-marker
+    new mapboxgl.Marker().setLngLat([-110, 50]).addTo(map)
+
+5) You need:
+    map.addControl(new mapboxgl.FullscreenControl(), 'top-right');  // apply this html, body { height: 100%; margin: 0; padding: 0; }
+            // not supported unless the HTML document is allowed to enter fullscreen mode. 
+            // map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector('body')}), "top-right"); 
+            // https://stackoverflow.com/questions/70975844/mapbox-gl-full-screen-hides-components-behind
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+6) Popup / Tooltip:
+    const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: {
+          "top": [0, 10],       //
+          "bottom": [0, -40]    // when popup on top of the pin (anchored on bottom), -40 = y offset
+        }
+    }).setHTML('<strong>Tada!</strong><br/>This is your tooltip content');
+
+7) Map Configuration:
+    a) "maxBounds": [      // builds a flat parallelogram with
+            [-180, -85],    // Southwest corner
+            [180, 85]       // Northeast corner
+        ]
+    b)  positionOptions: {
+            enableHighAccuracy: true    // true => Tells the browser to use less accurate, faster methods (like WiFi or cell tower triangulation), false => instead of GPS.
+        }
+    c) "icon-allow-overlap": false      // This does not affect loading of the data, only visual display.
+
+    map.on('click', 'pin-layer', (e) => {
+        const feature = e.features?.[0];
+        const { id } = feature?.properties || {};
+        findTours(id);  
+    });
+
+8) Panning: dragged the map
+9)  map: "load", "moveend": fires when user stops an action that changes the map, like when user stops zooming out.
+                    // is the combination of: dragend and zoomend
+    pin-layer: "mouseenter", "mouseleave", "click"
+
+10) Vector-tile loading:
+        - Store and serve geospatial data in pre-tiled chunks.
+        - Only load the tile data for the currently visible viewport.
+
+11) map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'points',
+        filter: ['has', 'point_count'], ... // means Only show this layer for features that have a point_count property.
+    
+    point count property is only added in clustered features, which are generated => it isnt added in the not clustered Layer (unclustered points).
+
+12) Step Conditional Expression for styling:
+    [
+        'step',
+        ['get', 'point_count'], // returns a number (called "input")
+        baseValue,              // fallback if input < threshold1
+        threshold1, value1,     // if threshold1 < input < threshold2
+        threshold2, value2,
+        ...
+    ]
+
+13) map.setLayoutProperty('pin-layer', 'icon-image',
+        [
+        'match',
+        ['get', 'id'], // means get the id from the properties property of the json.
+        id, 'custom-pin-hover',
+        'custom-pin' 
+        ]
+    )
+14) mapbox-gl-animated-popup
+===============================================================================================================
+
+GeoJSON - Is basicly a JSON, which follows a specific schema:
+
+    Mapbox needs to know for each object:
+        - What each object represents (via "type", πχ "Feature")
+        - Where it is on the map ("geometry" => coordinates, type (a point))
+        - What data it carries ("properties" => meta data about each pin)
+
+    Mapbox types:
+        - "Point" → one single location:
+                let lng = data.geometry.coordinates[0];
+                let lat = data.geometry.coordinates[1];
+
+        - "Feature" → a single object with geometry (location) + properties.
+        - "FeatureCollection" → an array of Features, i.e. multiple locations with metadata.
+    
+    icon-allow-overlap = false => a pin is skipped when it collides with one already drawn.
+    icon-ignore-placement = false => a pin can be skipped because of other layers’ icons.
+
+===============================================================================================================
+map.getSource('points').getClusterExpansionZoom(clusterId => (err, zoom) => { ... });   // get zoom level where this cluster is expanded (resolved into smaller entities)
+source.getClusterLeaves(clusterId, Infinity, 0, (err, leaves) => { ... })   // gets all the features inside of the cluster. Infinity => return all features
+                                                                            // this is the callback => (err, leaves) => { ... }, what is executed after the data has been retrieved
+
+===============================================================================================================
+Questions:
+
+1) Fetch all the tour data up front, then filter it client-side (inside the map) ? 
+            - When Expecting a lot of filtering / map movement.
+            - When Data Set is small, so first load isnt too costly.
+
+2) Query the server with filter parameters, and only fetch the data the user needs for their current view ?
+            - When Dataset is large.
+            - The heavier the filtering logic is, the more in the server it should run.
+            - Slower per user interaction.
+
+
+        "paint": {
+          "icon-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            4, 1,
+            5.5, 0
+          ]
+        }
+      },
+
+
+Comments:
+1) Isolation is good, define variable inside functions as much as you can expecially in composables.
+2) clean up events listeners on onUnMounted.
+
+============================================================================================================
+To use tile rendering:
+npm install -g tileserver-gl
+tileserver-gl tours.mbtiles (you need to create tours.mbtiles, binary SQLite database. Runs on server for providing this data)
+Convert from GeoJSON to .mbtiles 
+brew install tippecanoe
+tippecanoe -o tours.mbtiles tours.geojson \
+  --layer=tours \
+  --maximum-zoom=14 \
+  --minimum-zoom=5 \
+  --drop-densest-as-needed
+
+============================================================================================================
+
+const bbox = map.getBounds(); // returns a LngLatBounds object
+const west = Math.floor(bbox.getWest());
+const south = Math.floor(bbox.getSouth());
+const east = Math.ceil(bbox.getEast());
+const north = Math.ceil(bbox.getNorth());
+const tiles = [];
+
+for (let lng = west; lng < east; lng++) {
+  for (let lat = south; lat < north; lat++) {
+    tiles.push({
+      west: lng,
+      south: lat,
+      east: lng + 1,
+      north: lat + 1
+    });
+  }
+}
+const fetchedTiles = new Set(); // Use Set of tile keys like "lng,lat"
+
+tiles.forEach(tile => {
+  const key = `${tile.west},${tile.south}`;
+
+  if (!fetchedTiles.has(key)) {
+    fetchedTiles.add(key); // Mark tile as fetched
+
+    // Send request to your backend API
+    fetch(`/tours?bbox=${tile.west},${tile.south},${tile.east},${tile.north}`)
+      .then(res => res.json())
+      .then(data => {
+        // Add pins to the map here using data
+      });
+  }
+});
+map.on('moveend', () => {
+  fetchVisibleTiles(); // This wraps the logic above
+});
+
+
+1) Οταν πατησει ο χρηστης το Details button κλεινω το tooltip (τωρα εχω κανει comment out την λειτουργικοτητα) ωστε να ειναι λιγοτερο clutered το map 
+    (δηλαδη αλλιως θα ειναι 2 popups μαζι και θα κρυβουν τον χαρτη.) Επισης αμα δεν κλεισουμε το tooltip θα δειχνουμε στον user duplicate data.
+    (ειδικα θα φαινεται το ιδιο image δυο φορες). Επισης οταν πατας "Details" κατα το figma (στις κιτρινες καρτες) λεει
+    οτι πρεπει να κανει το map center στο selected pin. Αυτό μπορεί να μεταβάλει το anchoring του tooltip και αυτη η μεταβαση 
+    δεν ειναι ομαλη. Τελος στο Figma design υπαρχει διαφορετικο icon για το pin του selected tour 
+    (στο @/assets/icons/map-pin-figma-hover.svg). Ισως αμα το κανουμε αυτο το design ποιο εντονο (πχ να αυξησουμε το scale), 
+    λυνεται και το προβλημα οτι ο χρηστης δυσκολευεται να διακρυνει ποιο Pin ειναι active.
+
+2) Το small prop το χρησιμοποιησα μονο στο tooltip οχι στο mappopup, γιατι μου φαινοντουσαν τα tags δυσαναλογα μικρα στο υπολοιπο popup. 
+    Το κυριο θεμα ειναι οτι υπαρχει πολυ μικρο padding οταν χρησιμοποιεις small, και επισης στο Figma φαινεται το padding να ειναι περισσοτερο. 
+    Σε αυτο το commit χρησιμοποιω small Tags, αλλα κανω overide το padding για να ειναι λιγο μεγαλυτερο (παντως προτεινω για το popup τα κανονικα tags χωρις small)  
+
+3) Mappopup Logic: If the Mappopup will not overflow then height: fit-content. If the Mappopup does overflow then height is fixed height (height: calc(100vh - 4.2rem - 8rem)) 
+    and the <div class="mappopup__scrollable" ...> becomes scrollable.
+
+4) Ελυσα το προβλημα με το fullscreen, που δεν φαινοταν το mappopup.
+
+5) Αλλαξα το structure των composables. Προσθεσα και αλλα μικροτερα composables και τα directories: composables/tooltip 
+    and composables/map. Επισης θα προτεινα την βελτιωση για ονοματα (που τα εγραψα οπως στα comments του github): 
+    usePopup -> useTooltipInitializer and useMapInteractions -> useTooltipInteractions.
+
+    Θα ηθελα να ρωτησω επισης ποιος ειναι ο σκοπος ακριβως οταν χωριζουμε την λογικη σε πολλαπλα files ? 
+    να αποφυγουμε να ειναι πολυ μεγαλο το file ? το λεω επειδη ετσι οπως ειναι τωρα το design ειναι σωστο ή οχι 
+    να κανω merge το mapInitFunctions με το useMapEvents (οι συναρτησεις δεν χρησιμοποιουνται απο καποιο αλλο composable)? 
+
+WCAG 2.2 AA accessibility standards (Web Content Accessibility Guidelines):
+- You need to be able to use the keyboard navigation / tour selection (clicking tab)
+    => focus indicators: a visual cue to tell you where you are (during tour selection). A highlighting of the tour pin.
+            - needs a high contrast ratio of >= 3:1. use this to calculate the ratio:
+                https://webaim.org/resources/contrastchecker/
+
+node_modules\vue-library\src\assets\scss\styles.scss
+
+.language-icon__label {
+  color: #3E4954;
+  font-family: Commissioner;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+
+        <template v-slot:tooltip-content>
+            <div class="language-gallery__list--grid" style="line-height: 0; flex-direction: column; gap: 0.75rem; padding: 0.3rem 0rem 0.3rem 0rem; ">
+                <LanguageIcon v-for="language in languageData.fullList" :language="language" :showLabel="false" :size="`normal`" />
+            </div>
+        </template>
+
+Αλλαγες που πρεπει να γινουν για popover:
+1) padding: 0 για sc

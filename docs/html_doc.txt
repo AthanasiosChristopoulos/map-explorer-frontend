@@ -1,0 +1,95 @@
+<!-- -->
+<!--======================== Boiler plate code: ========================-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dummy Website</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> <!-- To include bootstrap icons -->
+    <script src="https://cdn.tailwindcss.com"></script> // generates and injects CSS styles (i.e. fonts ...)
+
+</head>
+<body>
+
+<!--Actuall HTML Code -->
+
+<script src="login.js"></script>
+
+</body>
+</html>
+
+<!--======================== Tags: ========================-->
+
+<div>
+<h1/h2/h3/h4/h5>
+<b></b> // bold text
+<p>
+
+<a href="https://www.example.com"> <!-- go to the specific URL --> </a>
+    Example:
+        <a href="https://vuejs.org/" target="_blank" rel="noopener">official documentation</a>
+<a href="home"> <!-- Add this route (home) to the current URL --> </a>
+<router-link to="/">Home</router-link>
+ 
+<button>
+<i class="build in bootstrap name"></i> 
+<label for="title">
+<li> <!-- Unordered List -->
+<ul> <!-- Ordered List -->
+
+// Void Elements:
+<img src="image_link" class="imageLink"/>      
+<br /> <!-- Break character, used for manual padding -->
+<input v-model="message" placeholder="NewTask"/> 
+ 
+<section></section> // 	When content is logically grouped and usually has a heading
+
+<form @submit="..."> // holds multiple inputs a submit and a cancel button
+    <input ...>
+    <button type="submit"></button>
+</form>
+
+<pre>   // gives an apperance as if it was just typed, useful for code blocks, preserves white spaces, indentitation, ...
+<code>  // shows the reader that its code
+
+1) Textfields - User Input:
+- <input v-model="message" placeholder="NewTask"/> 
+- <textarea v-model="message" placeholder="add multiple lines" spellcheck="false"></textarea>
+    =>  el.style.height = "auto";
+    =>  el.style.height = `${el.scrollHeight}px`;
+
+2) spans:
+- <span class="brand">📝 My Tasks</span> // The <span> helps keep “📝” and “My Tasks” inline together
+
+<!--============ HTML character entities  ========================-->
+- &times; => Represents: × (multiplication symbol or close button)
+- &apos; => just '
+
+<!--======================== For css use: class, id  ========================-->
+
+    <div class="navbar">    => .navbar{...}
+    <div id="homeButtons">  => #homeButtons{...}
+
+<!--======================== Simple website example  ========================-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSmart Website</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="header">
+<h1>Books Search</h1>
+</div>
+
+<script src="login.js"></script>
+
+</body>
+</html>
+
