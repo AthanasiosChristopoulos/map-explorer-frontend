@@ -1,0 +1,163 @@
+{
+  "controls": {
+    "fullscreen": true,
+    "navigation": {
+      "showZoom": true,
+      "showCompass": false
+    },
+    "geolocateControl": {
+        "positionOptions": {
+            "enableHighAccuracy": true
+        },
+        "trackUserLocation": true,
+        "showUserHeading": true
+    }
+  },
+  "customPin": {
+    "iconSize": 0.75,
+    "iconAnchor": "bottom",
+    "iconAllowOverlap": false
+  },
+  "map": {
+    "container":"map",
+    "style": "mapbox://styles/mapbox/streets-v12",
+    "center": [-9.1399, 38.7169],
+    "projection": "mercator",
+    "dragRotate": false,
+    "pitchWithRotate": false,
+    "minZoom": 1.7,
+    "zoom": 3,
+    "maxBounds": [
+      [-180, -85], 
+      [180, 85]    
+    ]
+  },
+  "mapSource": {
+    "type": "geojson",
+    "data": {
+        "type": "FeatureCollection",
+        "features": []
+    },
+    "cluster": true,
+    "clusterRadius": 50
+  },
+  "pinLayer": {
+      "id":"pin-layer",
+      "type": "symbol",
+      "source": "points",
+      "filter": ["!", ["has", "point_count"]],
+      "layout": {
+        "icon-image": "custom-pin",
+        "icon-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          3, 0.4,
+          5, 0.5,
+          7, 0.6
+        ],
+        "icon-anchor": "bottom",
+        "icon-allow-overlap": true
+      }
+    },
+    "pinLayerDefault": {
+      "id": "pin-layer",
+      "type": "circle",
+      "source": "points",
+      "filter": ["!", ["has", "point_count"]],
+      "paint": {
+        "circle-radius": 6,
+        "circle-color": "#D54552",
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#FFFFFF"
+      }
+    }, 
+    "popup": {
+        "closeButton": false,
+        "closeOnClick": false,
+        "offset": {
+          "top": [0, 10],   
+          "top-left": [0, 15],   
+          "top-right": [0, 15],   
+          "bottom": [0, -50],
+          "bottom-right": [0, -50],
+          "bottom-left": [0, -50],
+          "left": [10, 0],
+          "right": [-10, 0]
+        },
+        "openingAnimation": {
+            "duration": 200,
+            "easing": "easeOutCubic",
+            "transform": "scale"
+        }
+    },
+    "clusterLayers": {
+      "clusters": {
+        "id": "clusters",
+        "type": "symbol",
+        "source": "points",
+        "filter": ["has", "point_count"],
+        "layout": {
+          "icon-image": [
+            "step",
+            ["get", "point_count"],
+            "custom-cluster-1",
+            7, "custom-cluster-2"
+          ],
+          "icon-size": [
+            "step",
+            ["zoom"],
+            [
+              "step",
+              ["get", "point_count"],
+              0.75,          
+              7, 1.5
+            ],           
+            2.2, [
+              "step",
+              ["get", "point_count"],
+              1.25,          
+              7, 2.5
+            ]
+          ],        
+          "icon-allow-overlap": true
+        }
+      },
+      "clustersDefault": {
+        "id": "clusters",
+        "type": "circle",
+        "source": "points",
+        "filter": ["has", "point_count"],
+        "paint": {
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#EAA2A8",
+            10, "#FD907E",
+            30, "#D54552"
+          ],
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            20,
+            10, 30,
+            30, 40
+          ]
+        }
+      },
+      "clusterCount": {
+        "id": "cluster-count",
+        "type": "symbol",
+        "source": "points",
+        "filter": ["has", "point_count"],
+        "layout": {
+          "text-field": ["get", "point_count_abbreviated"],
+          "text-font": ["Arial Unicode MS Bold"],
+          "text-size": 18
+        },
+        "paint": {
+          "text-color": "#ffffff"
+        }
+      }
+    }
+}

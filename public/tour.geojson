@@ -1,0 +1,57 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -9.1399,
+                    38.7169
+                ]
+            },
+            "properties": {
+                "id": 0,
+                "title": "Lisbon: Stories from the Old Town",
+                "language": "en",
+                "availableLanguages": [
+                    "en",
+                    "pt",
+                    "es",
+                    "fr"
+                ],
+                "categories": [
+                    1,
+                    2
+                ],
+                "hasPreview": true,
+                "isIndoors": true
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    12.4964,
+                    41.9028
+                ]
+            },
+            "properties": {
+                "id": 1,
+                "title": "Rome: Walking with Emperors",
+                "language": "it",
+                "availableLanguages": [
+                    "it",
+                    "en"
+                ],
+                "categories": [
+                    2,
+                    3
+                ],
+                "hasPreview": false,
+                "isIndoors": false
+            }
+        }
+    ]
+}

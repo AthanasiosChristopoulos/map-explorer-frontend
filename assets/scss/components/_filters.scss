@@ -1,0 +1,67 @@
+@use '../variables/_structure';
+
+.button__icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.header-bar__filters .button__text {
+  padding-bottom: 0.35rem;
+  font-family: Commissioner; 
+  font-weight: 400; 
+}
+
+.header-bar__filters.button__white {
+  border: 2px solid #D8DEE8;
+  @media (max-width: structure.$small) {
+    border: none;
+  }
+}
+
+.header-bar {
+  position: relative;
+  height: 4.5rem;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  width: 100dvw;
+}
+
+.header-bar__logo {
+  left: 1rem;
+  height: 2rem;
+  padding: 0rem;
+  width: 10dvw;
+  @media (max-width: structure.$small) {
+    padding: 0rem 0rem 0rem 1rem;
+  }
+}
+
+.header-bar__center-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100dvw;
+}
+.header-bar__search {
+    width: fit-content;
+    z-index: 1; 
+}
+
+.header-bar__filters {
+  right: -10rem;
+  z-index: 0;
+  height: 2.65rem;
+  width: 7.5rem;
+
+  @media (max-width: structure.$small) {
+    right: -4rem;
+    width: 1.2rem; 
+    height: 1.2rem; 
+    padding: 1rem;
+    aspect-ratio: 1 / 1;
+  }
+}
+
